@@ -1,6 +1,7 @@
 var express = require('express');
 var app = express();
 
+app.set('json spaces', 3);
 
 app.get('/', function (req, res) {
   
@@ -72,7 +73,33 @@ app.get('/meals', function (req, res) {
   }
   
   res.send(meals)*/
-  res.send('get /meals')
+
+
+
+  var MongoClient = require('mongodb').MongoClient
+ 
+  MongoClient.connect('mongodb://localhost:27017', function (err, client) {
+    if (err) throw err
+
+    var db = client.db('testdb');
+
+    db.collection('test').find().toArray(function (err, result) {
+      if (err) throw err
+
+      console.log(result)
+  	  res.setHeader('Content-Type', 'application/json');
+  	  res.json(result);
+  	  //res.send('Hello World! 2');
+  	  client.close();
+    })
+  })
+
+
+
+  //res.setHeader('Content-Type', 'application/json');
+  //res.json({ a: 1, b: 2 });
+
+  //res.send('get /meals')
 })
 
 // get /meals/day
@@ -104,7 +131,24 @@ app.get('/goals', function (req, res) {
 
 // post /meal
 // posts a single meal to current day
-app.post('/meal', function (req, res) {
+//app.post('/meal', function (req, res) {
+app.get('/meal_post', function (req, res) {
+
+  var MongoClient = require('mongodb').MongoClient
+ 
+  MongoClient.connect('mongodb://localhost:27017', function (err, client) {
+    if (err) throw err
+
+    var db = client.db('testdb');
+
+    var myobj = { name: "kyle" };
+
+    db.collection('test').insertOne(myobj, function(err, res) {
+      if (err) throw err
+      console.log("1 document inserted");
+      client.close();
+    })
+  })
   res.send('post /meal')
 })
 
