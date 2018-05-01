@@ -2,6 +2,9 @@ var express = require('express');
 var app = express();
 
 app.set('json spaces', 3);
+var bodyParser = require('body-parser');
+app.use(express.json());       // to support JSON-encoded bodies
+app.use(express.urlencoded()); // to support URL-encoded bodies
 
 app.get('/', function (req, res) {
   
@@ -129,11 +132,20 @@ app.get('/goals', function (req, res) {
 
 //POSTS
 
+//test post
+app.get('/name', function (req, res) {
+  
+  res.sendFile(__dirname + '/form.html');
+  //res.render('form.html');
+})
+
 // post /meal
 // posts a single meal to current day
 //app.post('/meal', function (req, res) {
-app.get('/meal_post', function (req, res) {
+app.post('/meal_post', function (req, res) {
 
+  var name_in = req.body.name;
+  
   var MongoClient = require('mongodb').MongoClient
  
   MongoClient.connect('mongodb://localhost:27017', function (err, client) {
@@ -141,11 +153,11 @@ app.get('/meal_post', function (req, res) {
 
     var db = client.db('testdb');
 
-    var myobj = { name: "kyle" };
+    var myobj = { name: name_in };
 
     db.collection('test').insertOne(myobj, function(err, res) {
       if (err) throw err
-      console.log("1 document inserted");
+      console.log(name_in);
       client.close();
     })
   })
