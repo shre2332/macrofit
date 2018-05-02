@@ -6,6 +6,105 @@ var bodyParser = require('body-parser');
 app.use(express.json());       // to support JSON-encoded bodies
 app.use(express.urlencoded()); // to support URL-encoded bodies
 
+
+
+var mongoose = require('mongoose');
+var UserSchema = new mongoose.Schema({
+  email: {
+    type: String,
+    unique: true,
+    required: true,
+    trim: true
+  },
+  username: {
+    type: String,
+    unique: true,
+    required: true,
+    trim: true
+  },
+  password: {
+    type: String,
+    required: true,
+  },
+  passwordConf: {
+    type: String,
+    required: true,
+  }
+});
+var User = mongoose.model('User', UserSchema);
+module.exports = User;
+
+var bcrypt = require('bcrypt');
+//hashing a password before saving it to the database
+UserSchema.pre('save', function (next) {
+  var user = this;
+  bcrypt.hash(user.password, 10, function (err, hash){
+    if (err) {
+      return next(err);
+    }
+    user.password = hash;
+    next();
+  })
+});
+
+var session = require('express-session');
+//use sessions for tracking logins
+app.use(session({
+  secret: 'work hard',
+  resave: true,
+  saveUninitialized: false
+}));
+
+
+
+
+app.post('/create_account_post', function (req, res) {
+
+	mongoose.connect('mongodb://localhost/testdb');
+
+	if (req.body.email &&
+	  req.body.username &&
+	  req.body.password &&
+	  req.body.passwordConf) {
+	  var userData = {
+	    email: req.body.email,
+	    username: req.body.username,
+	    password: req.body.password,
+	    passwordConf: req.body.passwordConf,
+	  }
+	  //use schema.create to insert data into the db
+	  User.create(userData, function (err, user) {
+	    if (err) {
+	      return next(err)
+	    } else {
+	      return res.redirect('/');
+	    }
+	  });
+	}
+
+	//mongoose.connection.close()
+})
+
+
+app.get('/create_account', function (req, res) {
+  
+  res.sendFile(__dirname + '/form2.html');
+  //res.render('form.html');
+})
+
+app.get('/login', function (req, res) {
+  
+  res.sendFile(__dirname + '/form3.html');
+  //res.render('form.html');
+})
+
+
+
+
+
+
+
+
 app.get('/', function (req, res) {
   
   var MongoClient = require('mongodb').MongoClient
@@ -132,7 +231,6 @@ app.get('/goals', function (req, res) {
 
 //POSTS
 
-//test post
 app.get('/name', function (req, res) {
   
   res.sendFile(__dirname + '/form.html');
