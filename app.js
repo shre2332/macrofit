@@ -31,8 +31,31 @@ var UserSchema = new mongoose.Schema({
     required: true,
   }
 });
+
+//authenticate input against database
+UserSchema.statics.authenticate = function (email, password, callback) {
+  User.findOne({ email: email })
+    .exec(function (err, user) {
+      if (err) {
+        return callback(err)
+      } else if (!user) {
+        var err = new Error('User not found.');
+        err.status = 401;
+        return callback(err);
+      }
+      bcrypt.compare(password, user.password, function (err, result) {
+        if (result === true) {
+          return callback(null, user);
+        } else {
+          return callback();
+        }
+      })
+    });
+}
+
 var User = mongoose.model('User', UserSchema);
 module.exports = User;
+
 
 var bcrypt = require('bcrypt');
 //hashing a password before saving it to the database
@@ -83,6 +106,31 @@ app.post('/create_account_post', function (req, res) {
 	}
 
 	//mongoose.connection.close()
+})
+
+
+app.post('/login_post', function (req, res) {
+
+	mongoose.connect('mongodb://localhost/testdb');
+
+	if (req.body.email && req.body.password) {
+	  	User.authenticate(req.body.email, req.body.password,
+	  		function (error, user) {
+	  			if (error || !user) {
+	  				var err = new Error('Wrong email or password');
+	  				err.status = 401;
+	  				return next(err);
+	  			} else {
+	  				req.session.userId = user._id;
+	  				return res.redirect('/meals');
+	  			}
+	  		});
+	  } else {
+	  	var err = new Error('Email and password are required.');
+	  	err.status = 401;
+	  	return next(err);
+	  }
+
 })
 
 
