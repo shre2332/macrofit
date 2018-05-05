@@ -1,74 +1,14 @@
 var express = require('express');
 var app = express();
+var mongoose = require('mongoose');
 
 app.set('json spaces', 3);
 var bodyParser = require('body-parser');
 app.use(express.json());       // to support JSON-encoded bodies
 app.use(express.urlencoded()); // to support URL-encoded bodies
 
+var User = require('./models/user.js');
 
-
-var mongoose = require('mongoose');
-var UserSchema = new mongoose.Schema({
-  email: {
-    type: String,
-    unique: true,
-    required: true,
-    trim: true
-  },
-  username: {
-    type: String,
-    unique: true,
-    required: true,
-    trim: true
-  },
-  password: {
-    type: String,
-    required: true,
-  },
-  passwordConf: {
-    type: String,
-    required: true,
-  }
-});
-
-//authenticate input against database
-UserSchema.statics.authenticate = function (email, password, callback) {
-  User.findOne({ email: email })
-    .exec(function (err, user) {
-      if (err) {
-        return callback(err)
-      } else if (!user) {
-        var err = new Error('User not found.');
-        err.status = 401;
-        return callback(err);
-      }
-      bcrypt.compare(password, user.password, function (err, result) {
-        if (result === true) {
-          return callback(null, user);
-        } else {
-          return callback();
-        }
-      })
-    });
-}
-
-var User = mongoose.model('User', UserSchema);
-module.exports = User;
-
-
-var bcrypt = require('bcrypt');
-//hashing a password before saving it to the database
-UserSchema.pre('save', function (next) {
-  var user = this;
-  bcrypt.hash(user.password, 10, function (err, hash){
-    if (err) {
-      return next(err);
-    }
-    user.password = hash;
-    next();
-  })
-});
 
 var session = require('express-session');
 //use sessions for tracking logins
@@ -78,12 +18,13 @@ app.use(session({
   saveUninitialized: false
 }));
 
-
+//connect to MongoDB
+mongoose.connect('mongodb://localhost/testdb');
 
 
 app.post('/create_account_post', function (req, res) {
 
-	mongoose.connect('mongodb://localhost/testdb');
+	//mongoose.connect('mongodb://localhost/testdb');
 
 	if (req.body.email &&
 	  req.body.username &&
@@ -111,7 +52,7 @@ app.post('/create_account_post', function (req, res) {
 
 app.post('/login_post', function (req, res) {
 
-	mongoose.connect('mongodb://localhost/testdb');
+	//mongoose.connect('mongodb://localhost/testdb');
 
 	if (req.body.email && req.body.password) {
 	  	User.authenticate(req.body.email, req.body.password,
@@ -158,7 +99,7 @@ app.get('/', function (req, res) {
   var MongoClient = require('mongodb').MongoClient
   const mongoose = require('mongoose');
  
-  mongoose.connect('mongodb://localhost/testdb');
+  //mongoose.connect('mongodb://localhost/testdb');
 
   //MongoClient.connect('mongodb://localhost:27017/testdb', function (err, db) {
   MongoClient.connect('mongodb://localhost:27017', function (err, client) {
