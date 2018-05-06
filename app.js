@@ -9,7 +9,6 @@ app.use(express.urlencoded()); // to support URL-encoded bodies
 
 var User = require('./models/user.js');
 
-
 var session = require('express-session');
 //use sessions for tracking logins
 app.use(session({
@@ -21,6 +20,9 @@ app.use(session({
 //connect to MongoDB
 mongoose.connect('mongodb://localhost/testdb');
 
+// include routes
+var routes = require('./routes/router.js');
+app.use('/', routes);
 
 app.post('/create_account_post', function (req, res) {
 
@@ -81,7 +83,7 @@ app.get('/create_account', function (req, res) {
   //res.render('form.html');
 })
 
-app.get('/login', function (req, res) {
+app.get('/', function (req, res) {
   
   res.sendFile(__dirname + '/form3.html');
   //res.render('form.html');
