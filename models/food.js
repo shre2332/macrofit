@@ -29,7 +29,21 @@ var FoodSchema = new mongoose.Schema({
   Fiber: {
     type: Number,
     required: true,
+  },
+  Entry_Date: {
+    type: Date,
+    default: Date.now
+  },
+  Custom_Flag: {
+    type: Boolean,
+    required: true,
+    default: false
+  },
+  Custom_Creator_ID: {
+    type: ObjectId,
+    default: null
   }
+
 });
 
 var Food = mongoose.model('Food', FoodSchema);

@@ -8,6 +8,8 @@ app.use(express.json());       // to support JSON-encoded bodies
 app.use(express.urlencoded()); // to support URL-encoded bodies
 
 var User = require('./models/user.js');
+var Meal = require('./models/meal.js');
+var Food = require('./models/food.js');
 
 var session = require('express-session');
 //use sessions for tracking logins
@@ -80,16 +82,17 @@ app.post('/login_post', function (req, res) {
 app.get('/create_account', function (req, res) {
   
   res.sendFile(__dirname + '/form2.html');
-  //res.render('form.html');
+})
+
+app.get('/log', function (req, res) {
+  
+  res.sendFile(__dirname + '/form3.html');
 })
 
 app.get('/', function (req, res) {
   
-  res.sendFile(__dirname + '/form3.html');
-  //res.render('form.html');
+  res.sendFile(__dirname + '/formAng.html');
 })
-
-
 
 
 
