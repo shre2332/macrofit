@@ -8,6 +8,8 @@
 
 <body>
 
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+
 <div ng-app="myApp" ng-controller="myCtrl">
 	<!--<div accordion ng-repeat="some text">
 	  <div accordion-group heading="test">-->
@@ -21,8 +23,13 @@
 	  <br />
 	  <h3>FIND FOOD</h3>
 	  <p><input type="text" ng-model="search_food_text"></p>
-	  <button ng-click="search_food_click()">Search</button>
+	  <button ng-click="search_food_click()">Search Food</button>
 	  <ul id="found_foods_list">
+	  	<li ng-repeat="x in myData">
+	  		<button ng-click="food_select_click($event)" ng-attr-id="{{x._id}}">
+    			{{ x.name + ', ' + x._id }}
+    		</button>
+  		</li>
 	  </ul>	
 	  
 	  <br />
@@ -47,16 +54,22 @@
 
 <script>
 var app = angular.module('myApp', []);
-app.controller('myCtrl', function($scope) {
+app.controller('myCtrl', function($scope, $http) {
 		$scope.login_click = function() {
-   		$scope.username= "John";
-    	$scope.password= "Doe";
-    	//var found_foods_list = document.getElementById('found_foods_list').value;
-        //var entry = document.createElement('li');
-        //var food_button = document.createElement('button');
-        //entry.appendChild(document.createTextNode(firstname));
-        //list.appendChild(entry);
-    }
+   			$scope.username= "John";
+    		$scope.password= "Doe";
+    	}
+    	$scope.search_food_click = function() {
+    		$http.get("http://localhost:3000/meals").then(function(response) {
+        		$scope.myData = response.data;
+		    });
+	    }
+	    $scope.food_select_click = function(event) {
+	    	alert(event.target.id);
+    		//http.get("http://localhost:3000/meals").then(function(response) {
+        	//	$scope.myData = response.data;
+		    //});
+	    }
 });
 </script>
 

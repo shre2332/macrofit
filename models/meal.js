@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 
 var MealSchema = new mongoose.Schema({
   Food_ID: {
-    type: ObjectId,
+    type: String,//should be object id
     required: true,
     trim: true
   },

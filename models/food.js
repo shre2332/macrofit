@@ -40,7 +40,7 @@ var FoodSchema = new mongoose.Schema({
     default: false
   },
   Custom_Creator_ID: {
-    type: ObjectId,
+    type: String,//should be object id
     default: null
   }
 
