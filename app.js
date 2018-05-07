@@ -95,7 +95,50 @@ app.get('/', function (req, res) {
 })
 
 
+app.post('/create_food', function (req, res) {
+  if (req.body.name &&
+      req.body.grams &&
+      req.body.calories &&
+      req.body.grams &&
+      req.body.protein &&
+      req.body.fat &&
+      req.body.carbs &&
+      req.body.fiber) {
 
+      var foodData = {
+        Name: req.body.name,
+        Grams: req.body.grams,
+        Calories: req.body.calories,
+        Grams: req.body.grams,
+      }
+
+      User.create(userData, function (error, user) {
+        if (error) {
+          return next(error);
+        } else {
+          req.session.userId = user._id;
+          return res.redirect('/profile');
+        }
+      });
+})
+
+/*User.findAll({ email: email })
+    .exec(function (err, user) {
+      if (err) {
+        return callback(err)
+      } else if (!user) {
+        var err = new Error('User not found.');
+        err.status = 401;
+        return callback(err);
+      }
+      bcrypt.compare(password, user.password, function (err, result) {
+        if (result === true) {
+          return callback(null, user);
+        } else {
+          return callback();
+        }
+      })
+    });*/
 
 
 

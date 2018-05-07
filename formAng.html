@@ -25,7 +25,7 @@
 	  <p><input type="text" ng-model="search_food_text"></p>
 	  <button ng-click="search_food_click()">Search Food</button>
 	  <ul id="found_foods_list">
-	  	<li ng-repeat="x in myData">
+	  	<li ng-repeat="x in search_food_data">
 	  		<button ng-click="food_select_click($event)" ng-attr-id="{{x._id}}">
     			{{ x.name + ', ' + x._id }}
     		</button>
@@ -35,6 +35,24 @@
 	  <br />
 	  <h3>CHECK MEAL</h3>
 	  <button ng-click="check_meals_click()">Check Meals</button>
+	  <br />
+
+	  <h3>CHECK MACROS</h3>
+	  <button ng-click="check_macros_click()">Check Macros</button>
+	  <div id="macros_list">
+	    <p>{{date}}</p>
+	    <p>{{calories}}</p>
+	    <p>{{protein}}</p>
+	    <p>{{fat}}</p>
+	    <p>{{carbs}}</p>
+	    <ul id="found_foods_list_macros">
+	  		<li ng-repeat="x in search_food_data_macros">
+	  			<button ng-click="food_select_click($event)" ng-attr-id="{{x._id}}">
+    				{{ x.name + ', ' + x._id }}
+    			</button>
+  			</li>
+	  	</ul>	
+	  </div>	
 	  
 	  <br />
 	  <h3>ADD FOOD</h3>
@@ -61,7 +79,7 @@ app.controller('myCtrl', function($scope, $http) {
     	}
     	$scope.search_food_click = function() {
     		$http.get("http://localhost:3000/meals").then(function(response) {
-        		$scope.myData = response.data;
+        		$scope.search_food_data = response.data;
 		    });
 	    }
 	    $scope.food_select_click = function(event) {
@@ -69,6 +87,12 @@ app.controller('myCtrl', function($scope, $http) {
     		//http.get("http://localhost:3000/meals").then(function(response) {
         	//	$scope.myData = response.data;
 		    //});
+	    }
+	    $scope.check_macros_click = function(event) {
+	    	alert(event.target.id);
+    		$http.get("http://localhost:3000/meals").then(function(response) {
+        		$scope.macro_data = response.data;
+		    });
 	    }
 });
 </script>
