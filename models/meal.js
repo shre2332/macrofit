@@ -13,6 +13,26 @@ var MealSchema = new mongoose.Schema({
   Entry_Date: {
     type: Date,
     default: Date.now
+  },
+  Calories: {
+    type: Number,
+    required: true,
+  },
+  Protein: {
+    type: Number,
+    required: true,
+  },
+  Fat: {
+    type: Number,
+    required: true,
+  },
+  Carbs: {
+    type: Number,
+    required: true,
+  },
+  Fiber: {
+    type: Number,
+    required: true,
   }
 });
 

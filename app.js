@@ -26,58 +26,35 @@ mongoose.connect('mongodb://localhost/testdb');
 var routes = require('./routes/router.js');
 app.use('/', routes);
 
-app.post('/create_account_post', function (req, res) {
+function get_daily_totals()
+{
+	day = time.date;
+	
+	var daily_totals = {
+        Calories: 0,
+        Protein: 0,
+        Fat: 0,
+        Carbs: 0,
+        Fiber: 0
+      }
+	
+	//query for all meals in day
+	//query will be in meals model
+		//for each
+			/*daily_totals.Calories += meal.Calories;
+			daily_totals.Protein +=	meal.Protein;
+			daily_totals.Fat +=	meal.Fat;
+			daily_totals.Carbs += meal.Fat;
+			daily_totals.Fiber += meal.Fiber;
+	res.send(daily_totals);*/
+			
+}
 
-	//mongoose.connect('mongodb://localhost/testdb');
-
-	if (req.body.email &&
-	  req.body.username &&
-	  req.body.password &&
-	  req.body.passwordConf) {
-	  var userData = {
-	    email: req.body.email,
-	    username: req.body.username,
-	    password: req.body.password,
-	    passwordConf: req.body.passwordConf,
-	  }
-	  //use schema.create to insert data into the db
-	  User.create(userData, function (err, user) {
-	    if (err) {
-	      return next(err)
-	    } else {
-	      return res.redirect('/');
-	    }
-	  });
-	}
-
-	//mongoose.connection.close()
+app.post('/someUrl', function (req, res) {
+	//res.send('Hello World! 2');
+	res.setHeader('Content-Type', 'application/json');
+  	res.json({ok: "okay"});
 })
-
-
-app.post('/login_post', function (req, res) {
-
-	//mongoose.connect('mongodb://localhost/testdb');
-
-	if (req.body.email && req.body.password) {
-	  	User.authenticate(req.body.email, req.body.password,
-	  		function (error, user) {
-	  			if (error || !user) {
-	  				var err = new Error('Wrong email or password');
-	  				err.status = 401;
-	  				return next(err);
-	  			} else {
-	  				req.session.userId = user._id;
-	  				return res.redirect('/meals');
-	  			}
-	  		});
-	  } else {
-	  	var err = new Error('Email and password are required.');
-	  	err.status = 401;
-	  	return next(err);
-	  }
-
-})
-
 
 app.get('/create_account', function (req, res) {
   
@@ -105,21 +82,25 @@ app.post('/create_food', function (req, res) {
       req.body.carbs &&
       req.body.fiber) {
 
-      var foodData = {
-        Name: req.body.name,
-        Grams: req.body.grams,
-        Calories: req.body.calories,
-        Grams: req.body.grams,
-      }
+	      var foodData = {
+	        Name: req.body.name,
+	        Grams: req.body.grams,
+	        Calories: req.body.calories,
+	        Grams: req.body.grams,
+	        Protein: req.body.calories,
+	        Fat: req.body.grams,
+	        Carbs: req.body.calories,
+	        Fiber: req.body.grams
+	      }
 
-      User.create(userData, function (error, user) {
-        if (error) {
-          return next(error);
-        } else {
-          req.session.userId = user._id;
-          return res.redirect('/profile');
-        }
-      });
+	      Food.create(foodData, function (error, food) {
+	        if (error) {
+	          return next(error);
+	        } else {
+	          return res.redirect('/profile');
+	        }
+	      });
+	}
 })
 
 /*User.findAll({ email: email })
@@ -142,20 +123,16 @@ app.post('/create_food', function (req, res) {
 
 
 
-app.get('/', function (req, res) {
+app.get('/test', function (req, res) {
   
   var MongoClient = require('mongodb').MongoClient
   const mongoose = require('mongoose');
  
-  //mongoose.connect('mongodb://localhost/testdb');
-
-  //MongoClient.connect('mongodb://localhost:27017/testdb', function (err, db) {
   MongoClient.connect('mongodb://localhost:27017', function (err, client) {
     if (err) throw err
 
     var db = client.db('testdb');
 
-    //db.collection('test').find().toArray(function (err, result) {
     db.collection('test').find().toArray(function (err, result) {
       if (err) throw err
 
@@ -180,40 +157,17 @@ app.get('/', function (req, res) {
 // get /meals
 // meals for today
 app.get('/meals', function (req, res) {
-  //query for meals
-  /*var meals = [];
+
   var db_meals;
-  var meals = document.createElement("meals");
-  
-  connection.query('SELECT 1 + 1 AS solution', function (err, rows, fields) {
-  if (err) throw err
-  db_meals = rows;
-  })
-  
-  var meals_xml = document.createElement("meals");
-  for (var temp in db_meals)
-  {
-		
-    	var food = document.createElement("food");
-    	meal.appendChild(temp);
-		var amount = document.createTextNode(temp);
-		meal.appendChild(name);
-    
-    	meals.appendChild(meal);
-  }
-  
   
   var meals_json = [];
-  for (var temp in db_meals)
+  /*for (var temp in db_meals)
   {
     	var meal = {"food" : temp.food, "amount" : temp.amount, "calories" : temp.calories, "protein" : temp.protein, "carbs" : temp.carbs, "fat" : temp.fat, "fiber" : temp.fiber};
-
     	meals_json.push(meal);
   }
   
   res.send(meals)*/
-
-
 
   var MongoClient = require('mongodb').MongoClient
  
@@ -232,7 +186,6 @@ app.get('/meals', function (req, res) {
   	  client.close();
     })
   })
-
 
 
   //res.setHeader('Content-Type', 'application/json');
@@ -359,10 +312,6 @@ app.put('/meal/day/id', function (req, res) {
 app.put('/goal/id', function (req, res) {
   res.send('put /goal/id')
 })
-
-
-
-
 
 
 

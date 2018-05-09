@@ -40,11 +40,11 @@
 	  <h3>CHECK MACROS</h3>
 	  <button ng-click="check_macros_click()">Check Macros</button>
 	  <div id="macros_list">
-	    <p>{{date}}</p>
-	    <p>{{calories}}</p>
-	    <p>{{protein}}</p>
-	    <p>{{fat}}</p>
-	    <p>{{carbs}}</p>
+	    <p ng-model="date">{{date}}</p>
+	    <p ng-model="calories">{{calories}}</p>
+	    <p ng-model="protein">{{protein}}</p>
+	    <p ng-model="fat">{{fat}}</p>
+	    <p ng-model="carbs">{{carbs}}</p>
 	    <ul id="found_foods_list_macros">
 	  		<li ng-repeat="x in search_food_data_macros">
 	  			<button ng-click="food_select_click($event)" ng-attr-id="{{x._id}}">
@@ -88,10 +88,15 @@ app.controller('myCtrl', function($scope, $http) {
         	//	$scope.myData = response.data;
 		    //});
 	    }
-	    $scope.check_macros_click = function(event) {
-	    	alert(event.target.id);
-    		$http.get("http://localhost:3000/meals").then(function(response) {
-        		$scope.macro_data = response.data;
+	    $scope.check_macros_click = function() {
+	    	$http.post("http://localhost:3000/someUrl", {key: "hey"}).then(function(response) {
+    		//$http.get("http://localhost:3000/meals").then(function(response) {
+        		//$scope.macro_data = response.data;
+        		$scope.date = response.data.ok;
+        		$scope.calories = "ok";
+        		$scope.protein = "ok";
+        		$scope.fat = "ok";
+        		$scope.carbs = "ok";
 		    });
 	    }
 });
