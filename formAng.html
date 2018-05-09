@@ -93,10 +93,10 @@ app.controller('myCtrl', function($scope, $http) {
     		//$http.get("http://localhost:3000/meals").then(function(response) {
         		//$scope.macro_data = response.data;
         		$scope.date = response.data.ok;
-        		$scope.calories = "ok";
-        		$scope.protein = "ok";
-        		$scope.fat = "ok";
-        		$scope.carbs = "ok";
+        		$scope.calories = response.data.ok;
+        		$scope.protein = response.data.ok;
+        		$scope.fat = response.data.ok;
+        		$scope.carbs = response.data.ok;
 		    });
 	    }
 });
