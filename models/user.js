@@ -21,6 +21,11 @@ var UserSchema = new mongoose.Schema({
   passwordConf: {
     type: String,
     required: true,
+  },
+  Publicity_type: {
+    type: Number,
+    required: true,
+    default: 0
   }
 });
 

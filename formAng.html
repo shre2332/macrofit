@@ -28,10 +28,12 @@
 	  <ul id="found_foods_list">
 	  	<li ng-repeat="x in search_food_data">
 	  		<button ng-click="food_select_click($event)" ng-attr-id="{{x._id}}">
-    			{{ x.name + ', ' + x._id }}
+    			{{ x.Name + ", " + x._id }}
     		</button>
   		</li>
-	  </ul>	
+	  </ul>
+	  <p>Add Meal Grams: <input type="text" ng-model="add_meal_grams"></p>
+	  <h3 ng-model="add_meal_confirmed">{{add_meal_confirmed}}</h3>
 	  <br />
 	  
 	  <h3>CHECK MEAL</h3>
@@ -40,7 +42,7 @@
 	  <ul id="found_meals_list">
 	  	<li ng-repeat="x in search_meals_data">
 	  		<button ng-click="meal_select_click($event)" ng-attr-id="{{x._id}}">
-    			{{ x.name + ', ' + x._id }}
+    			{{ x.Name + ', ' + x._id }}
     		</button>
   		</li>
 	  </ul>	
@@ -64,15 +66,17 @@
 	  </div>	
 	  
 	  <br />
-	  <h3>ADD FOOD</h3>
-	  <p>Name: <input type="text" ng-model="food_name"></p>
-	  <p>Grams: <input type="text" ng-model="grams"></p>
-	  <p>Calories: <input type="text" ng-model="calories"></p>
-	  <p>Fat: <input type="text" ng-model="fat"></p>
-	  <p>Carbs: <input type="text" ng-model="carbs"></p>
-	  <p>Protein: <input type="text" ng-model="protein"></p>
-	  <p>Fiber: <input type="text" ng-model="fiber"></p>
-	  <button ng-click="add_food_click()">Add</button>
+	  <h3>CREATE FOOD</h3>
+	  <p>Name: <input type="text" ng-model="create_food_name"></p>
+	  <p>Grams: <input type="text" ng-model="create_grams"></p>
+	  <p>Calories: <input type="text" ng-model="create_calories"></p>
+	  <p>Fat: <input type="text" ng-model="create_fat"></p>
+	  <p>Carbs: <input type="text" ng-model="create_carbs"></p>
+	  <p>Protein: <input type="text" ng-model="create_protein"></p>
+	  <p>Fiber: <input type="text" ng-model="create_fiber"></p>
+	  <button ng-click="create_food_click()">Add</button>
+
+	  <h3 ng-model="create_food_confirmed">{{create_food_confirmed}}</h3>
 
 </div>
 
@@ -81,24 +85,24 @@
 <script>
 var app = angular.module('myApp', []);
 app.controller('myCtrl', function($scope, $http) {
-			$scope.login_click = function() {
-				$http.post("http://localhost:3000/login", 
-				{login_email: $scope.username, login_username: $scope.username, login_password: $scope.password}
-				).then(function(response) {
-					if (response.data.success == true) {
-						var x = document.getElementById("login_block");
-					    if (x.style.display === "none") {
-					        x.style.display = "block";
-					    } else {
-					        x.style.display = "none";
-					    }
-						
-						$scope.username_confirmed = "WELCOME " + response.data.username + "  ID: " + response.data.user_id ;
-					}
-					else
-					{
-						$scope.username_confirmed = "Failed to log in";
-					}
+		$scope.login_click = function() {
+			$http.post("http://localhost:3000/login", 
+			{login_email: $scope.username, login_username: $scope.username, login_password: $scope.password}
+			).then(function(response) {
+				if (response.data.success == true) {
+					var x = document.getElementById("login_block");
+				    if (x.style.display === "none") {
+				        x.style.display = "block";
+				    } else {
+				        x.style.display = "none";
+				    }
+					
+					$scope.username_confirmed = "WELCOME " + response.data.username + "  ID: " + response.data.user_id ;
+				}
+				else
+				{
+					$scope.username_confirmed = "Failed to log in";
+				}
 					
 		    });
    			$scope.username= "John";
@@ -106,16 +110,26 @@ app.controller('myCtrl', function($scope, $http) {
     	}
     	
     	$scope.search_food_click = function() {
-    		$http.get("http://localhost:3000/meals").then(function(response) {
+    		$http.get("http://localhost:3000/food").then(function(response) {
         		$scope.search_food_data = response.data;
 		    });
 	    }
 	    
 	    $scope.food_select_click = function(event) {
-	    	alert(event.target.id);
-    		//http.get("http://localhost:3000/meals").then(function(response) {
-        	//	$scope.myData = response.data;
-		    //});
+	    	//alert(event.target.id);
+    		
+    		$http.post("http://localhost:3000/add_meal", 
+			{food_id: event.target.id, grams: $scope.add_meal_grams}
+			).then(function(response) {
+				if (response.data.success == true) {		
+					$scope.add_meal_confirmed = "SUCCESS";
+				}
+				else
+				{
+					$scope.add_meal_confirmed = "Failed to add meal";
+				}
+					
+		    });
 	    }
 	    
 	    $scope.check_macros_click = function() {
@@ -140,6 +154,21 @@ app.controller('myCtrl', function($scope, $http) {
         	//	$scope.myData = response.data;
 		    //});
 	    }
+
+	    $scope.create_food_click = function() {
+			$http.post("http://localhost:3000/create_food", 
+			{name: $scope.create_food_name, grams: $scope.create_grams, calories: $scope.create_calories, fat: $scope.create_fat, carbs: $scope.create_carbs, protein: $scope.create_protein, fiber: $scope.create_fiber}
+			).then(function(response) {
+				if (response.data.success == true) {		
+					$scope.create_food_confirmed = "SUCCESS";
+				}
+				else
+				{
+					$scope.create_food_confirmed = "Failed to create food";
+				}
+					
+		    });
+    	}
 });
 </script>
 

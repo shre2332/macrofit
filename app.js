@@ -38,9 +38,12 @@ function get_daily_totals()
         Fiber: 0
       }
 	
-	//query for all meals in day
-	//query will be in meals model
-		//for each
+	/*Meal.find({}, function(err, meals) {
+    var userMap = {};
+
+    meals.forEach(function(user) {
+      userMap[user._id] = user;
+    });*/
 			/*daily_totals.Calories += meal.Calories;
 			daily_totals.Protein +=	meal.Protein;
 			daily_totals.Fat +=	meal.Fat;
@@ -76,28 +79,27 @@ app.post('/create_food', function (req, res) {
   if (req.body.name &&
       req.body.grams &&
       req.body.calories &&
-      req.body.grams &&
-      req.body.protein &&
       req.body.fat &&
       req.body.carbs &&
+      req.body.protein &&
       req.body.fiber) {
 
 	      var foodData = {
 	        Name: req.body.name,
 	        Grams: req.body.grams,
 	        Calories: req.body.calories,
-	        Grams: req.body.grams,
-	        Protein: req.body.calories,
-	        Fat: req.body.grams,
-	        Carbs: req.body.calories,
-	        Fiber: req.body.grams
+	        Fat: req.body.fat,
+	        Carbs: req.body.carbs,
+	        Protein: req.body.protein,
+	        Fiber: req.body.fiber
 	      }
 
 	      Food.create(foodData, function (error, food) {
 	        if (error) {
 	          return next(error);
 	        } else {
-	          return res.redirect('/profile');
+	          res.setHeader('Content-Type', 'application/json');
+  			  res.json({success: true});
 	        }
 	      });
 	}
@@ -161,13 +163,6 @@ app.get('/meals', function (req, res) {
   var db_meals;
   
   var meals_json = [];
-  /*for (var temp in db_meals)
-  {
-    	var meal = {"food" : temp.food, "amount" : temp.amount, "calories" : temp.calories, "protein" : temp.protein, "carbs" : temp.carbs, "fat" : temp.fat, "fiber" : temp.fiber};
-    	meals_json.push(meal);
-  }
-  
-  res.send(meals)*/
 
   var MongoClient = require('mongodb').MongoClient
  
@@ -186,18 +181,28 @@ app.get('/meals', function (req, res) {
   	  client.close();
     })
   })
-
-
-  //res.setHeader('Content-Type', 'application/json');
-  //res.json({ a: 1, b: 2 });
-
-  //res.send('get /meals')
+  
 })
 
 // get /meals/day
 // meals for specified day
 app.get('/meals/day', function (req, res) {
   res.send('get /meals/day')
+})
+
+// get /food/search_string
+// get food search
+app.get('/food', function (req, res) {
+
+  Food.find({}, function(err, foods) {
+    var foodMap = {};
+
+    foods.forEach(function(food) {
+      foodMap[food._id] = food;
+    });
+	res.setHeader('Content-Type', 'application/json');
+  	res.json(foodMap);
+  })
 })
 
 // get /food/search_string
@@ -220,6 +225,50 @@ app.get('/goals', function (req, res) {
 
 
 //POSTS
+
+app.post('/add_meal', function (req, res) {
+  if (req.body.food_id &&
+      req.body.grams) {
+
+  		var foodMap = {};
+  		var mealData = {};
+
+  		Food.findById(req.body.food_id)
+		.exec(function (error, food) {
+		      if (error) {
+		        return next(error);
+		      } else {
+		        if (food === null) {
+		          var err = new Error('Not found');
+		          err.status = 400;
+		          return next(err);
+		        } else {
+		          foodMap = food;
+		          mealData = {
+	        	  	Food_ID: String(req.body.food_id),
+	        	  	User_ID: String(req.session.userId),
+		          	Grams: req.body.grams,
+		          	Calories: parseInt(foodMap[Calories]),
+		          	Protein: 2,//parseInt(foodMap.Protein),
+		          	Fat: 2,//parseInt(foodMap.Fat),
+		          	Carbs: 2,//parseInt(foodMap.Carbs),
+		          	Fiber: 2//parseInt(foodMap.Fiber)
+	      		  }
+		          console.log(foodMap);
+		        }
+		      }
+		    });
+
+	      Meal.create(mealData, function (error, meal) {
+	        if (error) {
+	          return next(error);
+	        } else {
+	          res.setHeader('Content-Type', 'application/json');
+  			  res.json({success: true});
+	        }
+	      });
+	}
+})
 
 app.get('/name', function (req, res) {
   

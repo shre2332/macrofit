@@ -6,6 +6,11 @@ var MealSchema = new mongoose.Schema({
     required: true,
     trim: true
   },
+  User_ID: {
+    type: String,//should be object id
+    required: true,
+    trim: true
+  },
   Grams: {
     type: Number,
     required: true
