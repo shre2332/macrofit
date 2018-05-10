@@ -48,8 +48,13 @@ router.post('/login', function (req, res, next) {
         err.status = 401;
         return next(err);
       } else {
+      	console.log(user._id);
+      	console.log(user.username);
+      	console.log(user);
         req.session.userId = user._id;
-        return res.redirect('/meals');
+        res.setHeader('Content-Type', 'application/json');
+  		res.json({success: true, username: user.username, user_id: user._id});
+        //return res.redirect('/meals');
       }
     });
   } else {

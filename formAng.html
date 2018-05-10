@@ -2,8 +2,6 @@
 <html>
 <head>
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
-	<!--<script src="http://angular-ui.github.com/bootstrap/ui-bootstrap-tpls-0.3.0.js"></script>
-	<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">-->
 </head>
 
 <body>
@@ -11,14 +9,17 @@
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
 
 <div ng-app="myApp" ng-controller="myCtrl">
-	<!--<div accordion ng-repeat="some text">
-	  <div accordion-group heading="test">-->
-	  <h3>LOGIN</h3>
-	  <p>Username: <input type="text" ng-model="username"></p>
-	  <p>Password: <input type="text" ng-model="password"></p>
-	  <button ng-click="login_click()">Login</button>
-	  <p>{{username}}</p>
-	  <p>{{password}}</p>
+
+	  <div id="login_block">
+		  <h3>LOGIN</h3>
+		  <p>Username: <input type="text" ng-model="username"></p>
+		  <p>Password: <input type="text" ng-model="password"></p>
+		  <button ng-click="login_click()">Login</button>
+		  <p>{{username}}</p>
+		  <p>{{password}}</p>
+		</div>
+	  
+	  <h3 ng-model="username_confirmed">{{username_confirmed}}</h3>
 	  
 	  <br />
 	  <h3>FIND FOOD</h3>
@@ -31,10 +32,18 @@
     		</button>
   		</li>
 	  </ul>	
-	  
 	  <br />
+	  
 	  <h3>CHECK MEAL</h3>
+	  <p><input type="text" ng-model="search_meals_text"></p>
 	  <button ng-click="check_meals_click()">Check Meals</button>
+	  <ul id="found_meals_list">
+	  	<li ng-repeat="x in search_meals_data">
+	  		<button ng-click="meal_select_click($event)" ng-attr-id="{{x._id}}">
+    			{{ x.name + ', ' + x._id }}
+    		</button>
+  		</li>
+	  </ul>	
 	  <br />
 
 	  <h3>CHECK MACROS</h3>
@@ -64,8 +73,7 @@
 	  <p>Protein: <input type="text" ng-model="protein"></p>
 	  <p>Fiber: <input type="text" ng-model="fiber"></p>
 	  <button ng-click="add_food_click()">Add</button>
-	  <!--</div>
-	</div>-->
+
 </div>
 
 </body>
@@ -73,31 +81,64 @@
 <script>
 var app = angular.module('myApp', []);
 app.controller('myCtrl', function($scope, $http) {
-		$scope.login_click = function() {
+			$scope.login_click = function() {
+				$http.post("http://localhost:3000/login", 
+				{login_email: $scope.username, login_username: $scope.username, login_password: $scope.password}
+				).then(function(response) {
+					if (response.data.success == true) {
+						var x = document.getElementById("login_block");
+					    if (x.style.display === "none") {
+					        x.style.display = "block";
+					    } else {
+					        x.style.display = "none";
+					    }
+						
+						$scope.username_confirmed = "WELCOME " + response.data.username + "  ID: " + response.data.user_id ;
+					}
+					else
+					{
+						$scope.username_confirmed = "Failed to log in";
+					}
+					
+		    });
    			$scope.username= "John";
     		$scope.password= "Doe";
     	}
+    	
     	$scope.search_food_click = function() {
     		$http.get("http://localhost:3000/meals").then(function(response) {
         		$scope.search_food_data = response.data;
 		    });
 	    }
+	    
 	    $scope.food_select_click = function(event) {
 	    	alert(event.target.id);
     		//http.get("http://localhost:3000/meals").then(function(response) {
         	//	$scope.myData = response.data;
 		    //});
 	    }
+	    
 	    $scope.check_macros_click = function() {
-	    	$http.post("http://localhost:3000/someUrl", {key: "hey"}).then(function(response) {
-    		//$http.get("http://localhost:3000/meals").then(function(response) {
-        		//$scope.macro_data = response.data;
-        		$scope.date = response.data.ok;
-        		$scope.calories = response.data.ok;
-        		$scope.protein = response.data.ok;
-        		$scope.fat = response.data.ok;
-        		$scope.carbs = response.data.ok;
+	    	$http.post("http://localhost:3000/someUrl", {username: "a"}).then(function(response) {
+        		$scope.date = response.data.Date;
+        		$scope.calories = response.data.Calories;
+        		$scope.protein = response.data.Protein;
+        		$scope.fat = response.data.Fat;
+        		$scope.carbs = response.data.Carbs;
 		    });
+	    }
+	    
+	    $scope.check_meals_click = function() {
+    		$http.get("http://localhost:3000/meals").then(function(response) {
+        		$scope.search_meals_data = response.data;
+		  	});
+		  }
+		  
+		  $scope.meal_select_click = function(event) {
+	    	alert(event.target.id);
+    		//http.get("http://localhost:3000/meals").then(function(response) {
+        	//	$scope.myData = response.data;
+		    //});
 	    }
 });
 </script>
