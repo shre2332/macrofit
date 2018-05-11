@@ -230,7 +230,6 @@ app.post('/add_meal', function (req, res) {
   if (req.body.food_id &&
       req.body.grams) {
 
-  		var foodMap = {};
   		var mealData = {};
 
   		Food.findById(req.body.food_id)
@@ -243,30 +242,31 @@ app.post('/add_meal', function (req, res) {
 		          err.status = 400;
 		          return next(err);
 		        } else {
-		          foodMap = food;
+		          //foodMap = food;
 		          mealData = {
 	        	  	Food_ID: String(req.body.food_id),
 	        	  	User_ID: String(req.session.userId),
 		          	Grams: req.body.grams,
-		          	Calories: parseInt(foodMap[Calories]),
-		          	Protein: 2,//parseInt(foodMap.Protein),
-		          	Fat: 2,//parseInt(foodMap.Fat),
-		          	Carbs: 2,//parseInt(foodMap.Carbs),
-		          	Fiber: 2//parseInt(foodMap.Fiber)
+		          	Calories: parseInt(food["Calories"]),
+		          	Protein: parseInt(food["Protein"]),
+		          	Fat: parseInt(food["Fat"]),
+		          	Carbs: parseInt(food["Carbs"]),
+		          	Fiber: parseInt(food["Fiber"])
 	      		  }
-		          console.log(foodMap);
+
+	      		  Meal.create(mealData, function (error, meal) {
+			        if (error) {
+			          return next(error);
+			        } else {
+			          res.setHeader('Content-Type', 'application/json');
+		  			  res.json({success: true});
+			        }
+			      });
+
 		        }
 		      }
 		    });
-
-	      Meal.create(mealData, function (error, meal) {
-	        if (error) {
-	          return next(error);
-	        } else {
-	          res.setHeader('Content-Type', 'application/json');
-  			  res.json({success: true});
-	        }
-	      });
+     
 	}
 })
 

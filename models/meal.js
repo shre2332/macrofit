@@ -15,10 +15,6 @@ var MealSchema = new mongoose.Schema({
     type: Number,
     required: true
   },
-  Entry_Date: {
-    type: Date,
-    default: Date.now
-  },
   Calories: {
     type: Number,
     required: true,
@@ -38,6 +34,10 @@ var MealSchema = new mongoose.Schema({
   Fiber: {
     type: Number,
     required: true,
+  },
+  Entry_Date: {
+    type: Date,
+    default: Date.now
   }
 });
 
