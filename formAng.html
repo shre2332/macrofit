@@ -56,13 +56,14 @@
 	    <p ng-model="protein">{{protein}}</p>
 	    <p ng-model="fat">{{fat}}</p>
 	    <p ng-model="carbs">{{carbs}}</p>
-	    <ul id="found_foods_list_macros">
+	    <p ng-model="fiber">{{fiber}}</p>
+	    <!--<ul id="found_foods_list_macros">
 	  		<li ng-repeat="x in search_food_data_macros">
 	  			<button ng-click="food_select_click($event)" ng-attr-id="{{x._id}}">
     				{{ x.name + ', ' + x._id }}
     			</button>
   			</li>
-	  	</ul>	
+	  	</ul>-->	
 	  </div>	
 	  
 	  <br />
@@ -133,12 +134,15 @@ app.controller('myCtrl', function($scope, $http) {
 	    }
 	    
 	    $scope.check_macros_click = function() {
-	    	$http.post("http://localhost:3000/someUrl", {username: "a"}).then(function(response) {
-        		$scope.date = response.data.Date;
+	    	//$http.post("http://localhost:3000/macros", {username: "a"}).then(function(response) {
+	    	$http.get("http://localhost:3000/macros").then(function(response) {
+	    		//alert(response.data);
+        		//$scope.date = response.data.Date;
         		$scope.calories = response.data.Calories;
         		$scope.protein = response.data.Protein;
         		$scope.fat = response.data.Fat;
         		$scope.carbs = response.data.Carbs;
+        		$scope.fiber = response.data.Fiber;
 		    });
 	    }
 	    

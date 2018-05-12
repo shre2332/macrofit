@@ -26,33 +26,6 @@ mongoose.connect('mongodb://localhost/testdb');
 var routes = require('./routes/router.js');
 app.use('/', routes);
 
-function get_daily_totals()
-{
-	day = time.date;
-	
-	var daily_totals = {
-        Calories: 0,
-        Protein: 0,
-        Fat: 0,
-        Carbs: 0,
-        Fiber: 0
-      }
-	
-	/*Meal.find({}, function(err, meals) {
-    var userMap = {};
-
-    meals.forEach(function(user) {
-      userMap[user._id] = user;
-    });*/
-			/*daily_totals.Calories += meal.Calories;
-			daily_totals.Protein +=	meal.Protein;
-			daily_totals.Fat +=	meal.Fat;
-			daily_totals.Carbs += meal.Fat;
-			daily_totals.Fiber += meal.Fiber;
-	res.send(daily_totals);*/
-			
-}
-
 app.post('/someUrl', function (req, res) {
 	//res.send('Hello World! 2');
 	res.setHeader('Content-Type', 'application/json');
@@ -105,56 +78,49 @@ app.post('/create_food', function (req, res) {
 	}
 })
 
-/*User.findAll({ email: email })
-    .exec(function (err, user) {
-      if (err) {
-        return callback(err)
-      } else if (!user) {
-        var err = new Error('User not found.');
-        err.status = 401;
-        return callback(err);
-      }
-      bcrypt.compare(password, user.password, function (err, result) {
-        if (result === true) {
-          return callback(null, user);
-        } else {
-          return callback();
-        }
-      })
-    });*/
-
-
-
-app.get('/test', function (req, res) {
-  
-  var MongoClient = require('mongodb').MongoClient
-  const mongoose = require('mongoose');
- 
-  MongoClient.connect('mongodb://localhost:27017', function (err, client) {
-    if (err) throw err
-
-    var db = client.db('testdb');
-
-    db.collection('test').find().toArray(function (err, result) {
-      if (err) throw err
-
-      console.log(result)
-  	  res.send('Hello World! 2');
-  	  client.close();
-    })
-  })
-
-});
-
-
-
-
 
 //ROUTES
 
 
 
 //GETS
+
+// get /meals
+// meals for today
+app.get('/macros', function (req, res) {
+
+	var day = new Date();
+	
+	var daily_totals = {
+        Calories: 0,
+        Protein: 0,
+        Fat: 0,
+        Carbs: 0,
+        Fiber: 0
+      }
+	
+	//Meal.find({"User_ID": req.session.userId, "Entry_Date": {"$gte": new Date(day.getYear(), day.getMonth(), day.getDate()), "$lt": new Date(day.getYear(), day.getMonth(), day.getDate()+1)}}, function(err, meals) {
+	Meal.find({"User_ID": req.session.userId}, function(err, meals) {
+	  if (err) return handleError(err);
+	  	//console.log(meals);
+	    var arrayLength = meals.length;
+		for (var i = 0; i < arrayLength; i++) {
+	      	//console.log(meals[i]["Calories"]);
+			daily_totals["Calories"] = daily_totals["Calories"] + parseInt(meals[i]["Calories"]);
+			daily_totals["Protein"] = daily_totals["Protein"] +	parseInt(meals[i]["Protein"]);
+			daily_totals["Fat"] = daily_totals["Fat"] + parseInt(meals[i]["Fat"]);
+			daily_totals["Carbs"] = daily_totals["Carbs"] + parseInt(meals[i]["Carbs"]);
+			daily_totals["Fiber"] = daily_totals["Fiber"] + parseInt(meals[i]["Fiber"]);
+		}
+
+		console.log("done");
+		//return daily_totals;
+
+		console.log(daily_totals);
+		res.setHeader('Content-Type', 'application/json');
+  		res.json(daily_totals);
+	});
+})
 
 // get /meals
 // meals for today
@@ -181,7 +147,7 @@ app.get('/meals', function (req, res) {
   	  client.close();
     })
   })
-  
+
 })
 
 // get /meals/day
