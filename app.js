@@ -99,13 +99,14 @@ app.get('/macros', function (req, res) {
         Fiber: 0
       }
 	
+	//console.log(new Date(day.getFullYear(),day.getMonth(),day.getDate()));
 	//Meal.find({"User_ID": req.session.userId, "Entry_Date": {"$gte": new Date(day.getYear(), day.getMonth(), day.getDate()), "$lt": new Date(day.getYear(), day.getMonth(), day.getDate()+1)}}, function(err, meals) {
-	Meal.find({"User_ID": req.session.userId}, function(err, meals) {
+	Meal.find({"User_ID": req.session.userId, "Entry_Date": {$gte: new Date(day.getFullYear(),day.getMonth(),day.getDate())}}, function(err, meals) {
 	  if (err) return handleError(err);
-	  	//console.log(meals);
+	  	
 	    var arrayLength = meals.length;
 		for (var i = 0; i < arrayLength; i++) {
-	      	//console.log(meals[i]["Calories"]);
+	      	//console.log(meals[i]["Entry_Date"]);
 			daily_totals["Calories"] = daily_totals["Calories"] + parseInt(meals[i]["Calories"]);
 			daily_totals["Protein"] = daily_totals["Protein"] +	parseInt(meals[i]["Protein"]);
 			daily_totals["Fat"] = daily_totals["Fat"] + parseInt(meals[i]["Fat"]);
@@ -113,10 +114,10 @@ app.get('/macros', function (req, res) {
 			daily_totals["Fiber"] = daily_totals["Fiber"] + parseInt(meals[i]["Fiber"]);
 		}
 
-		console.log("done");
+		//console.log("done");
 		//return daily_totals;
 
-		console.log(daily_totals);
+		//console.log(daily_totals);
 		res.setHeader('Content-Type', 'application/json');
   		res.json(daily_totals);
 	});
