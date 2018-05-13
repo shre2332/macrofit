@@ -26,11 +26,6 @@ mongoose.connect('mongodb://localhost/testdb');
 var routes = require('./routes/router.js');
 app.use('/', routes);
 
-app.post('/someUrl', function (req, res) {
-	//res.send('Hello World! 2');
-	res.setHeader('Content-Type', 'application/json');
-  	res.json({ok: "okay"});
-})
 
 app.get('/create_account', function (req, res) {
   
@@ -167,7 +162,7 @@ app.get('/food', function (req, res) {
     foods.forEach(function(food) {
       foodMap[food._id] = food;
     });
-	res.setHeader('Content-Type', 'application/json');
+	  res.setHeader('Content-Type', 'application/json');
   	res.json(foodMap);
   })
 })
@@ -210,15 +205,19 @@ app.post('/add_meal', function (req, res) {
 		          return next(err);
 		        } else {
 		          //foodMap = food;
+              var new_grams = req.body.grams;
+              var food_grams = food["Grams"];
+              var gram_ratio = new_grams/food_grams;
+
 		          mealData = {
 	        	  	Food_ID: String(req.body.food_id),
 	        	  	User_ID: String(req.session.userId),
-		          	Grams: req.body.grams,
-		          	Calories: parseInt(food["Calories"]),
-		          	Protein: parseInt(food["Protein"]),
-		          	Fat: parseInt(food["Fat"]),
-		          	Carbs: parseInt(food["Carbs"]),
-		          	Fiber: parseInt(food["Fiber"])
+		          	Grams: new_grams,
+		          	Calories: (parseInt(food["Calories"]) * gram_ratio),
+		          	Protein: (parseInt(food["Protein"]) * gram_ratio),
+		          	Fat: (parseInt(food["Fat"]) * gram_ratio),
+		          	Carbs: (parseInt(food["Carbs"]) * gram_ratio),
+		          	Fiber: (parseInt(food["Fiber"]) * gram_ratio)
 	      		  }
 
 	      		  Meal.create(mealData, function (error, meal) {
