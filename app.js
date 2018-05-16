@@ -10,6 +10,7 @@ app.use(express.urlencoded()); // to support URL-encoded bodies
 var User = require('./models/user.js');
 var Meal = require('./models/meal.js');
 var Food = require('./models/food.js');
+var Mac_Goal = require('./models/mac_goal.js');
 
 var session = require('express-session');
 //use sessions for tracking logins
@@ -74,6 +75,33 @@ app.post('/create_food', function (req, res) {
 })
 
 
+app.post('/create_mac_goal', function (req, res) {
+  if (req.body.calories &&
+      req.body.protein &&
+      req.body.fat &&
+      req.body.carbs &&
+      req.body.fiber) {
+
+	      var macGoalData = {
+	        User_ID: String(req.session.userId),
+	        Calories: req.body.calories,
+	        Protein: req.body.protein,
+	        Fat: req.body.fat,
+	        Carbs: req.body.carbs,
+	        Fiber: req.body.fiber
+	      }
+
+	      Mac_Goal.create(macGoalData, function (error, goal) {
+	        if (error) {
+	          return next(error);
+	        } else {
+	          res.setHeader('Content-Type', 'application/json');
+  			    res.json({success: true});
+	        }
+	      });
+	}
+})
+
 //ROUTES
 
 
@@ -117,6 +145,68 @@ app.get('/macros', function (req, res) {
   		res.json(daily_totals);
 	});
 })
+
+
+// get /remaining
+// remaining macros for today
+app.get('/remaining_macros', function (req, res) {
+
+	var day = new Date();
+	
+	var daily_totals = {
+        Calories: 0,
+        Protein: 0,
+        Fat: 0,
+        Carbs: 0,
+        Fiber: 0
+      }
+	
+	Meal.find({"User_ID": req.session.userId, "Entry_Date": {$gte: new Date(day.getFullYear(),day.getMonth(),day.getDate())}}, function(err, meals) {
+	  if (err) return handleError(err);
+	  	
+	  var arrayLength = meals.length;
+	  for (var i = 0; i < arrayLength; i++) {
+		daily_totals["Calories"] = daily_totals["Calories"] + parseInt(meals[i]["Calories"]);
+		daily_totals["Protein"] = daily_totals["Protein"] +	parseInt(meals[i]["Protein"]);
+		daily_totals["Fat"] = daily_totals["Fat"] + parseInt(meals[i]["Fat"]);
+		daily_totals["Carbs"] = daily_totals["Carbs"] + parseInt(meals[i]["Carbs"]);
+		daily_totals["Fiber"] = daily_totals["Fiber"] + parseInt(meals[i]["Fiber"]);
+	   }
+		
+	  var remData = {};
+
+  	  Mac_Goal.findOne({"User_ID": String(req.session.userId)})
+	  .exec(function (error, goal) {
+	    if (error) {
+		  return next(error);
+		} else {
+		  if (goal === null) {
+		    var err = new Error('Not found');
+		    err.status = 400;
+		    return next(err);
+		  } else {
+
+		  	 console.log(parseInt(goal["Calories"]));
+             console.log(daily_totals["Calories"]);
+
+		     remData = {
+	           Calories: parseInt(goal["Calories"]) - daily_totals["Calories"],
+	           Protein: parseInt(goal["Protein"]) - daily_totals["Protein"],
+		       Fat: parseInt(goal["Fat"]) - daily_totals["Fat"],
+		       Carbs: parseInt(goal["Carbs"]) - daily_totals["Carbs"],
+		       Fiber: parseInt(goal["Fiber"]) - daily_totals["Fiber"]
+	      	 }
+	      		
+	      	 console.log(remData);
+			 res.setHeader('Content-Type', 'application/json');
+		  	 res.json(remData);
+		  }
+		}
+      })
+    })
+})
+
+
 
 // get /meals
 // meals for today

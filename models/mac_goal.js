@@ -1,11 +1,6 @@
 var mongoose = require('mongoose');
 
 var MacGoalSchema = new mongoose.Schema({
-  Mac_Goal_ID: {
-    type: String,//should be object id
-    required: true,
-    trim: true
-  },
   User_ID: {
     type: String,//should be object id
     required: true,

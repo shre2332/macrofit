@@ -79,6 +79,29 @@
 
 	  <h3 ng-model="create_food_confirmed">{{create_food_confirmed}}</h3>
 
+	  <br />
+	  <h3>CREATE MACRO GOAL</h3>
+	  <p>Calories: <input type="text" ng-model="goal_calories"></p>
+	  <p>Fat: <input type="text" ng-model="goal_fat"></p>
+	  <p>Carbs: <input type="text" ng-model="goal_carbs"></p>
+	  <p>Protein: <input type="text" ng-model="goal_protein"></p>
+	  <p>Fiber: <input type="text" ng-model="goal_fiber"></p>
+	  <button ng-click="create_goal_click()">Add</button>
+
+	  <h3 ng-model="create_goal_confirmed">{{create_goal_confirmed}}</h3>
+
+	  <br />
+	  <h3>REMAINING MACROS</h3>
+	  <button ng-click="get_rem_click()">GET</button>
+
+	  <div id="remaining_macros_list">
+	    <p ng-model="cal_rem">{{cal_rem}}</p>
+	    <p ng-model="pro_rem">{{pro_rem}}</p>
+	    <p ng-model="fat_rem">{{fat_rem}}</p>
+	    <p ng-model="carb_rem">{{carb_rem}}</p>
+	    <p ng-model="fib_rem">{{fib_rem}}</p>
+	  </div>
+
 </div>
 
 </body>
@@ -173,6 +196,35 @@ app.controller('myCtrl', function($scope, $http) {
 					
 		    });
     	}
+
+    	$scope.create_goal_click = function() {
+			$http.post("http://localhost:3000/create_mac_goal", 
+			{calories: $scope.goal_calories, fat: $scope.goal_fat, carbs: $scope.goal_carbs, protein: $scope.goal_protein, fiber: $scope.goal_fiber}
+			).then(function(response) {
+				if (response.data.success == true) {		
+					$scope.create_goal_confirmed = "SUCCESS";
+				}
+				else
+				{
+					$scope.create_goal_confirmed = "Failed to create goal";
+				}
+					
+		    });
+    	}
+
+    	$scope.get_rem_click = function() {
+	    	//$http.post("http://localhost:3000/macros", {username: "a"}).then(function(response) {
+	    	$http.get("http://localhost:3000/remaining_macros").then(function(response) {
+	    		//alert(response.data.Calories);
+
+        		$scope.cal_rem = response.data.Calories;
+        		$scope.pro_rem = response.data.Protein;
+        		$scope.fat_rem = response.data.Fat;
+        		$scope.carb_rem = response.data.Carbs;
+        		$scope.fib_rem = response.data.Fiber;
+		    });
+	    }
+
 });
 </script>
 
