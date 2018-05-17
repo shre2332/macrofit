@@ -1,7 +1,53 @@
 <!DOCTYPE html>
 <html>
-<head>
+<!--<head>
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+</head>-->
+
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.js"></script>
+
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.11.2/ui-bootstrap-tpls.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/angular-ui-sortable/0.13.2/sortable.min.js"></script>
+
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/css/bootstrap.css">
+
+    <link rel="stylesheet" href="style.css" />
+    
+    <script>
+		  $( function() {
+		    $( "#tabs" ).tabs();
+		    
+		  } );
+		  
+		  $( function() {
+		   	$(".accordion").accordion({
+		      heightStyle: "fill"
+		    });
+		 
+		    $( "#accordion-resizer" ).resizable({
+		      minHeight: 300,
+		      minWidth: 100,
+		      resize: function() {
+		        $(".accordionHeader").accordion( "refresh" );
+		      }
+		    });
+	  	} );
+	  	
+	  </script>
+	  	
+	  <style>
+	  	.logout_button {
+	  		position: absolute;
+		    right: 0;
+		    top: 0;
+		    text-align: center;
+	  	}
+	  </style>
 </head>
 
 <body>
@@ -10,97 +56,195 @@
 
 <div ng-app="myApp" ng-controller="myCtrl">
 
-	  <div id="login_block">
-		  <h3>LOGIN</h3>
-		  <p>Username: <input type="text" ng-model="username"></p>
-		  <p>Password: <input type="text" ng-model="password"></p>
-		  <button ng-click="login_click()">Login</button>
-		  <p>{{username}}</p>
-		  <p>{{password}}</p>
-		</div>
-	  
-	  <h3 ng-model="username_confirmed">{{username_confirmed}}</h3>
-	  
-	  <br />
-	  <h3>FIND FOOD</h3>
-	  <p><input type="text" ng-model="search_food_text"></p>
-	  <button ng-click="search_food_click()">Search Food</button>
-	  <ul id="found_foods_list">
-	  	<li ng-repeat="x in search_food_data">
-	  		<button ng-click="food_select_click($event)" ng-attr-id="{{x._id}}">
-    			{{ x.Name + ", " + x._id }}
-    		</button>
-  		</li>
+	<div class="header">
+		<p>MACROFIT</p>
+		<button class="logout_button ui-button" ng-click="logout_click()">LOGOUT</button>
+	</div>
+
+	<div id="tabs">
+	  <ul>
+	    <li><a href="#tabs-1">Profile</a></li>
+	    <li><a href="#tabs-2">Log</a></li>
+	    <li><a href="#tabs-3">Progress</a></li>
+	    <li><a href="#tabs-4">Create</a></li>
+	    <li><a href="#tabs-5">Goals</a></li>
 	  </ul>
-	  <p>Add Meal Grams: <input type="text" ng-model="add_meal_grams"></p>
-	  <h3 ng-model="add_meal_confirmed">{{add_meal_confirmed}}</h3>
-	  <br />
 	  
-	  <h3>CHECK MEAL</h3>
-	  <p><input type="text" ng-model="search_meals_text"></p>
-	  <button ng-click="check_meals_click()">Check Meals</button>
-	  <ul id="found_meals_list">
-	  	<li ng-repeat="x in search_meals_data">
-	  		<button ng-click="meal_select_click($event)" ng-attr-id="{{x._id}}">
-    			{{ x.Name + ', ' + x._id }}
-    		</button>
-  		</li>
-	  </ul>	
-	  <br />
-
-	  <h3>CHECK MACROS</h3>
-	  <button ng-click="check_macros_click()">Check Macros</button>
-	  <div id="macros_list">
-	    <p ng-model="date">{{date}}</p>
-	    <p ng-model="calories">{{calories}}</p>
-	    <p ng-model="protein">{{protein}}</p>
-	    <p ng-model="fat">{{fat}}</p>
-	    <p ng-model="carbs">{{carbs}}</p>
-	    <p ng-model="fiber">{{fiber}}</p>
-	    <!--<ul id="found_foods_list_macros">
-	  		<li ng-repeat="x in search_food_data_macros">
-	  			<button ng-click="food_select_click($event)" ng-attr-id="{{x._id}}">
-    				{{ x.name + ', ' + x._id }}
-    			</button>
-  			</li>
-	  	</ul>-->	
-	  </div>	
-	  
-	  <br />
-	  <h3>CREATE FOOD</h3>
-	  <p>Name: <input type="text" ng-model="create_food_name"></p>
-	  <p>Grams: <input type="text" ng-model="create_grams"></p>
-	  <p>Calories: <input type="text" ng-model="create_calories"></p>
-	  <p>Fat: <input type="text" ng-model="create_fat"></p>
-	  <p>Carbs: <input type="text" ng-model="create_carbs"></p>
-	  <p>Protein: <input type="text" ng-model="create_protein"></p>
-	  <p>Fiber: <input type="text" ng-model="create_fiber"></p>
-	  <button ng-click="create_food_click()">Add</button>
-
-	  <h3 ng-model="create_food_confirmed">{{create_food_confirmed}}</h3>
-
-	  <br />
-	  <h3>CREATE MACRO GOAL</h3>
-	  <p>Calories: <input type="text" ng-model="goal_calories"></p>
-	  <p>Fat: <input type="text" ng-model="goal_fat"></p>
-	  <p>Carbs: <input type="text" ng-model="goal_carbs"></p>
-	  <p>Protein: <input type="text" ng-model="goal_protein"></p>
-	  <p>Fiber: <input type="text" ng-model="goal_fiber"></p>
-	  <button ng-click="create_goal_click()">Add</button>
-
-	  <h3 ng-model="create_goal_confirmed">{{create_goal_confirmed}}</h3>
-
-	  <br />
-	  <h3>REMAINING MACROS</h3>
-	  <button ng-click="get_rem_click()">GET</button>
-
-	  <div id="remaining_macros_list">
-	    <p ng-model="cal_rem">{{cal_rem}}</p>
-	    <p ng-model="pro_rem">{{pro_rem}}</p>
-	    <p ng-model="fat_rem">{{fat_rem}}</p>
-	    <p ng-model="carb_rem">{{carb_rem}}</p>
-	    <p ng-model="fib_rem">{{fib_rem}}</p>
+	  <div id="tabs-1">
+			<div class="accordion">
+				<h3>LOGIN</h3>
+				<div>
+					<p>Username: <br/><input type="text" ng-model="username"></p>
+					<p>Password: <br/><input type="text" ng-model="password"></p>
+					<button ng-click="login_click()">Login</button>
+					<p>{{username}}</p>
+					<p>{{password}}</p>
+				  
+				  <p ng-model="username_confirmed">WELCOME {{username_confirmed}}</p>
+				</div>
+				<h3>ACCOUNT</h3>
+				<div>
+					<p>account goes here</p>
+				</div>
+				<h3>PERSONAL STATS</h3>
+				<div>
+					<p>stats go here</p>
+				</div>
+				<h3>SETTINGS</h3>
+				<div>
+					<p>settings go here</p>
+				</div>
+			</div>
 	  </div>
+	  
+	  
+	  <div id="tabs-2">
+	  	<div class="accordion">
+		    <h3>FIND FOOD</h3>
+		    	<div>
+					  <p><input type="text" ng-model="search_food_text"></p>
+					  <button ng-click="search_food_click()">Search Food</button>
+					  <ul id="found_foods_list">
+					  	<li ng-repeat="x in search_food_data">
+					  		<button ng-click="food_select_click($event)" ng-attr-id="{{x._id}}">
+				    			{{ x.Name + ", " + x._id }}
+				    		</button>
+				  		</li>
+					  </ul>
+					  <p>Add Meal Grams: <input type="text" ng-model="add_meal_grams"></p>
+					  <p ng-model="add_meal_confirmed">{{add_meal_confirmed}}</p>
+				  </div>
+				  
+				  <h3>CHECK MEAL</h3>
+				  <div>
+					  <p><input type="text" ng-model="search_meals_text"></p>
+					  <button ng-click="check_meals_click()">Check Meals</button>
+					  <ul id="found_meals_list">
+					  	<li ng-repeat="x in search_meals_data">
+					  		<button ng-click="meal_select_click($event)" ng-attr-id="{{x._id}}">
+				    			{{ x.Name + ', ' + x._id }}
+				    		</button>
+				  		</li>
+					  </ul>	
+				  </div>
+					<h3>FIND EXERCISE</h3>
+					<div>
+						<p>exercise go here</p>
+					</div>
+					<h3>CHECK EXERCISES</h3>
+					<div>
+						<p>exercise go here</p>
+					</div>
+			</div>
+	  </div>
+	  
+	  
+	  <div id="tabs-3">
+	  	<div class="accordion">
+				<h3>CHECK MACROS</h3>
+				<div>
+				  <button ng-click="check_macros_click()">Check Macro Goal</button>
+				  <div id="macros_list">
+				    <p ng-model="date">{{date}}</p>
+				    <p ng-model="calories">{{calories}}</p>
+				    <p ng-model="protein">{{protein}}</p>
+				    <p ng-model="fat">{{fat}}</p>
+				    <p ng-model="carbs">{{carbs}}</p>
+				    <p ng-model="fiber">{{fiber}}</p>
+				    <!--<ul id="found_foods_list_macros">
+				  		<li ng-repeat="x in search_food_data_macros">
+				  			<button ng-click="food_select_click($event)" ng-attr-id="{{x._id}}">
+			    				{{ x.name + ', ' + x._id }}
+			    			</button>
+			  			</li>
+				  	</ul>-->	
+				  </div>	
+			  </div>
+			  	
+			  <h3>REMAINING MACROS</h3>
+			  <div>
+				  <button ng-click="get_rem_click()">Get remaining macros</button>
+
+				  <div id="remaining_macros_list">
+				    <p ng-model="cal_rem">{{cal_rem}}</p>
+				    <p ng-model="pro_rem">{{pro_rem}}</p>
+				    <p ng-model="fat_rem">{{fat_rem}}</p>
+				    <p ng-model="carb_rem">{{carb_rem}}</p>
+				    <p ng-model="fib_rem">{{fib_rem}}</p>
+				  </div>
+				</div>
+				<h3>CHECK PROGRESS</h3>
+			  <div>
+			  	<p>progress reporting will go here</p>
+			  </div>
+			  <h3>CHECK EXERCISE</h3>
+				<div>
+					<p>exercise go here</p>
+				</div>
+				<h3>REMAINING EXERCISE</h3>
+				<div>
+					<p>exercise go here</p>
+				</div>
+			</div>
+	  </div>
+	  
+	  
+	  <div id="tabs-4">
+	  	<div class="accordion">
+	    	<h3>CREATE FOOD</h3>
+	    	<div>
+				  <p>Name: <br/><input type="text" ng-model="create_food_name"></p>
+				  <p>Grams: <br/><input type="text" ng-model="create_grams"></p>
+				  <p>Calories: <br/><input type="text" ng-model="create_calories"></p>
+				  <p>Fat: <br/><input type="text" ng-model="create_fat"></p>
+				  <p>Carbs: <br/><input type="text" ng-model="create_carbs"></p>
+				  <p>Protein: <br/><input type="text" ng-model="create_protein"></p>
+				  <p>Fiber: <br/><input type="text" ng-model="create_fiber"></p>
+				  <button ng-click="create_food_click()">Add</button>
+
+				  <p ng-model="create_food_confirmed">{{create_food_confirmed}}</p>
+			  </div>
+			  <h3>EDIT FOOD</h3>
+	    	<div>
+	    		<p>edit food will go here</p>
+	    	</div>
+	    	<h3>CREATE EXERCISE MOVE</h3>
+				<div>
+					<p>exercise go here</p>
+				</div>
+				<h3>EDIT EXERCISE MOVE</h3>
+				<div>
+					<p>exercise go here</p>
+				</div>
+			</div>
+	  </div>
+	  
+	  
+	  <div id="tabs-5">
+	  	<div class="accordion">
+		  	<h3>CREATE MACRO GOAL</h3>
+		  	<div>
+				  <p>Calories: <br/><input type="text" ng-model="goal_calories"></p>
+				  <p>Fat: <br/><input type="text" ng-model="goal_fat"></p>
+				  <p>Carbs: <br/><input type="text" ng-model="goal_carbs"></p>
+				  <p>Protein: <br/><input type="text" ng-model="goal_protein"></p>
+				  <p>Fiber: <br/><input type="text" ng-model="goal_fiber"></p>
+				  <button ng-click="create_goal_click()">Add</button>
+
+				  <p ng-model="create_goal_confirmed">{{create_goal_confirmed}}</p>
+				</div>
+				<h3>CREATE EXERCISE GOAL</h3>
+				<div>
+					<p>exercise go here</p>
+				</div>
+				<h3>CURRENT GOALS</h3>
+		  	<div>
+				  <p>current goals will go here</p>
+				</div>
+			</div>
+	  </div>
+	  
+	</div>
 
 </div>
 
@@ -181,7 +325,6 @@ app.controller('myCtrl', function($scope, $http) {
         	//	$scope.myData = response.data;
 		    //});
 	    }
-
 	    $scope.create_food_click = function() {
 			$http.post("http://localhost:3000/create_food", 
 			{name: $scope.create_food_name, grams: $scope.create_grams, calories: $scope.create_calories, fat: $scope.create_fat, carbs: $scope.create_carbs, protein: $scope.create_protein, fiber: $scope.create_fiber}
@@ -196,7 +339,6 @@ app.controller('myCtrl', function($scope, $http) {
 					
 		    });
     	}
-
     	$scope.create_goal_click = function() {
 			$http.post("http://localhost:3000/create_mac_goal", 
 			{calories: $scope.goal_calories, fat: $scope.goal_fat, carbs: $scope.goal_carbs, protein: $scope.goal_protein, fiber: $scope.goal_fiber}
@@ -211,12 +353,10 @@ app.controller('myCtrl', function($scope, $http) {
 					
 		    });
     	}
-
     	$scope.get_rem_click = function() {
 	    	//$http.post("http://localhost:3000/macros", {username: "a"}).then(function(response) {
 	    	$http.get("http://localhost:3000/remaining_macros").then(function(response) {
 	    		//alert(response.data.Calories);
-
         		$scope.cal_rem = response.data.Calories;
         		$scope.pro_rem = response.data.Protein;
         		$scope.fat_rem = response.data.Fat;
@@ -224,7 +364,6 @@ app.controller('myCtrl', function($scope, $http) {
         		$scope.fib_rem = response.data.Fiber;
 		    });
 	    }
-
 });
 </script>
 
