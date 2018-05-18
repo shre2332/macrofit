@@ -22,12 +22,12 @@
 		  $( function() {
 		    $( "#tabs" ).tabs();
 		    
-		  } );
+		  	} );
 		  
-		  $( function() {
-		   	$(".accordion").accordion({
-		      heightStyle: "fill"
-		    });
+		  	$( function() {
+			   	$(".accordion").accordion({
+			      heightStyle: "fill"
+			    });
 		 
 		    $( "#accordion-resizer" ).resizable({
 		      minHeight: 300,
@@ -36,7 +36,57 @@
 		        $(".accordionHeader").accordion( "refresh" );
 		      }
 		    });
+		    
+		    //$( "#logout_button" ).button().on( "click", function() {
+      	//	dialog.dialog( "open" );
+    		//});
+		    
+		    //Initialize dialog
+				$("#login_dialog").dialog({
+				    autoOpen: false,
+				    show: {
+				        effect: "fade",
+				        duration: 500
+				    },
+				    hide: {
+				        effect: "fade",
+				        duration: 500
+				    }
+				});
+				
+				//Initialize dialog
+				$("#create_account_dialog").dialog({
+				    autoOpen: false,
+				    show: {
+				        effect: "fade",
+				        duration: 500
+				    },
+				    hide: {
+				        effect: "fade",
+				        duration: 500
+				    }
+				});
+
+				//Open it when #opener is clicked
+				$("#logout_button").click(function () {
+						$("#create_account_dialog").dialog('close');
+				    $("#login_dialog").dialog("open");
+				});
+				
+				//Open it when #opener is clicked
+				$("#login_create_account").click(function () {
+						$("#login_dialog").dialog('close');
+				    $("#create_account_dialog").dialog("open");
+				});
+
+				//When the button in the form is clicked, take the input value and set that as the value of `.myTarget`
+				$('.formSaver').on('click', function () {
+				    $('.myTarget').text($('.myInput').val());
+				    $("#login_dialog").dialog('close');
+				});
+		    
 	  	} );
+	  	
 	  	
 	  </script>
 	  	
@@ -47,6 +97,14 @@
 		    top: 0;
 		    text-align: center;
 	  	}
+	  	
+	  	#login_dialog {
+      	display:none;
+      }
+      
+      #create_account_dialog {
+      	display:none;
+      }
 	  </style>
 </head>
 
@@ -55,10 +113,32 @@
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
 
 <div ng-app="myApp" ng-controller="myCtrl">
-
+	
+	<div id="login_dialog" title="LOGIN">
+    <p>Username: <br/><input type="text" ng-model="username"></p>
+		<p>Password: <br/><input type="text" ng-model="password"></p>
+		<button ng-click="login_click()">Login</button>
+		<br/><br/>
+		<button id="login_create_account" ng-click="login_create_account_click()">Create New Account</button>
+		<p>{{username}}</p>
+		<p>{{password}}</p>
+  </div>
+    
+  <div id="create_account_dialog" title="CREATE ACCOUNT">
+  	<label for="username label">Username: </label>
+    <input type="text" id="username" name="username" ng-model="new_username" />
+    <label for="email label">Email: </label>
+    <input type="text" id="email" name="email" ng-model="new_email" />
+    <label for="password label">Password: </label>
+    <input type="text" id="password" name="password" ng-model="new_password" />
+    <label for="password conf label">Password Conformation: </label>
+    <input type="text" id="passwordConf" name="passwordConf" ng-model="new_passwordConf" />
+    <button ng-click="create_account_click()">Create</button>
+	</div>
+    
 	<div class="header">
 		<p>MACROFIT</p>
-		<button class="logout_button ui-button" ng-click="logout_click()">LOGOUT</button>
+		<button id="logout_button" class="logout_button ui-button" ng-click="logout_click()">LOGOUT</button>
 	</div>
 
 	<div id="tabs">
@@ -253,28 +333,52 @@
 <script>
 var app = angular.module('myApp', []);
 app.controller('myCtrl', function($scope, $http) {
-		$scope.login_click = function() {
-			$http.post("http://localhost:3000/login", 
-			{login_email: $scope.username, login_username: $scope.username, login_password: $scope.password}
-			).then(function(response) {
-				if (response.data.success == true) {
-					var x = document.getElementById("login_block");
-				    if (x.style.display === "none") {
-				        x.style.display = "block";
-				    } else {
-				        x.style.display = "none";
-				    }
-					
-					$scope.username_confirmed = "WELCOME " + response.data.username + "  ID: " + response.data.user_id ;
-				}
-				else
-				{
-					$scope.username_confirmed = "Failed to log in";
-				}
-					
-		    });
-   			$scope.username= "John";
-    		$scope.password= "Doe";
+			$scope.login_click = function() {
+				$http.post("http://localhost:3000/login", 
+				{login_email: $scope.username, login_username: $scope.username, login_password: $scope.password}
+				).then(function(response) {
+					if (response.data.success == true) {
+						var x = document.getElementById("login_block");
+					    if (x.style.display === "none") {
+					        x.style.display = "block";
+					    } else {
+					        x.style.display = "none";
+					    }
+						
+						$scope.username_confirmed = "WELCOME " + response.data.username + "  ID: " + response.data.user_id ;
+					}
+					else
+					{
+						$scope.username_confirmed = "Failed to log in";
+					}
+						
+			  });
+	   		$scope.username= "John";
+	    	$scope.password= "Doe";
+    	}
+    	
+    	$scope.create_account_click = function() {
+				$http.post("http://localhost:3000/login", 
+				{email: $scope.new_username, username: $scope.new_email, password: $scope.new_password, passwordConf: $scope.new_passwordConf}
+				).then(function(response) {
+					if (response.data.success == true) {
+						var x = document.getElementById("login_block");
+					    if (x.style.display === "none") {
+					        x.style.display = "block";
+					    } else {
+					        x.style.display = "none";
+					    }
+						
+						$scope.username_confirmed = "WELCOME " + response.data.username + "  ID: " + response.data.user_id ;
+					}
+					else
+					{
+						$scope.username_confirmed = "Failed to log in";
+					}
+						
+			  });
+	   		$scope.username= "John";
+	    	$scope.password= "Doe";
     	}
     	
     	$scope.search_food_click = function() {
