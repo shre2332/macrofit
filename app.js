@@ -11,6 +11,7 @@ var User = require('./models/user.js');
 var Meal = require('./models/meal.js');
 var Food = require('./models/food.js');
 var Mac_Goal = require('./models/mac_goal.js');
+var Mac_Goal = require('./models/user_stats.js');
 
 var session = require('express-session');
 //use sessions for tracking logins
