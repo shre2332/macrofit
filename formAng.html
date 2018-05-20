@@ -5,23 +5,30 @@
 </head>-->
 
 <head>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
 
     <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.js"></script>
 
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.11.2/ui-bootstrap-tpls.min.js"></script>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/angular-ui-sortable/0.13.2/sortable.min.js"></script>
+    <!--<script src="http://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.11.2/ui-bootstrap-tpls.min.js"></script>-->
+    <!--<script src="http://cdnjs.cloudflare.com/ajax/libs/angular-ui-sortable/0.13.2/sortable.min.js"></script>-->
 
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/css/bootstrap.css">
 
-    <link rel="stylesheet" href="style.css" />
+    <!--<link rel="stylesheet" href="style.css" />-->
     
     <script>
 		  $( function() {
+
+		  	$( ".spinner" ).spinner({
+		   		step: 10, 
+            	min: 0, 
+            	max: 10000
+		   	});
+
 		    $( "#tabs" ).tabs();
-		    
 		  	} );
 		  
 		  	$( function() {
@@ -91,6 +98,24 @@
 	  </script>
 	  	
 	  <style>
+
+	  	table {
+	    font-family: arial, sans-serif;
+	    border-collapse: collapse;
+	    width: 50%;
+	    font-size: 75%;
+		}
+
+		td, th {
+		    border: 1px solid #dddddd;
+		    text-align: left;
+		    padding: 8px;
+		}
+
+		tr:nth-child(even) {
+		    background-color: #dddddd;
+		}
+
 	  	.logout_button {
 	  		position: absolute;
 		    right: 0;
@@ -186,12 +211,44 @@
 					  <button ng-click="search_food_click()">Search Food</button>
 					  <ul id="found_foods_list">
 					  	<li ng-repeat="x in search_food_data">
-					  		<button ng-click="food_select_click($event)" ng-attr-id="{{x._id}}">
-				    			{{ x.Name + ", " + x._id }}
-				    		</button>
+					  		<div>
+					  			<h3>{{x.Name}}</h3>
+					  			<table>
+					  			  <tr>
+								    <th>Serving Size</th>
+								    <th>{{x.Grams}}</th>
+								  </tr>
+								  <tr>
+								    <th>Calories</th>
+								    <th>{{x.Calories}}</th>
+								  </tr>
+								  <tr>
+								    <th>Fat</th>
+								    <th>{{x.Fat}}</th>
+								  </tr>
+								  <tr>
+								    <th>Carbs</th>
+								    <th>{{x.Carbs}}</th>
+								  </tr>
+								  <tr>
+								    <th>Protein</th>
+								    <th>{{x.Protein}}</th>
+								  </tr>
+								  <tr>
+								    <th>Fiber</th>
+								    <th>{{x.Fiber}}</th>
+								  </tr>
+								  <tr>
+								    <th>Grams: <input class="spinner" name="value" ng-attr-id="{{ 'add_meal_grams-' + x._id}}" style="width:30%;">{{load_spinner()}}</th>
+								    <th><button ng-click="food_select_click($event)" ng-attr-id="{{x._id}}">ADD</button></th>
+								  </tr>
+								</table>
+
+						  		<!--<button ng-click="food_select_click($event)" ng-attr-id="{{x._id}}">add</button>-->
+				    		</div>
 				  		</li>
 					  </ul>
-					  <p>Add Meal Grams: <input type="text" ng-model="add_meal_grams"></p>
+					  <p>Grams: <input class="spinner" type="text" ng-model="add_meal_grams"></p>
 					  <p ng-model="add_meal_confirmed">{{add_meal_confirmed}}</p>
 				  </div>
 				  
@@ -201,9 +258,47 @@
 					  <button ng-click="check_meals_click()">Check Meals</button>
 					  <ul id="found_meals_list">
 					  	<li ng-repeat="x in search_meals_data">
-					  		<button ng-click="meal_select_click($event)" ng-attr-id="{{x._id}}">
-				    			{{ x.Name + ', ' + x._id }}
-				    		</button>
+
+					  		<div>
+					  			<h3>meal</h3>
+					  			<table>
+					  			  <tr>
+								    <th>Size</th>
+								    <th>{{x.Grams}}</th>
+								  </tr>
+								  <tr>
+								    <th>Calories</th>
+								    <th>{{x.Calories}}</th>
+								  </tr>
+								  <tr>
+								    <th>Fat</th>
+								    <th>{{x.Fat}}</th>
+								  </tr>
+								  <tr>
+								    <th>Carbs</th>
+								    <th>{{x.Carbs}}</th>
+								  </tr>
+								  <tr>
+								    <th>Protein</th>
+								    <th>{{x.Protein}}</th>
+								  </tr>
+								  <tr>
+								    <th>Fiber</th>
+								    <th>{{x.Fiber}}</th>
+								  </tr>
+								  <tr>
+								    <th>Delete:</th>
+								    <th><button ng-click="meal_select_click($event)" ng-attr-id="{{x._id}}">delete</button></th>
+								  </tr>
+								</table>
+
+						  		<!--<button ng-click="food_select_click($event)" ng-attr-id="{{x._id}}">add</button>-->
+				    		</div>
+
+					  		<div>
+					  			<p>{{x.Name}}</p>
+						  		<button ng-click="meal_select_click($event)" ng-attr-id="{{x._id}}">delete</button>
+					    	</div>
 				  		</li>
 					  </ul>	
 				  </div>
@@ -221,23 +316,35 @@
 	  
 	  <div id="tabs-3">
 	  	<div class="accordion">
-				<h3>CHECK MACROS</h3>
+				<h3>CURRENT MACROS</h3>
 				<div>
-				  <button ng-click="check_macros_click()">Check Macro Goal</button>
-				  <div id="macros_list">
+				  <button ng-click="check_macros_click()">Check Current Macro</button>
+				  <div id="current_macros_list">
 				    <p ng-model="date">{{date}}</p>
-				    <p ng-model="calories">{{calories}}</p>
-				    <p ng-model="protein">{{protein}}</p>
-				    <p ng-model="fat">{{fat}}</p>
-				    <p ng-model="carbs">{{carbs}}</p>
-				    <p ng-model="fiber">{{fiber}}</p>
-				    <!--<ul id="found_foods_list_macros">
-				  		<li ng-repeat="x in search_food_data_macros">
-				  			<button ng-click="food_select_click($event)" ng-attr-id="{{x._id}}">
-			    				{{ x.name + ', ' + x._id }}
-			    			</button>
-			  			</li>
-				  	</ul>-->	
+				    
+				    <h3>Remaining Macros</h3>
+		  			<table>
+					  <tr>
+					    <th>Calories</th>
+					    <th><p ng-model="calories">{{calories}}</p></th>
+					  </tr>
+					  <tr>
+					    <th>Fat</th>
+					    <th><p ng-model="fat">{{fat}}</p></th>
+					  </tr>
+					  <tr>
+					    <th>Carbs</th>
+					    <th><p ng-model="carbs">{{carbs}}</p></th>
+					  </tr>
+					  <tr>
+					    <th>Protein</th>
+					    <th><p ng-model="protein">{{protein}}</p></th>
+					  </tr>
+					  <tr>
+					    <th>Fiber</th>
+					    <th><p ng-model="fiber">{{fiber}}</p></th>
+					  </tr>
+					</table>	
 				  </div>	
 			  </div>
 			  	
@@ -246,13 +353,33 @@
 				  <button ng-click="get_rem_click()">Get remaining macros</button>
 
 				  <div id="remaining_macros_list">
-				    <p ng-model="cal_rem">{{cal_rem}}</p>
-				    <p ng-model="pro_rem">{{pro_rem}}</p>
-				    <p ng-model="fat_rem">{{fat_rem}}</p>
-				    <p ng-model="carb_rem">{{carb_rem}}</p>
-				    <p ng-model="fib_rem">{{fib_rem}}</p>
+
+		  			<h3>Remaining Macros</h3>
+		  			<table>
+					  <tr>
+					    <th>Calories</th>
+					    <th><p ng-model="cal_rem">{{cal_rem}}</p></th>
+					  </tr>
+					  <tr>
+					    <th>Fat</th>
+					    <th><p ng-model="fat_rem">{{fat_rem}}</p></th>
+					  </tr>
+					  <tr>
+					    <th>Carbs</th>
+					    <th><p ng-model="carb_rem">{{carb_rem}}</p></th>
+					  </tr>
+					  <tr>
+					    <th>Protein</th>
+					    <th><p ng-model="pro_rem">{{pro_rem}}</p></th>
+					  </tr>
+					  <tr>
+					    <th>Fiber</th>
+					    <th><p ng-model="fib_rem">{{fib_rem}}</p></th>
+					  </tr>
+					</table>
+				    
 				  </div>
-				</div>
+			  </div>
 				<h3>CHECK PROGRESS</h3>
 			  <div>
 			  	<p>progress reporting will go here</p>
@@ -388,8 +515,8 @@ app.controller('myCtrl', function($scope, $http) {
 	    }
 	    
 	    $scope.food_select_click = function(event) {
-	    	//alert(event.target.id);
-    		
+	    	alert(event.target.id);
+    		alert($scope.add_meal_grams);
     		$http.post("http://localhost:3000/add_meal", 
 			{food_id: event.target.id, grams: $scope.add_meal_grams}
 			).then(function(response) {
@@ -461,13 +588,29 @@ app.controller('myCtrl', function($scope, $http) {
 	    	//$http.post("http://localhost:3000/macros", {username: "a"}).then(function(response) {
 	    	$http.get("http://localhost:3000/remaining_macros").then(function(response) {
 	    		//alert(response.data.Calories);
-        		$scope.cal_rem = response.data.Calories;
-        		$scope.pro_rem = response.data.Protein;
-        		$scope.fat_rem = response.data.Fat;
-        		$scope.carb_rem = response.data.Carbs;
-        		$scope.fib_rem = response.data.Fiber;
+	    		if (response.data.no_goal == true)
+	    		{
+	    			$scope.cal_rem = "no goal set";
+	    		}
+	    		else
+	    		{
+	        		$scope.cal_rem = response.data.Calories;
+	        		$scope.pro_rem = response.data.Protein;
+	        		$scope.fat_rem = response.data.Fat;
+	        		$scope.carb_rem = response.data.Carbs;
+	        		$scope.fib_rem = response.data.Fiber;
+	        	}
 		    });
 	    }
+
+	    $scope.load_spinner = function()
+		{
+		   $( ".spinner" ).spinner({
+		   		step: 10, 
+            	min: 0, 
+            	max: 10000
+		   });
+		}
 });
 </script>
 

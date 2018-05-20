@@ -11,7 +11,7 @@ var User = require('./models/user.js');
 var Meal = require('./models/meal.js');
 var Food = require('./models/food.js');
 var Mac_Goal = require('./models/mac_goal.js');
-var Mac_Goal = require('./models/user_stats.js');
+var User_Stats = require('./models/user_stats.js');
 
 var session = require('express-session');
 //use sessions for tracking logins
@@ -176,7 +176,7 @@ app.get('/remaining_macros', function (req, res) {
 		
 	  var remData = {};
 
-  	  Mac_Goal.findOne({"User_ID": String(req.session.userId)})
+  	  Mac_Goal.findOne({"User_ID": String(req.session.userId), "Active": true})
 	  .exec(function (error, goal) {
 	    if (error) {
 		  return next(error);
@@ -184,13 +184,16 @@ app.get('/remaining_macros', function (req, res) {
 		  if (goal === null) {
 		    var err = new Error('Not found');
 		    err.status = 400;
-		    return next(err);
+		    res.setHeader('Content-Type', 'application/json');
+		  	res.json({no_goal: true});
+		    //return next(err);
 		  } else {
 
 		  	 console.log(parseInt(goal["Calories"]));
              console.log(daily_totals["Calories"]);
 
 		     remData = {
+		       no_goal: false,
 	           Calories: parseInt(goal["Calories"]) - daily_totals["Calories"],
 	           Protein: parseInt(goal["Protein"]) - daily_totals["Protein"],
 		       Fat: parseInt(goal["Fat"]) - daily_totals["Fat"],
@@ -213,26 +216,17 @@ app.get('/remaining_macros', function (req, res) {
 // meals for today
 app.get('/meals', function (req, res) {
 
-  var db_meals;
-  
-  var meals_json = [];
+  var day = new Date();
 
-  var MongoClient = require('mongodb').MongoClient
- 
-  MongoClient.connect('mongodb://localhost:27017', function (err, client) {
-    if (err) throw err
+  Meal.find({"User_ID": req.session.userId, "Entry_Date": {$gte: new Date(day.getFullYear(),day.getMonth(),day.getDate())}}, function(err, meals) {
+    var mealMap = {};
 
-    var db = client.db('testdb');
+    meals.forEach(function(meal) {
+      mealMap[meal._id] = meal;
+    });
 
-    db.collection('test').find().toArray(function (err, result) {
-      if (err) throw err
-
-      console.log(result)
-  	  res.setHeader('Content-Type', 'application/json');
-  	  res.json(result);
-  	  //res.send('Hello World! 2');
-  	  client.close();
-    })
+	res.setHeader('Content-Type', 'application/json');
+  	res.json(mealMap);
   })
 
 })
