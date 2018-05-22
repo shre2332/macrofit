@@ -21,13 +21,11 @@
     
     <script>
 		  $( function() {
-
 		  	$( ".spinner" ).spinner({
 		   		step: 10, 
             	min: 0, 
             	max: 10000
 		   	});
-
 		    $( "#tabs" ).tabs();
 		  	} );
 		  
@@ -73,7 +71,38 @@
 				        duration: 500
 				    }
 				});
-
+				
+				 //Initialize dialog
+				$("#edit_meal_dialog").dialog({
+				    autoOpen: false,
+				    show: {
+				        effect: "fade",
+				        duration: 500
+				    },
+				    hide: {
+				        effect: "fade",
+				        duration: 500
+				    }
+				});
+				
+				 //Initialize dialog
+				$("#edit_food_dialog").dialog({
+				    autoOpen: false,
+				    show: {
+				        effect: "fade",
+				        duration: 500
+				    },
+				    hide: {
+				        effect: "fade",
+				        duration: 500
+				    }
+				});
+				
+				$( "#edit_meal_date" ).datepicker();
+				$( "#edit_meal_date" ).datepicker("setDate", new Date());
+				
+				//$("#edit_meal_dialog").dialog("open");
+				
 				//Open it when #opener is clicked
 				$("#logout_button").click(function () {
 						$("#create_account_dialog").dialog('close');
@@ -85,11 +114,18 @@
 						$("#login_dialog").dialog('close');
 				    $("#create_account_dialog").dialog("open");
 				});
-
 				//When the button in the form is clicked, take the input value and set that as the value of `.myTarget`
 				$('.formSaver').on('click', function () {
 				    $('.myTarget').text($('.myInput').val());
 				    $("#login_dialog").dialog('close');
+				});
+		    //When the button in the form is clicked, take the input value and set that as the value of `.myTarget`
+				$('.edit_food_button').click(function () {
+				    $("#edit_food_dialog").dialog("open");
+				});
+		    //When the button in the form is clicked, take the input value and set that as the value of `.myTarget`
+				$('.edit_meal_button').click(function () {
+				    $("#edit_meal_dialog").dialog("open");
 				});
 		    
 	  	} );
@@ -98,24 +134,20 @@
 	  </script>
 	  	
 	  <style>
-
 	  	table {
 	    font-family: arial, sans-serif;
 	    border-collapse: collapse;
 	    width: 50%;
 	    font-size: 75%;
 		}
-
 		td, th {
 		    border: 1px solid #dddddd;
 		    text-align: left;
 		    padding: 8px;
 		}
-
 		tr:nth-child(even) {
 		    background-color: #dddddd;
 		}
-
 	  	.logout_button {
 	  		position: absolute;
 		    right: 0;
@@ -128,6 +160,14 @@
       }
       
       #create_account_dialog {
+      	display:none;
+      }
+      
+      #edit_meal_dialog {
+      	display:none;
+      }
+      
+      #edit_food_dialog {
       	display:none;
       }
 	  </style>
@@ -159,6 +199,46 @@
     <label for="password conf label">Password Conformation: </label>
     <input type="text" id="passwordConf" name="passwordConf" ng-model="new_passwordConf" />
     <button ng-click="create_account_click()">Create</button>
+	</div>
+	
+	<div id="edit_meal_dialog" title="EDIT MEAL">
+  	<label for="amount">Amount: </label>
+    <input type="text" id="edit_meal_amount" name="edit_meal_amount" ng-model="edit_meal_amount" />
+    <label for="date">Date: </label>
+    <input type="text" id="edit_meal_date" name="edit_meal_date" ng-model="edit_meal_date" />
+    <label for="edit_meal_calories">Calories: </label>
+    <p ng-model="edit_meal_calories">{{edit_meal_calories}}</p>
+    <label for="edit_meal_fat">Fat: </label>
+    <p ng-model="edit_meal_fat">{{edit_meal_fat}}</p>
+    <label for="edit_meal_carbs">Carbs: </label>
+    <p ng-model="edit_meal_carbs">{{edit_meal_carbs}}</p>
+    <label for="edit_meal_protein">Protein: </label>
+    <p ng-model="edit_meal_protein">{{edit_meal_protein}}</p>
+    <label for="edit_meal_fiber">Fiber: </label>
+    <p ng-model="edit_meal_fiber">{{edit_meal_fiber}}</p>
+    <button ng-click="save_edit_meal()">Save</button>
+    <button ng-click="delete_edit_meal()">Delete</button>
+    <button ng-click="discard_edit_food()">Discard</button>
+	</div>
+	
+	<div id="edit_food_dialog" title="EDIT FOOD">
+		<label for="date">Name: </label>
+    <input type="text" id="edit_food_name" name="edit_food_name" ng-model="edit_food_name" />
+  	<label for="amount">Amount: </label>
+    <input type="text" id="edit_food_amount" name="edit_food_amount" ng-model="edit_food_amount" />
+    <label for="edit_calories_food">Calories: </label>
+    <input type="text" id="edit_food_calories" name="edit_food_calories" ng-model="edit_food_calories" />
+    <label for="edit_food_fat">Fat: </label>
+    <input type="text" id="edit_food_fat" name="edit_food_fat" ng-model="edit_food_fat" />
+    <label for="edit_food_carbs">Carbs: </label>
+    <input type="text" id="edit_food_carbs" name="edit_food_carbs" ng-model="edit_food_carbs" />
+    <label for="edit_food_protein">Protein: </label>
+    <input type="text" id="edit_food_protein" name="edit_food_protein" ng-model="edit_food_protein" />
+    <label for="edit_food_fiber">Fiber: </label>
+    <input type="text" id="edit_food_fiber" name="edit_food_fiber" ng-model="edit_food_fiber" />
+    <button ng-click="save_edit_food()">More Fields</button>
+    <button ng-click="save_edit_food()">Create New</button>
+    <button ng-click="delete_edit_food()">Discard</button>
 	</div>
     
 	<div class="header">
@@ -242,6 +322,10 @@
 								    <th>Grams: <input class="spinner" name="value" ng-attr-id="{{ 'add_meal_grams-' + x._id}}" style="width:30%;">{{load_spinner()}}</th>
 								    <th><button ng-click="food_select_click($event)" ng-attr-id="{{x._id}}">ADD</button></th>
 								  </tr>
+								  <tr>
+								    <th>Edit Food: </th>
+								    <th><button ng-attr-class="edit_food_button" ng-click="food_edit_click($event)" ng-attr-id="{{x._id}}">EDIT</button></th>
+								  </tr>
 								</table>
 
 						  		<!--<button ng-click="food_select_click($event)" ng-attr-id="{{x._id}}">add</button>-->
@@ -262,7 +346,11 @@
 					  		<div>
 					  			<h3>meal</h3>
 					  			<table>
-					  			  <tr>
+					  		  <tr>
+								    <th>Food Name</th>
+								    <th>Food Name</th>
+								  </tr>
+					  			<tr>
 								    <th>Size</th>
 								    <th>{{x.Grams}}</th>
 								  </tr>
@@ -285,6 +373,10 @@
 								  <tr>
 								    <th>Fiber</th>
 								    <th>{{x.Fiber}}</th>
+								  </tr>
+								  <tr>
+								    <th>Edit:</th>
+								    <th><button ng-attr-class="edit_food_button" ng-click="meal_edit_click($event)" ng-attr-id="{{x._id}}">edit</button></th>
 								  </tr>
 								  <tr>
 								    <th>Delete:</th>
@@ -602,7 +694,6 @@ app.controller('myCtrl', function($scope, $http) {
 	        	}
 		    });
 	    }
-
 	    $scope.load_spinner = function()
 		{
 		   $( ".spinner" ).spinner({
@@ -611,6 +702,15 @@ app.controller('myCtrl', function($scope, $http) {
             	max: 10000
 		   });
 		}
+		$scope.meal_edit_click = function()
+		{
+			$("#edit_meal_dialog").dialog("open");
+		}
+		$scope.food_edit_click = function()
+		{
+			$("#edit_food_dialog").dialog("open");
+		}
+		
 });
 </script>
 

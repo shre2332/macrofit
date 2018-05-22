@@ -109,8 +109,8 @@ app.post('/create_mac_goal', function (req, res) {
 
 //GETS
 
-// get /meals
-// meals for today
+// get /macros
+// macros for today
 app.get('/macros', function (req, res) {
 
 	var day = new Date();
@@ -233,8 +233,23 @@ app.get('/meals', function (req, res) {
 
 // get /meals/day
 // meals for specified day
-app.get('/meals/day', function (req, res) {
-  res.send('get /meals/day')
+app.get('/meals:day', function (req, res) {
+
+  var day = new Date();
+  
+  day = req.params.day;
+
+  Meal.find({"User_ID": req.session.userId, "Entry_Date": {$gte: new Date(day.getFullYear(),day.getMonth(),day.getDate())}}, function(err, meals) {
+    var mealMap = {};
+
+    meals.forEach(function(meal) {
+      mealMap[meal._id] = meal;
+    });
+
+	res.setHeader('Content-Type', 'application/json');
+  	res.json(mealMap);
+  })
+
 })
 
 // get /food/search_string
