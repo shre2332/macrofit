@@ -51,9 +51,6 @@ var FoodSchema = new mongoose.Schema({
   Calories_From_Fat: {
     type: Number
   },
-  Serving_Size: {
-    type: Number
-  },
   Saturated_Fat: {
     type: Number
   },
