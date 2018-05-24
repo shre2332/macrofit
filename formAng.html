@@ -348,7 +348,7 @@
 					  			<table>
 					  		  <tr>
 								    <th>Food Name</th>
-								    <th>Food Name</th>
+								    <th>{{x.Food_Name}}</th>
 								  </tr>
 					  			<tr>
 								    <th>Size</th>
@@ -538,8 +538,50 @@
 				</div>
 				<h3>CURRENT GOALS</h3>
 		  	<div>
-				  <p>current goals will go here</p>
-				</div>
+					  <p><input type="text" ng-model="search_goals_text"></p>
+					  <button ng-click="search_goals_click()">Search Goals</button>
+					  <ul id="found_goals_list">
+					  	<li ng-repeat="x in search_goals_data">
+					  		<div>
+					  			<h3>Goal</h3>
+					  			<table>
+					  			<tr>
+								    <th>Active</th>
+								    <th>{{x.Active}}</th>
+								  </tr>
+								  <tr>
+								    <th>Entry Date</th>
+								    <th>{{x.Entry_Date}}</th>
+								  </tr>
+								  <tr>
+								    <th>Calories</th>
+								    <th>{{x.Calories}}</th>
+								  </tr>
+								  <tr>
+								    <th>Fat</th>
+								    <th>{{x.Fat}}</th>
+								  </tr>
+								  <tr>
+								    <th>Carbs</th>
+								    <th>{{x.Carbs}}</th>
+								  </tr>
+								  <tr>
+								    <th>Protein</th>
+								    <th>{{x.Protein}}</th>
+								  </tr>
+								  <tr>
+								    <th>Fiber</th>
+								    <th>{{x.Fiber}}</th>
+								  </tr>
+								  <tr>
+								    <th>Edit Food: </th>
+								    <th><button ng-attr-class="edit_goal_button" ng-click="edit_goal_click($event)" ng-attr-id="{{x._id}}">EDIT</button></th>
+								  </tr>
+								</table>
+				    		</div>
+				  		</li>
+					  </ul>
+				  </div>
 			</div>
 	  </div>
 	  
@@ -605,7 +647,11 @@ app.controller('myCtrl', function($scope, $http) {
         		$scope.search_food_data = response.data;
 		    });
 	    }
-	    
+	    $scope.search_goals_click = function() {
+    		$http.get("http://localhost:3000/goals").then(function(response) {
+        		$scope.search_goals_data = response.data;
+		    });
+	    }
 	    $scope.food_select_click = function(event) {
 	    	alert(event.target.id);
     		alert($scope.add_meal_grams);
@@ -702,13 +748,30 @@ app.controller('myCtrl', function($scope, $http) {
             	max: 10000
 		   });
 		}
-		$scope.meal_edit_click = function()
+		$scope.meal_edit_click = function(event)
 		{
-			$("#edit_meal_dialog").dialog("open");
+			$http.get("http://localhost:3000/meal/" + event.target.id).then(function(response) {
+				document.getElementById("edit_meal_amount").value = response.data.Grams;
+				$scope.edit_meal_calories =response.data.Calories;
+				$scope.edit_meal_fat =response.data.Fat;
+				$scope.edit_meal_carbs =response.data.Carbs;
+				$scope.edit_meal_protein =response.data.Protein;
+				$scope.edit_meal_fiber =response.data.Fiber;
+				$("#edit_meal_dialog").dialog("open");
+			})
 		}
-		$scope.food_edit_click = function()
+		$scope.food_edit_click = function(event)
 		{
-			$("#edit_food_dialog").dialog("open");
+			$http.get("http://localhost:3000/one_food/" + event.target.id).then(function(response) {
+				document.getElementById("edit_food_name").value = response.data.Name;
+				document.getElementById("edit_food_amount").value = response.data.Grams;
+				document.getElementById("edit_food_calories").value = response.data.Calories;
+				document.getElementById("edit_food_fat").value = response.data.Fat;
+				document.getElementById("edit_food_carbs").value = response.data.Carbs;
+				document.getElementById("edit_food_protein").value = response.data.Protein;
+				document.getElementById("edit_food_fiber").value = response.data.Fiber;
+				$("#edit_food_dialog").dialog("open");
+			})
 		}
 		
 });

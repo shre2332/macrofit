@@ -176,7 +176,7 @@ app.get('/remaining_macros', function (req, res) {
 		
 	  var remData = {};
 
-  	  Mac_Goal.findOne({"User_ID": String(req.session.userId), "Active": true})
+  	Mac_Goal.findOne({"User_ID": String(req.session.userId), "Active": true})
 	  .exec(function (error, goal) {
 	    if (error) {
 		  return next(error);
@@ -210,6 +210,35 @@ app.get('/remaining_macros', function (req, res) {
     })
 })
 
+
+// get /meal
+// get one meal
+app.get('/meal/:id', function (req, res) {
+
+	var id = req.params.id;
+
+    Meal.findById(id, function (err, meal) {
+  
+	  res.setHeader('Content-Type', 'application/json');
+  	  res.json(meal);
+    })
+
+})
+
+
+// get /food
+// get one food
+app.get('/one_food/:id', function (req, res) {
+
+	var id = req.params.id;
+
+    Food.findById(id, function (err, food) {
+  
+      res.setHeader('Content-Type', 'application/json');
+  	  res.json(food);
+    })
+
+})
 
 
 // get /meals
@@ -267,6 +296,23 @@ app.get('/food', function (req, res) {
   })
 })
 
+
+// get/goals
+// get goals search
+app.get('/goals', function (req, res) {
+
+  Mac_Goal.find({"User_ID": req.session.userId}, function(err, goals) {
+    var goalsMap = {};
+
+    goals.forEach(function(goal) {
+      goalsMap[goal._id] = goal;
+    });
+	  res.setHeader('Content-Type', 'application/json');
+  	res.json(goalsMap);
+  })
+})
+
+
 // get /food/search_string
 // get food search
 app.get('/food/search_string', function (req, res) {
@@ -295,7 +341,7 @@ app.post('/add_meal', function (req, res) {
   		var mealData = {};
 
   		Food.findById(req.body.food_id)
-		.exec(function (error, food) {
+			.exec(function (error, food) {
 		      if (error) {
 		        return next(error);
 		      } else {
@@ -311,6 +357,7 @@ app.post('/add_meal', function (req, res) {
 
 		          mealData = {
 	        	  	Food_ID: String(req.body.food_id),
+	        	  	Food_Name: String(food["Name"]),
 	        	  	User_ID: String(req.session.userId),
 		          	Grams: new_grams,
 		          	Calories: (parseInt(food["Calories"]) * gram_ratio),
@@ -321,17 +368,17 @@ app.post('/add_meal', function (req, res) {
 	      		  }
 
 	      		  Meal.create(mealData, function (error, meal) {
-			        if (error) {
-			          return next(error);
-			        } else {
-			          res.setHeader('Content-Type', 'application/json');
-		  			  res.json({success: true});
-			        }
-			      });
+			        	if (error) {
+			          	return next(error);
+			        	} else {
+			         	 res.setHeader('Content-Type', 'application/json');
+		  			  		res.json({success: true});
+			        	}
+			      	});
 
 		        }
 		      }
-		    });
+		  });
      
 	}
 })
