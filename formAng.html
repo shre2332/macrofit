@@ -17,6 +17,7 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/css/bootstrap.css">
 
+	<script src="https://cdn.jsdelivr.net/npm/chart.js@2.7.2/dist/Chart.js"></script>
     <!--<link rel="stylesheet" href="style.css" />-->
     
     <script>
@@ -55,7 +56,7 @@
 				    },
 				    hide: {
 				        effect: "fade",
-				        duration: 500
+				        duration: 250
 				    }
 				});
 				
@@ -68,7 +69,7 @@
 				    },
 				    hide: {
 				        effect: "fade",
-				        duration: 500
+				        duration: 250
 				    }
 				});
 				
@@ -81,7 +82,7 @@
 				    },
 				    hide: {
 				        effect: "fade",
-				        duration: 500
+				        duration: 250
 				    }
 				});
 				
@@ -94,7 +95,7 @@
 				    },
 				    hide: {
 				        effect: "fade",
-				        duration: 500
+				        duration: 250
 				    }
 				});
 				
@@ -127,6 +128,14 @@
 				$('.edit_meal_button').click(function () {
 				    $("#edit_meal_dialog").dialog("open");
 				});
+
+				$('#discard_edit_meal_button').click(function () {
+				    $("#edit_meal_dialog").dialog("close");
+				});
+		    //When the button in the form is clicked, take the input value and set that as the value of `.myTarget`
+				$('#discard_edit_food_button').click(function () {
+				    $("#edit_food_dialog").dialog("close");
+				});
 		    
 	  	} );
 	  	
@@ -153,6 +162,14 @@
 		    right: 0;
 		    top: 0;
 		    text-align: center;
+	  	}
+	  	
+	  	#account_button {
+	  		position: absolute;
+		    text-align:center;
+		    left: 50%;
+		    top: 0;
+		    visibility: hidden;
 	  	}
 	  	
 	  	#login_dialog {
@@ -199,9 +216,9 @@
     <label for="password conf label">Password Conformation: </label>
     <input type="text" id="passwordConf" name="passwordConf" ng-model="new_passwordConf" />
     <button ng-click="create_account_click()">Create</button>
-	</div>
+  </div>
 	
-	<div id="edit_meal_dialog" title="EDIT MEAL">
+  <div id="edit_meal_dialog" title="EDIT MEAL">
   	<label for="amount">Amount: </label>
     <input type="text" id="edit_meal_amount" name="edit_meal_amount" ng-model="edit_meal_amount" />
     <label for="date">Date: </label>
@@ -218,11 +235,11 @@
     <p ng-model="edit_meal_fiber">{{edit_meal_fiber}}</p>
     <button ng-click="save_edit_meal()">Save</button>
     <button ng-click="delete_edit_meal()">Delete</button>
-    <button ng-click="discard_edit_food()">Discard</button>
-	</div>
+    <button id="discard_edit_meal_button">Discard</button>
+  </div>
 	
-	<div id="edit_food_dialog" title="EDIT FOOD">
-		<label for="date">Name: </label>
+  <div id="edit_food_dialog" title="EDIT FOOD">
+	<label for="date">Name: </label>
     <input type="text" id="edit_food_name" name="edit_food_name" ng-model="edit_food_name" />
   	<label for="amount">Amount: </label>
     <input type="text" id="edit_food_amount" name="edit_food_amount" ng-model="edit_food_amount" />
@@ -238,12 +255,13 @@
     <input type="text" id="edit_food_fiber" name="edit_food_fiber" ng-model="edit_food_fiber" />
     <button ng-click="save_edit_food()">More Fields</button>
     <button ng-click="save_edit_food()">Create New</button>
-    <button ng-click="delete_edit_food()">Discard</button>
-	</div>
+    <button id="discard_edit_food_button">Discard</button>
+  </div>
     
 	<div class="header">
 		<p>MACROFIT</p>
-		<button id="logout_button" class="logout_button ui-button" ng-click="logout_click()">LOGOUT</button>
+		<button id="account_button" class="account_button ui-button" ng-click="account_button_click()" ng-model="username_account_button">{{username_account_button}}</p>
+		<button id="logout_button" class="logout_button ui-button" ng-click="logout_click()" ng-model="login_logout_button_text" ng-init="login_logout_button_text ='LOGIN'">{{login_logout_button_text}}</button>
 	</div>
 
 	<div id="tabs">
@@ -265,7 +283,7 @@
 					<p>{{username}}</p>
 					<p>{{password}}</p>
 				  
-				  <p ng-model="username_confirmed">WELCOME {{username_confirmed}}</p>
+				  <p ng-model="username_confirmed">{{username_confirmed}}</p>
 				</div>
 				<h3>ACCOUNT</h3>
 				<div>
@@ -414,7 +432,7 @@
 				  <div id="current_macros_list">
 				    <p ng-model="date">{{date}}</p>
 				    
-				    <h3>Remaining Macros</h3>
+				    <h3>Current Macros</h3>
 		  			<table>
 					  <tr>
 					    <th>Calories</th>
@@ -437,7 +455,8 @@
 					    <th><p ng-model="fiber">{{fiber}}</p></th>
 					  </tr>
 					</table>	
-				  </div>	
+				  </div>
+
 			  </div>
 			  	
 			  <h3>REMAINING MACROS</h3>
@@ -470,6 +489,10 @@
 					  </tr>
 					</table>
 				    
+				    <div height="20%" width="60%">
+						<canvas id="myPieChart" width="400" height="400"></canvas>
+					</div>
+
 				  </div>
 			  </div>
 				<h3>CHECK PROGRESS</h3>
@@ -599,14 +622,19 @@ app.controller('myCtrl', function($scope, $http) {
 				{login_email: $scope.username, login_username: $scope.username, login_password: $scope.password}
 				).then(function(response) {
 					if (response.data.success == true) {
-						var x = document.getElementById("login_block");
+						/*var x = document.getElementById("login_block");
 					    if (x.style.display === "none") {
 					        x.style.display = "block";
 					    } else {
 					        x.style.display = "none";
-					    }
+					    }*/
 						
 						$scope.username_confirmed = "WELCOME " + response.data.username + "  ID: " + response.data.user_id ;
+						$scope.username_account_button = response.data.username + " ACCOUNT INFO";
+						document.getElementById("account_button").style.visibility = "visible";
+						$scope.login_logout_button_text = "LOGOUT";
+						$("#login_dialog").dialog("close");
+						
 					}
 					else
 					{
@@ -614,8 +642,8 @@ app.controller('myCtrl', function($scope, $http) {
 					}
 						
 			  });
-	   		$scope.username= "John";
-	    	$scope.password= "Doe";
+	   		//$scope.username= "John";
+	    	//$scope.password= "Doe";
     	}
     	
     	$scope.create_account_click = function() {
@@ -631,6 +659,10 @@ app.controller('myCtrl', function($scope, $http) {
 					    }
 						
 						$scope.username_confirmed = "WELCOME " + response.data.username + "  ID: " + response.data.user_id ;
+						$scope.username_account_button = response.data.username + " ACCOUNT INFO";
+						document.getElementById("account_button").style.visibility = "visible";
+						$scope.login_logout_button_text = "LOGOUT";
+						$("#create_account_dialog").dialog("close");
 					}
 					else
 					{
@@ -638,8 +670,8 @@ app.controller('myCtrl', function($scope, $http) {
 					}
 						
 			  });
-	   		$scope.username= "John";
-	    	$scope.password= "Doe";
+	   		//$scope.username= "John";
+	    	//$scope.password= "Doe";
     	}
     	
     	$scope.search_food_click = function() {
@@ -737,6 +769,31 @@ app.controller('myCtrl', function($scope, $http) {
 	        		$scope.fat_rem = response.data.Fat;
 	        		$scope.carb_rem = response.data.Carbs;
 	        		$scope.fib_rem = response.data.Fiber;
+
+	        		var ctx = document.getElementById("myPieChart");
+
+					var myPieChart = new Chart(ctx, {
+					    type: 'pie',
+					    data: {
+					        labels: ["Fat", "Carbs", "Protein"],
+					        datasets: [{
+					            label: 'Remaining Macros',
+					            data: [response.data.Fat, response.data.Carbs, response.data.Protein],
+					            backgroundColor: [
+					                'rgba(255, 99, 132, 0.2)',
+					                'rgba(54, 162, 235, 0.2)',
+					                'rgba(255, 206, 86, 0.2)'
+					            ],
+					            borderColor: [
+					                'rgba(255,99,132,1)',
+					                'rgba(54, 162, 235, 1)',
+					                'rgba(255, 206, 86, 1)'
+					            ],
+					            borderWidth: 1
+					        }]
+					    },
+					    options: {}
+					});
 	        	}
 		    });
 	    }
@@ -775,6 +832,7 @@ app.controller('myCtrl', function($scope, $http) {
 		}
 		
 });
+
 </script>
 
 </html>
