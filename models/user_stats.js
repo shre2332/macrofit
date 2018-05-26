@@ -8,19 +8,19 @@ var User_Stats_Schema = new mongoose.Schema({
     trim: true
   },
   Height: {
-    type: Number,
+    type: Number
   },
   Weight: {
-    type: Number,
+    type: Number
   },
   Age: {
-    type: Number,
+    type: Number
   },
   Body_Fat_Percentage: {
-    type: Number,
+    type: Number
   },
   Gender: {
-    type: Number,
+    type: Number
   }
 });
 
