@@ -33,7 +33,8 @@
 		  	$( function() {
 			   	$(".accordion").accordion({
 			      //heightStyle: "fill"
-			      heightStyle: "content"
+			      heightStyle: "content",
+			      widthStyle: "content"
 			    });
 		 
 		    $( "#accordion-resizer" ).resizable({
@@ -195,6 +196,11 @@
 
       #rem_mac_graph{
       	position: relative;
+      }
+
+      .container_a{
+      	max-width: 300;
+      	width:80%;
       }
 	  </style>
 </head>
@@ -438,6 +444,7 @@
 	  
 	  
 	  <div id="tabs-3">
+	  	<div class="container_a">
 	  	<div class="accordion">
 				<h3>CURRENT MACROS</h3>
 				<div>
@@ -523,6 +530,7 @@
 					<p>exercise go here</p>
 				</div>
 			</div>
+		</div>
 	  </div>
 	  
 	  
