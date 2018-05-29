@@ -29,6 +29,15 @@ mongoose.connect('mongodb://localhost/testdb');
 var routes = require('./routes/router.js');
 app.use('/', routes);
 
+//var meal_routes = require('./routes/meal_router.js');
+//app.use('/', meal_routes);
+
+var food_routes = require('./routes/food_router.js');
+app.use('/food', food_routes);
+
+//var goal_routes = require('./routes/goal_router.js');
+//app.use('/', goal_routes);*/
+
 
 app.get('/create_account', function (req, res) {
   
@@ -46,7 +55,7 @@ app.get('/', function (req, res) {
 })
 
 
-app.post('/create_food', function (req, res) {
+/*app.post('/create_food', function (req, res) {
   if (req.body.name &&
       req.body.grams &&
       req.body.calories &&
@@ -74,7 +83,7 @@ app.post('/create_food', function (req, res) {
 	        }
 	      });
 	}
-})
+})*/
 
 
 app.post('/create_mac_goal', function (req, res) {
@@ -229,7 +238,7 @@ app.get('/meal/:id', function (req, res) {
 
 // get /food
 // get one food
-app.get('/one_food/:id', function (req, res) {
+/*app.get('/one_food/:id', function (req, res) {
 
 	var id = req.params.id;
 
@@ -239,7 +248,7 @@ app.get('/one_food/:id', function (req, res) {
   	  res.json(food);
     })
 
-})
+})*/
 
 
 // get /meals
@@ -284,7 +293,7 @@ app.get('/meals:day', function (req, res) {
 
 // get /food/search_string
 // get food search
-app.get('/food', function (req, res) {
+/*app.get('/food', function (req, res) {
 
   Food.find({}, function(err, foods) {
     var foodMap = {};
@@ -295,7 +304,7 @@ app.get('/food', function (req, res) {
 	  res.setHeader('Content-Type', 'application/json');
   	res.json(foodMap);
   })
-})
+})*/
 
 
 // get/goals
@@ -311,19 +320,6 @@ app.get('/goals', function (req, res) {
 	  res.setHeader('Content-Type', 'application/json');
   	res.json(goalsMap);
   })
-})
-
-
-// get /food/search_string
-// get food search
-app.get('/food/search_string', function (req, res) {
-  res.send('get /food/search_string')
-})
-
-// get /food/id
-// get food by id
-app.get('/food/id', function (req, res) {
-  res.send('get /food/id')
 })
 
 // get /goals
@@ -419,12 +415,6 @@ app.post('/meal_post', function (req, res) {
 // posts a single meal to the specified day
 app.post('/meal/day', function (req, res) {
   res.send('post /meal/day')
-})
-
-// post /food
-// posts a new food item
-app.post('/food', function (req, res) {
-  res.send('post /food')
 })
 
 // post /goal

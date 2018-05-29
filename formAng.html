@@ -698,7 +698,7 @@ app.controller('myCtrl', function($scope, $http) {
     	}
     	
     	$scope.search_food_click = function() {
-    		$http.get("http://localhost:3000/food").then(function(response) {
+    		$http.get("http://localhost:3000/food/list").then(function(response) {//$http.get("http://localhost:3000/food").then(function(response) {
         		$scope.search_food_data = response.data;
 		    });
 	    }
@@ -748,7 +748,7 @@ app.controller('myCtrl', function($scope, $http) {
 		    //});
 	    }
 	    $scope.create_food_click = function() {
-			$http.post("http://localhost:3000/create_food", 
+			$http.post("http://localhost:3000/food/new", //$http.post("http://localhost:3000/create_food", 
 			{name: $scope.create_food_name, grams: $scope.create_grams, calories: $scope.create_calories, fat: $scope.create_fat, carbs: $scope.create_carbs, protein: $scope.create_protein, fiber: $scope.create_fiber}
 			).then(function(response) {
 				if (response.data.success == true) {		
@@ -844,7 +844,8 @@ app.controller('myCtrl', function($scope, $http) {
 		}
 		$scope.food_edit_click = function(event)
 		{
-			$http.get("http://localhost:3000/one_food/" + event.target.id).then(function(response) {
+			$http.get("http://localhost:3000/food/one/" + event.target.id).then(function(response) {
+				$("#edit_food_dialog").dialog("open");
 				document.getElementById("edit_food_name").value = response.data.Name;
 				document.getElementById("edit_food_amount").value = response.data.Grams;
 				document.getElementById("edit_food_calories").value = response.data.Calories;
@@ -859,13 +860,14 @@ app.controller('myCtrl', function($scope, $http) {
 				$scope.edit_food_carbs = response.data.Carbs;
 				$scope.edit_food_protein = response.data.Protein;
 				$scope.edit_food_fiber = response.data.Fiber;
-				$("#edit_food_dialog").dialog("open");
 			})
 		}
 
 		$scope.create_food_dialog_click = function()
 		{
-			$http.post("http://localhost:3000/create_food", 
+			alert( $scope.edit_food_name +  $scope.edit_food_amount +  $scope.edit_food_calories +  $scope.edit_food_fat +  $scope.edit_food_carbs +  $scope.edit_food_protein +  $scope.edit_food_fiber);
+
+			$http.post("http://localhost:3000/food/new", //$http.post("http://localhost:3000/create_food", 
 			{name: $scope.edit_food_name, grams: $scope.edit_food_amount, calories: $scope.edit_food_calories, fat: $scope.edit_food_fat, carbs: $scope.edit_food_carbs, protein: $scope.edit_food_protein, fiber: $scope.edit_food_fiber}
 			).then(function(response) {
 				if (response.data.success == true) {		
@@ -874,6 +876,7 @@ app.controller('myCtrl', function($scope, $http) {
 				else
 				{
 					//do somthing
+					alert("failed");
 				}
 					
 		    });
