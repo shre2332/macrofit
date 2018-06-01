@@ -22,11 +22,31 @@
     
     <script>
 		  $( function() {
+		  	$body = $("body");
+		  	
+		  	$( "#meal_size_select" ).selectmenu();
+		  	$( "#meal_size_edit" ).selectmenu();
+		  	$( "#food_size_edit" ).selectmenu();
+		  	$( "#food_create_amount_type" ).selectmenu();
+		  	
 		  	$( ".spinner" ).spinner({
 		   		step: 10, 
             	min: 0, 
             	max: 10000
 		   	});
+		   	
+		   	$( ".spinner_bp" ).spinner({
+		   		step: 5, 
+            	min: 0, 
+            	max: 10000
+		   	});
+		   	
+		   	$( ".spinner_bf" ).spinner({
+		   		step: 1, 
+            	min: 0, 
+            	max: 100
+		   	});
+		   	
 		    $( "#tabs" ).tabs();
 		  	} );
 		  
@@ -104,6 +124,10 @@
 				$( "#edit_meal_date" ).datepicker();
 				$( "#edit_meal_date" ).datepicker("setDate", new Date());
 				
+				$( "#pu_date" ).datepicker();
+				$( "#pu_date" ).datepicker("setDate", new Date());
+				
+				
 				//$("#edit_meal_dialog").dialog("open");
 				
 				//Open it when #opener is clicked
@@ -130,7 +154,6 @@
 				$('.edit_meal_button').click(function () {
 				    $("#edit_meal_dialog").dialog("open");
 				});
-
 				$('#discard_edit_meal_button').click(function () {
 				    $("#edit_meal_dialog").dialog("close");
 				});
@@ -145,6 +168,43 @@
 	  </script>
 	  	
 	  <style>
+	  	
+	  /* Start by setting display:none to make this hidden.
+	  Then we position it in relation to the viewport window
+	  with position:fixed. Width, height, top and left speak
+	  for themselves. Background we set to 80% white with
+	  our animation centered, and no-repeating */
+		.modal {
+			z-index:    1000;
+			height:     100px;
+		    width:      100px;
+		    display:    none;
+		    /*display:    none;
+		    position:   absolute;
+		    margin: -100px 0 0 -200px;
+		    z-index:    1000;
+		    top:        50%;
+		    left:       50%;
+		    height:     20%;
+		    width:      20%;*/
+		    background: rgba( 255, 255, 255, .8 ) 
+		                url('http://i.stack.imgur.com/FhHRx.gif') 
+		                50% 50% 
+		                no-repeat;
+		}
+
+		/* When the body has the loading class, we turn
+		   the scrollbar off with overflow:hidden */
+		/*body.loading .modal {
+		    overflow: hidden;   
+		}
+
+		/* Anytime the body has the loading class, our
+		   modal element will be visible 
+		body.loading .modal {
+		    display: block;
+		}*/
+	  	
 	  	table {
 	    font-family: arial, sans-serif;
 	    border-collapse: collapse;
@@ -189,15 +249,12 @@
       #edit_food_dialog {
       	display:none;
       }
-
       #hidden_stuff {
       	display:none;
       }
-
       #rem_mac_graph{
       	position: relative;
       }
-
       .container_a{
       	max-width: 300;
       	width:80%;
@@ -208,6 +265,8 @@
 <body>
 
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+
+<div class="modal"><!-- Place at bottom of page --></div>
 
 <div id="hidden_stuff">
 	<div ng-model="saved"></div>
@@ -238,6 +297,10 @@
   </div>
 	
   <div id="edit_meal_dialog" title="EDIT MEAL">
+  	<select name="meal_size_edit" id="meal_size_edit">
+			<option selected="selected">Grams</option>
+			<option>Ounces</option>
+		</select>
   	<label for="amount">Amount: </label>
     <input type="text" id="edit_meal_amount" name="edit_meal_amount" ng-model="edit_meal_amount" />
     <label for="date">Date: </label>
@@ -260,6 +323,10 @@
   <div id="edit_food_dialog" title="EDIT FOOD">
 	<label for="name">Name: </label>
     <input type="text" id="edit_food_name" name="edit_food_name" ng-model="edit_food_name" />
+    <select name="food_size_edit" id="food_size_edit">
+			<option selected="selected">Grams</option>
+			<option>Ounces</option>
+		</select>
   	<label for="amount">Amount: </label>
     <input type="text" id="edit_food_amount" name="edit_food_amount" ng-model="edit_food_amount" />
     <label for="edit_calories_food">Calories: </label>
@@ -369,7 +436,12 @@
 				    		</div>
 				  		</li>
 					  </ul>
-					  <p>Grams: <input class="spinner" type="text" ng-model="add_meal_grams"></p>
+					  <label for="meal_size_select">Unit Type:</label>
+					  <select name="meal_size_select" id="meal_size_select">
+      				<option selected="selected">Grams</option>
+      				<option>Ounces</option>
+    				</select>
+					  <input class="spinner" type="text" ng-model="add_meal_grams">
 					  <p ng-model="add_meal_confirmed">{{add_meal_confirmed}}</p>
 				  </div>
 				  
@@ -431,6 +503,23 @@
 				  		</li>
 					  </ul>	
 				  </div>
+				  
+				  <h3>LOG PROGRESS UPDATE</h3>
+		    	<div>
+						<label for="date">Date: </label>
+    				<input type="text" id="pu_date" name="pu_date" ng-model="pu_date" />
+    				<label for="me">Unit Type:</label>
+					  <select name="me" id="me">
+      				<option selected="selected">Pounds</option>
+      				<option>Kilograms</option>
+    				</select>
+					  <p>Weight: <br/><input type="text" ng-model="weight_pu"></p>
+					  <p>Blood Pressue: <br/><input class="spinner_bp" type="text" ng-model="bp_over_pu"><input class="spinner_bp" type="text" ng-model="bp_under_pu"></p>
+					  <p>Body Fat Percentage: <br/><input class="spinner_bf" type="text" ng-model="bf_pu"></p>
+					  <button ng-click="progress_update_click()">Add</button>
+					  <p ng-model="add_progress_confirmed">{{add_progress_confirmed}}</p>
+				  </div>
+				  
 					<h3>FIND EXERCISE</h3>
 					<div>
 						<p>exercise go here</p>
@@ -539,7 +628,11 @@
 	    	<h3>CREATE FOOD</h3>
 	    	<div>
 				  <p>Name: <br/><input type="text" ng-model="create_food_name"></p>
-				  <p>Grams: <br/><input type="text" ng-model="create_grams"></p>
+				  <select name="food_create_amount_type" id="food_create_amount_type">
+						<option selected="selected">Grams</option>
+						<option>Ounces</option>
+					</select>
+				  <p><br/><input type="text" ng-model="create_grams"></p>
 				  <p>Calories: <br/><input type="text" ng-model="create_calories"></p>
 				  <p>Fat: <br/><input type="text" ng-model="create_fat"></p>
 				  <p>Carbs: <br/><input type="text" ng-model="create_carbs"></p>
@@ -698,9 +791,11 @@ app.controller('myCtrl', function($scope, $http) {
     	}
     	
     	$scope.search_food_click = function() {
+    		$body.addClass("loading");
     		$http.get("http://localhost:3000/food/list").then(function(response) {//$http.get("http://localhost:3000/food").then(function(response) {
         		$scope.search_food_data = response.data;
 		    });
+		    $body.removeClass("loading");
 	    }
 	    $scope.search_goals_click = function() {
     		$http.get("http://localhost:3000/goals").then(function(response) {
@@ -790,9 +885,7 @@ app.controller('myCtrl', function($scope, $http) {
 	        		$scope.fat_rem = response.data.Fat;
 	        		$scope.carb_rem = response.data.Carbs;
 	        		$scope.fib_rem = response.data.Fiber;
-
 	        		var ctx = document.getElementById("myPieChart");
-
 					var myPieChart = new Chart(ctx, {
 					    type: 'pie',
 					    data: {
@@ -817,7 +910,6 @@ app.controller('myCtrl', function($scope, $http) {
 					});
 	        	}
 		    });
-
 			/*$(window).resize(function(){
 			    $("#rem_mac_accordion").accordion("refresh");
 			});*/
@@ -862,11 +954,9 @@ app.controller('myCtrl', function($scope, $http) {
 				$scope.edit_food_fiber = response.data.Fiber;
 			})
 		}
-
 		$scope.create_food_dialog_click = function()
 		{
 			alert( $scope.edit_food_name +  $scope.edit_food_amount +  $scope.edit_food_calories +  $scope.edit_food_fat +  $scope.edit_food_carbs +  $scope.edit_food_protein +  $scope.edit_food_fiber);
-
 			$http.post("http://localhost:3000/food/new", //$http.post("http://localhost:3000/create_food", 
 			{name: $scope.edit_food_name, grams: $scope.edit_food_amount, calories: $scope.edit_food_calories, fat: $scope.edit_food_fat, carbs: $scope.edit_food_carbs, protein: $scope.edit_food_protein, fiber: $scope.edit_food_fiber}
 			).then(function(response) {
@@ -883,7 +973,6 @@ app.controller('myCtrl', function($scope, $http) {
 		}
 		
 });
-
 </script>
 
 </html>
