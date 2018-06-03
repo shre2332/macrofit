@@ -1,99 +1,59 @@
 var express = require('express');
 
 var app = express()
-var router = express.Router()
-var User = require('../models/user');
+var goal_router = express.Router()
 
-// a middleware function with no mount path. This code is executed for every request to the router
-router.use(function (req, res, next) {
-  console.log('Time:', Date.now())
+var User = require('../models/user.js');
+var Meal = require('../models/meal.js');
+var Food = require('../models/food.js');
+var Mac_Goal = require('../models/mac_goal.js');
+var User_Stats = require('../models/user_stats.js');
+var Measurement_Status = require('../models/measurement_status.js');
+
+goal_router.use(function (req, res, next) {
+  console.log('goal router')
   next()
 })
 
-//POST route for updating data
-router.post('/login', function (req, res, next) {
-  // confirm that user typed same password twice
-  if (req.body.password !== req.body.passwordConf) {
-    var err = new Error('Passwords do not match.');
-    err.status = 400;
-    res.send("passwords dont match");
-    return next(err);
-  }
+goal_router.post('/macro', function (req, res, next) {
+  if (req.body.calories &&
+      req.body.protein &&
+      req.body.fat &&
+      req.body.carbs &&
+      req.body.fiber) {
 
-  if (req.body.email &&
-    req.body.username &&
-    req.body.password &&
-    req.body.passwordConf) {
+        var macGoalData = {
+          User_ID: String(req.session.userId),
+          Calories: req.body.calories,
+          Protein: req.body.protein,
+          Fat: req.body.fat,
+          Carbs: req.body.carbs,
+          Fiber: req.body.fiber
+        }
 
-    var userData = {
-      email: req.body.email,
-      username: req.body.username,
-      password: req.body.password,
-      passwordConf: req.body.passwordConf,
-    }
-
-    User.create(userData, function (error, user) {
-      if (error) {
-        return next(error);
-      } else {
-        req.session.userId = user._id;
-        return res.redirect('/profile');
-      }
-    });
-
-  } else if (req.body.login_email && req.body.login_password) {
-    User.authenticate(req.body.login_email, req.body.login_password, function (error, user) {
-      if (error || !user) {
-        var err = new Error('Wrong email or password.');
-        err.status = 401;
-        return next(err);
-      } else {
-      	console.log(user._id);
-      	console.log(user.username);
-      	console.log(user);
-        req.session.userId = user._id;
-        res.setHeader('Content-Type', 'application/json');
-  		res.json({success: true, username: user.username, user_id: user._id});
-        //return res.redirect('/meals');
-      }
-    });
-  } else {
-    var err = new Error('All fields required.');
-    err.status = 400;
-    return next(err);
+        Mac_Goal.create(macGoalData, function (error, goal) {
+          if (error) {
+            return next(error);
+          } else {
+            res.setHeader('Content-Type', 'application/json');
+            res.json({success: true});
+          }
+        });
   }
 })
 
-// GET route after registering
-router.get('/profile', function (req, res, next) {
-  User.findById(req.session.userId)
-    .exec(function (error, user) {
-      if (error) {
-        return next(error);
-      } else {
-        if (user === null) {
-          var err = new Error('Not authorized! Go back!');
-          err.status = 400;
-          return next(err);
-        } else {
-          return res.send('<h1>Name: </h1>' + user.username + '<h2>Mail: </h2>' + user.email + '<br><a type="button" href="/logout">Logout</a>')
-        }
-      }
-    });
-});
+goal_router.get('/', function (req, res, next) {
 
-// GET for logout logout
-router.get('/logout', function (req, res, next) {
-  if (req.session) {
-    // delete session object
-    req.session.destroy(function (err) {
-      if (err) {
-        return next(err);
-      } else {
-        return res.redirect('/');
-      }
-    });
-  }
-});
+  Mac_Goal.find({"User_ID": req.session.userId}, function(err, goals) {
+    var goalsMap = {};
 
-module.exports = router;
+    goals.forEach(function(goal) {
+      goalsMap[goal._id] = goal;
+    });
+    res.setHeader('Content-Type', 'application/json');
+    res.json(goalsMap);
+  })
+})
+
+
+module.exports = goal_router;

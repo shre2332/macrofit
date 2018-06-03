@@ -760,7 +760,7 @@ app.controller('myCtrl', function($scope, $http) {
 		    $body.removeClass("loading");
 	    }
 	    $scope.search_goals_click = function() {
-    		$http.get("http://localhost:3000/goals").then(function(response) {
+    		$http.get("http://localhost:3000/goal").then(function(response) {
         		$scope.search_goals_data = response.data;
 		    });
 	    }
@@ -781,7 +781,7 @@ app.controller('myCtrl', function($scope, $http) {
 	    
 	    $scope.check_macros_click = function() {
 	    	//$http.post("http://localhost:3000/macros", {username: "a"}).then(function(response) {
-	    	$http.get("http://localhost:3000/macros").then(function(response) {
+	    	$http.get("http://localhost:3000/macro").then(function(response) {
 	    		//alert(response.data);
         		//$scope.date = response.data.Date;
         		$scope.calories = response.data.Calories;
@@ -823,7 +823,7 @@ app.controller('myCtrl', function($scope, $http) {
     	}
     	$scope.create_goal_click = function() {
     		//$("#loading_dialog").dialog("open");
-			$http.post("http://localhost:3000/create_mac_goal", 
+			$http.post("http://localhost:3000/goal/macro", 
 			{calories: $scope.goal_calories, fat: $scope.goal_fat, carbs: $scope.goal_carbs, protein: $scope.goal_protein, fiber: $scope.goal_fiber}
 			).then(function(response) {
 				if (response.data.success == true) {	
@@ -846,7 +846,7 @@ app.controller('myCtrl', function($scope, $http) {
     			
     		}
 	    	//$http.post("http://localhost:3000/macros", {username: "a"}).then(function(response) {
-	    	$http.get("http://localhost:3000/remaining_macros").then(function(response) {
+	    	$http.get("http://localhost:3000/macro/remaining").then(function(response) {
 	    		//alert(response.data.Calories);
 	    		if (response.data.no_goal == true)
 	    		{
