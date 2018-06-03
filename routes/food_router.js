@@ -15,7 +15,7 @@ food_router.use(function (req, res, next) {
   next()
 })
 
-food_router.post('/new', function (req, res, next)  {
+food_router.post('/', function (req, res, next)  {
   if (req.body.name &&
       req.body.grams &&
       req.body.calories &&
@@ -50,7 +50,7 @@ food_router.post('/new', function (req, res, next)  {
 
 // get /food
 // get one food
-food_router.get('/one/:id', function (req, res, next)  {
+food_router.get('/:id', function (req, res, next)  {
 
   var id = req.params.id;
 
@@ -64,7 +64,7 @@ food_router.get('/one/:id', function (req, res, next)  {
 
 // get /food/search_string
 // get food search
-food_router.get('/list', function (req, res, next)  {
+food_router.get('/', function (req, res, next)  {
   console.log("in food click");
 
   Food.find({}, function(err, foods) {

@@ -29,8 +29,8 @@ mongoose.connect('mongodb://localhost/testdb');
 var routes = require('./routes/router.js');
 app.use('/', routes);
 
-//var meal_routes = require('./routes/meal_router.js');
-//app.use('/', meal_routes);
+var meal_routes = require('./routes/meal_router.js');
+app.use('/meal', meal_routes);
 
 var food_routes = require('./routes/food_router.js');
 app.use('/food', food_routes);
@@ -53,37 +53,6 @@ app.get('/', function (req, res) {
   
   res.sendFile(__dirname + '/formAng.html');
 })
-
-
-/*app.post('/create_food', function (req, res) {
-  if (req.body.name &&
-      req.body.grams &&
-      req.body.calories &&
-      req.body.fat &&
-      req.body.carbs &&
-      req.body.protein &&
-      req.body.fiber) {
-
-	      var foodData = {
-	        Name: req.body.name,
-	        Grams: req.body.grams,
-	        Calories: req.body.calories,
-	        Fat: req.body.fat,
-	        Carbs: req.body.carbs,
-	        Protein: req.body.protein,
-	        Fiber: req.body.fiber
-	      }
-
-	      Food.create(foodData, function (error, food) {
-	        if (error) {
-	          return next(error);
-	        } else {
-	          res.setHeader('Content-Type', 'application/json');
-  			  res.json({success: true});
-	        }
-	      });
-	}
-})*/
 
 
 app.post('/create_mac_goal', function (req, res) {
@@ -220,93 +189,6 @@ app.get('/remaining_macros', function (req, res) {
     })
 })
 
-
-// get /meal
-// get one meal
-app.get('/meal/:id', function (req, res) {
-
-	var id = req.params.id;
-
-    Meal.findById(id, function (err, meal) {
-  
-	  res.setHeader('Content-Type', 'application/json');
-  	  res.json(meal);
-    })
-
-})
-
-
-// get /food
-// get one food
-/*app.get('/one_food/:id', function (req, res) {
-
-	var id = req.params.id;
-
-    Food.findById(id, function (err, food) {
-  
-      res.setHeader('Content-Type', 'application/json');
-  	  res.json(food);
-    })
-
-})*/
-
-
-// get /meals
-// meals for today
-app.get('/meals', function (req, res) {
-
-  var day = new Date();
-
-  Meal.find({"User_ID": req.session.userId, "Entry_Date": {$gte: new Date(day.getFullYear(),day.getMonth(),day.getDate())}}, function(err, meals) {
-    var mealMap = {};
-
-    meals.forEach(function(meal) {
-      mealMap[meal._id] = meal;
-    });
-
-	res.setHeader('Content-Type', 'application/json');
-  	res.json(mealMap);
-  })
-
-})
-
-// get /meals/day
-// meals for specified day
-app.get('/meals:day', function (req, res) {
-
-  var day = new Date();
-  
-  day = req.params.day;
-
-  Meal.find({"User_ID": req.session.userId, "Entry_Date": {$gte: new Date(day.getFullYear(),day.getMonth(),day.getDate())}}, function(err, meals) {
-    var mealMap = {};
-
-    meals.forEach(function(meal) {
-      mealMap[meal._id] = meal;
-    });
-
-	res.setHeader('Content-Type', 'application/json');
-  	res.json(mealMap);
-  })
-
-})
-
-// get /food/search_string
-// get food search
-/*app.get('/food', function (req, res) {
-
-  Food.find({}, function(err, foods) {
-    var foodMap = {};
-
-    foods.forEach(function(food) {
-      foodMap[food._id] = food;
-    });
-	  res.setHeader('Content-Type', 'application/json');
-  	res.json(foodMap);
-  })
-})*/
-
-
 // get/goals
 // get goals search
 app.get('/goals', function (req, res) {
@@ -328,88 +210,12 @@ app.get('/goals', function (req, res) {
   res.send('get /goals')
 })
 
-
-//POSTS
-
-app.post('/add_meal', function (req, res) {
-  if (req.body.food_id &&
-      req.body.grams) {
-
-  		var mealData = {};
-
-  		Food.findById(req.body.food_id)
-			.exec(function (error, food) {
-		      if (error) {
-		        return next(error);
-		      } else {
-		        if (food === null) {
-		          var err = new Error('Not found');
-		          err.status = 400;
-		          return next(err);
-		        } else {
-		          //foodMap = food;
-              var new_grams = req.body.grams;
-              var food_grams = food["Grams"];
-              var gram_ratio = new_grams/food_grams;
-
-		          mealData = {
-	        	  	Food_ID: String(req.body.food_id),
-	        	  	Food_Name: String(food["Name"]),
-	        	  	User_ID: String(req.session.userId),
-		          	Grams: new_grams,
-		          	Calories: (parseInt(food["Calories"]) * gram_ratio),
-		          	Protein: (parseInt(food["Protein"]) * gram_ratio),
-		          	Fat: (parseInt(food["Fat"]) * gram_ratio),
-		          	Carbs: (parseInt(food["Carbs"]) * gram_ratio),
-		          	Fiber: (parseInt(food["Fiber"]) * gram_ratio)
-	      		  }
-
-	      		  Meal.create(mealData, function (error, meal) {
-			        	if (error) {
-			          	return next(error);
-			        	} else {
-			         	 res.setHeader('Content-Type', 'application/json');
-		  			  		res.json({success: true});
-			        	}
-			      	});
-
-		        }
-		      }
-		  });
-     
-	}
-})
-
 app.get('/name', function (req, res) {
   
   res.sendFile(__dirname + '/form.html');
   //res.render('form.html');
 })
 
-// post /meal
-// posts a single meal to current day
-//app.post('/meal', function (req, res) {
-app.post('/meal_post', function (req, res) {
-
-  var name_in = req.body.name;
-  
-  var MongoClient = require('mongodb').MongoClient
- 
-  MongoClient.connect('mongodb://localhost:27017', function (err, client) {
-    if (err) throw err
-
-    var db = client.db('testdb');
-
-    var myobj = { name: name_in };
-
-    db.collection('test').insertOne(myobj, function(err, res) {
-      if (err) throw err
-      console.log(name_in);
-      client.close();
-    })
-  })
-  res.send('post /meal')
-})
 
 // post /meal/day
 // posts a single meal to the specified day
@@ -422,7 +228,6 @@ app.post('/meal/day', function (req, res) {
 app.post('/goal', function (req, res) {
   res.send('post /goal')
 })
-
 
 
 //DELETES

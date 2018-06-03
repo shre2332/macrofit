@@ -69,7 +69,7 @@
       	//	dialog.dialog( "open" );
     		//});
 		    
-		    //Initialize dialog
+
 				$("#login_dialog").dialog({
 				    autoOpen: false,
 				    show: {
@@ -169,42 +169,6 @@
 	  	
 	  <style>
 	  	
-	  /* Start by setting display:none to make this hidden.
-	  Then we position it in relation to the viewport window
-	  with position:fixed. Width, height, top and left speak
-	  for themselves. Background we set to 80% white with
-	  our animation centered, and no-repeating */
-		.modal {
-			z-index:    1000;
-			height:     100px;
-		    width:      100px;
-		    display:    none;
-		    /*display:    none;
-		    position:   absolute;
-		    margin: -100px 0 0 -200px;
-		    z-index:    1000;
-		    top:        50%;
-		    left:       50%;
-		    height:     20%;
-		    width:      20%;*/
-		    background: rgba( 255, 255, 255, .8 ) 
-		                url('http://i.stack.imgur.com/FhHRx.gif') 
-		                50% 50% 
-		                no-repeat;
-		}
-
-		/* When the body has the loading class, we turn
-		   the scrollbar off with overflow:hidden */
-		/*body.loading .modal {
-		    overflow: hidden;   
-		}
-
-		/* Anytime the body has the loading class, our
-		   modal element will be visible 
-		body.loading .modal {
-		    display: block;
-		}*/
-	  	
 	  	table {
 	    font-family: arial, sans-serif;
 	    border-collapse: collapse;
@@ -265,8 +229,6 @@
 <body>
 
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
-
-<div class="modal"><!-- Place at bottom of page --></div>
 
 <div id="hidden_stuff">
 	<div ng-model="saved"></div>
@@ -792,7 +754,7 @@ app.controller('myCtrl', function($scope, $http) {
     	
     	$scope.search_food_click = function() {
     		$body.addClass("loading");
-    		$http.get("http://localhost:3000/food/list").then(function(response) {//$http.get("http://localhost:3000/food").then(function(response) {
+    		$http.get("http://localhost:3000/food").then(function(response) {//$http.get("http://localhost:3000/food").then(function(response) {
         		$scope.search_food_data = response.data;
 		    });
 		    $body.removeClass("loading");
@@ -803,7 +765,7 @@ app.controller('myCtrl', function($scope, $http) {
 		    });
 	    }
 	    $scope.food_select_click = function(event) {
-    		$http.post("http://localhost:3000/add_meal", 
+    		$http.post("http://localhost:3000/meal", 
 			{food_id: event.target.id, grams: $scope.add_meal_grams}
 			).then(function(response) {
 				if (response.data.success == true) {		
@@ -831,7 +793,7 @@ app.controller('myCtrl', function($scope, $http) {
 	    }
 	    
 	    $scope.check_meals_click = function() {
-    		$http.get("http://localhost:3000/meals").then(function(response) {
+    		$http.get("http://localhost:3000/meal/today").then(function(response) {
         		$scope.search_meals_data = response.data;
 		  	});
 		  }
@@ -843,10 +805,13 @@ app.controller('myCtrl', function($scope, $http) {
 		    //});
 	    }
 	    $scope.create_food_click = function() {
-			$http.post("http://localhost:3000/food/new", //$http.post("http://localhost:3000/create_food", 
+	    	//$("#loading_dialog").dialog("open");
+			$http.post("http://localhost:3000/food", //$http.post("http://localhost:3000/create_food", 
 			{name: $scope.create_food_name, grams: $scope.create_grams, calories: $scope.create_calories, fat: $scope.create_fat, carbs: $scope.create_carbs, protein: $scope.create_protein, fiber: $scope.create_fiber}
 			).then(function(response) {
-				if (response.data.success == true) {		
+				if (response.data.success == true) {
+					//$("#loading_dialog").dialog("close");
+					//$("#success_dialog").dialog("open");	
 					$scope.create_food_confirmed = "SUCCESS";
 				}
 				else
@@ -857,10 +822,13 @@ app.controller('myCtrl', function($scope, $http) {
 		    });
     	}
     	$scope.create_goal_click = function() {
+    		//$("#loading_dialog").dialog("open");
 			$http.post("http://localhost:3000/create_mac_goal", 
 			{calories: $scope.goal_calories, fat: $scope.goal_fat, carbs: $scope.goal_carbs, protein: $scope.goal_protein, fiber: $scope.goal_fiber}
 			).then(function(response) {
-				if (response.data.success == true) {		
+				if (response.data.success == true) {	
+					//$("#loading_dialog").dialog("close");
+					//$("#success_dialog").dialog("open");	
 					$scope.create_goal_confirmed = "SUCCESS";
 				}
 				else
@@ -871,6 +839,12 @@ app.controller('myCtrl', function($scope, $http) {
 		    });
     	}
     	$scope.get_rem_click = function() {
+    		$("#loading_dialog").dialog("open");
+    		var k;
+    		for (k=0; k<100000; k++)
+    		{
+    			
+    		}
 	    	//$http.post("http://localhost:3000/macros", {username: "a"}).then(function(response) {
 	    	$http.get("http://localhost:3000/remaining_macros").then(function(response) {
 	    		//alert(response.data.Calories);
@@ -910,6 +884,7 @@ app.controller('myCtrl', function($scope, $http) {
 					});
 	        	}
 		    });
+			$("#loading_dialog").dialog("close");
 			/*$(window).resize(function(){
 			    $("#rem_mac_accordion").accordion("refresh");
 			});*/
@@ -936,7 +911,7 @@ app.controller('myCtrl', function($scope, $http) {
 		}
 		$scope.food_edit_click = function(event)
 		{
-			$http.get("http://localhost:3000/food/one/" + event.target.id).then(function(response) {
+			$http.get("http://localhost:3000/food/" + event.target.id).then(function(response) {
 				$("#edit_food_dialog").dialog("open");
 				document.getElementById("edit_food_name").value = response.data.Name;
 				document.getElementById("edit_food_amount").value = response.data.Grams;
@@ -957,7 +932,7 @@ app.controller('myCtrl', function($scope, $http) {
 		$scope.create_food_dialog_click = function()
 		{
 			alert( $scope.edit_food_name +  $scope.edit_food_amount +  $scope.edit_food_calories +  $scope.edit_food_fat +  $scope.edit_food_carbs +  $scope.edit_food_protein +  $scope.edit_food_fiber);
-			$http.post("http://localhost:3000/food/new", //$http.post("http://localhost:3000/create_food", 
+			$http.post("http://localhost:3000/food", //$http.post("http://localhost:3000/create_food", 
 			{name: $scope.edit_food_name, grams: $scope.edit_food_amount, calories: $scope.edit_food_calories, fat: $scope.edit_food_fat, carbs: $scope.edit_food_carbs, protein: $scope.edit_food_protein, fiber: $scope.edit_food_fiber}
 			).then(function(response) {
 				if (response.data.success == true) {		

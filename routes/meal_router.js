@@ -1,99 +1,119 @@
 var express = require('express');
 
 var app = express()
-var router = express.Router()
-var User = require('../models/user');
+var meal_router = express.Router()
 
-// a middleware function with no mount path. This code is executed for every request to the router
-router.use(function (req, res, next) {
-  console.log('Time:', Date.now())
+var User = require('../models/user.js');
+var Meal = require('../models/meal.js');
+var Food = require('../models/food.js');
+var Mac_Goal = require('../models/mac_goal.js');
+var User_Stats = require('../models/user_stats.js');
+var Measurement_Status = require('../models/measurement_status.js');
+
+meal_router.use(function (req, res, next) {
+  console.log('meal router')
   next()
 })
 
-//POST route for updating data
-router.post('/login', function (req, res, next) {
-  // confirm that user typed same password twice
-  if (req.body.password !== req.body.passwordConf) {
-    var err = new Error('Passwords do not match.');
-    err.status = 400;
-    res.send("passwords dont match");
-    return next(err);
-  }
+meal_router.post('/', function (req, res, next) {
+  if (req.body.food_id &&
+      req.body.grams) {
 
-  if (req.body.email &&
-    req.body.username &&
-    req.body.password &&
-    req.body.passwordConf) {
+      var mealData = {};
 
-    var userData = {
-      email: req.body.email,
-      username: req.body.username,
-      password: req.body.password,
-      passwordConf: req.body.passwordConf,
-    }
+      Food.findById(req.body.food_id)
+      .exec(function (error, food) {
+          if (error) {
+            return next(error);
+          } else {
+            if (food === null) {
+              var err = new Error('Not found');
+              err.status = 400;
+              return next(err);
+            } else {
+              //foodMap = food;
+              var new_grams = req.body.grams;
+              var food_grams = food["Grams"];
+              var gram_ratio = new_grams/food_grams;
 
-    User.create(userData, function (error, user) {
-      if (error) {
-        return next(error);
-      } else {
-        req.session.userId = user._id;
-        return res.redirect('/profile');
-      }
-    });
+              mealData = {
+                Food_ID: String(req.body.food_id),
+                Food_Name: String(food["Name"]),
+                User_ID: String(req.session.userId),
+                Grams: new_grams,
+                Calories: (parseInt(food["Calories"]) * gram_ratio),
+                Protein: (parseInt(food["Protein"]) * gram_ratio),
+                Fat: (parseInt(food["Fat"]) * gram_ratio),
+                Carbs: (parseInt(food["Carbs"]) * gram_ratio),
+                Fiber: (parseInt(food["Fiber"]) * gram_ratio)
+              }
 
-  } else if (req.body.login_email && req.body.login_password) {
-    User.authenticate(req.body.login_email, req.body.login_password, function (error, user) {
-      if (error || !user) {
-        var err = new Error('Wrong email or password.');
-        err.status = 401;
-        return next(err);
-      } else {
-      	console.log(user._id);
-      	console.log(user.username);
-      	console.log(user);
-        req.session.userId = user._id;
-        res.setHeader('Content-Type', 'application/json');
-  		res.json({success: true, username: user.username, user_id: user._id});
-        //return res.redirect('/meals');
-      }
-    });
-  } else {
-    var err = new Error('All fields required.');
-    err.status = 400;
-    return next(err);
+              Meal.create(mealData, function (error, meal) {
+                if (error) {
+                  return next(error);
+                } else {
+                 res.setHeader('Content-Type', 'application/json');
+                  res.json({success: true});
+                }
+              });
+
+            }
+          }
+      });
+     
   }
 })
 
-// GET route after registering
-router.get('/profile', function (req, res, next) {
-  User.findById(req.session.userId)
-    .exec(function (error, user) {
-      if (error) {
-        return next(error);
-      } else {
-        if (user === null) {
-          var err = new Error('Not authorized! Go back!');
-          err.status = 400;
-          return next(err);
-        } else {
-          return res.send('<h1>Name: </h1>' + user.username + '<h2>Mail: </h2>' + user.email + '<br><a type="button" href="/logout">Logout</a>')
-        }
-      }
-    });
-});
+// get /meals/day
+// meals for specified day
+meal_router.get('/day/:day', function (req, res, next) {
 
-// GET for logout logout
-router.get('/logout', function (req, res, next) {
-  if (req.session) {
-    // delete session object
-    req.session.destroy(function (err) {
-      if (err) {
-        return next(err);
-      } else {
-        return res.redirect('/');
-      }
-    });
-  }
-});
+  var day = new Date();
+  
+  day = req.params.day;
 
-module.exports = router;
+  Meal.find({"User_ID": req.session.userId, "Entry_Date": {$gte: new Date(day.getFullYear(),day.getMonth(),day.getDate())}}, function(err, meals) {
+    var mealMap = {};
+
+    meals.forEach(function(meal) {
+      mealMap[meal._id] = meal;
+    });
+
+  res.setHeader('Content-Type', 'application/json');
+    res.json(mealMap);
+  })
+
+})
+
+meal_router.get('/today', function (req, res, next) {
+
+  var day = new Date();
+
+  Meal.find({"User_ID": req.session.userId, "Entry_Date": {$gte: new Date(day.getFullYear(),day.getMonth(),day.getDate())}}, function(err, meals) {
+    var mealMap = {};
+
+    meals.forEach(function(meal) {
+      mealMap[meal._id] = meal;
+    });
+
+  res.setHeader('Content-Type', 'application/json');
+    res.json(mealMap);
+  })
+
+})
+
+// get /meal
+// get one meal
+meal_router.get('/:id', function (req, res) {
+
+  var id = req.params.id;
+
+    Meal.findById(id, function (err, meal) {
+  
+    res.setHeader('Content-Type', 'application/json');
+      res.json(meal);
+    })
+
+})
+
+module.exports = meal_router;
