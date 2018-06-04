@@ -68,7 +68,18 @@
 		    //$( "#logout_button" ).button().on( "click", function() {
       	//	dialog.dialog( "open" );
     		//});
-		    
+		    	
+		    	$("#success_dialog").dialog({
+				    autoOpen: false,
+				    show: {
+				        effect: "fade",
+				        duration: 500
+				    },
+				    hide: {
+				        effect: "fade",
+				        duration: 250
+				    }
+				});
 
 				$("#login_dialog").dialog({
 				    autoOpen: false,
@@ -201,6 +212,10 @@
 	  	#login_dialog {
       	display:none;
       }
+
+      #success_dialog {
+      	display:none;
+      }
       
       #create_account_dialog {
       	display:none;
@@ -236,14 +251,18 @@
 
 <div ng-app="myApp" ng-controller="myCtrl">
 	
-	<div id="login_dialog" title="LOGIN">
+  <div id="success_dialog">
+    <p>SUCCESS</p>
+  </div>
+
+  <div id="login_dialog" title="LOGIN">
     <p>Username: <br/><input type="text" ng-model="username"></p>
 		<p>Password: <br/><input type="text" ng-model="password"></p>
 		<button ng-click="login_click()">Login</button>
 		<br/><br/>
 		<button id="login_create_account" ng-click="login_create_account_click()">Create New Account</button>
-		<p>{{username}}</p>
-		<p>{{password}}</p>
+		<!--<p>{{username}}</p>
+		<p>{{password}}</p>-->
   </div>
     
   <div id="create_account_dialog" title="CREATE ACCOUNT">
@@ -330,8 +349,8 @@
 					<p>Username: <br/><input type="text" ng-model="username"></p>
 					<p>Password: <br/><input type="text" ng-model="password"></p>
 					<button ng-click="login_click()">Login</button>
-					<p>{{username}}</p>
-					<p>{{password}}</p>
+					<!--<p>{{username}}</p>
+					<p>{{password}}</p>-->
 				  
 				  <p ng-model="username_confirmed">{{username_confirmed}}</p>
 				</div>
@@ -677,12 +696,12 @@
 								    <th>{{x.Fiber}}</th>
 								  </tr>
 								  <tr>
-								    <th>Edit Food: </th>
+								    <th>Edit Goal: </th>
 								    <th><button ng-attr-class="edit_goal_button" ng-click="edit_goal_click($event)" ng-attr-id="{{x._id}}">EDIT</button></th>
 								  </tr>
 								  <tr>
-								    <th>Edit Food: </th>
-								    <th><button ng-attr-class="delete_goal_button" ng-click="delete_goal_click($event)" ng-attr-id="{{x._id}}">EDIT</button></th>
+								    <th>Delete Goal: </th>
+								    <th><button ng-attr-class="delete_goal_button" ng-click="delete_goal_click($event)" ng-attr-id="{{x._id}}">DELETE</button></th>
 								  </tr>
 								</table>
 				    		</div>
@@ -775,7 +794,9 @@ app.controller('myCtrl', function($scope, $http) {
 			{food_id: event.target.id, grams: $scope.add_meal_grams}
 			).then(function(response) {
 				if (response.data.success == true) {		
-					$scope.add_meal_confirmed = "SUCCESS";
+					//$scope.add_meal_confirmed = "SUCCESS";
+					$("#success_dialog").dialog("open");
+					$scope.add_meal_grams = "";
 				}
 				else
 				{
@@ -815,7 +836,14 @@ app.controller('myCtrl', function($scope, $http) {
 			{name: $scope.create_food_name, grams: $scope.create_grams, calories: $scope.create_calories, fat: $scope.create_fat, carbs: $scope.create_carbs, protein: $scope.create_protein, fiber: $scope.create_fiber}
 			).then(function(response) {
 				if (response.data.success == true) {
-					$scope.create_food_confirmed = "SUCCESS";
+					//$scope.create_food_confirmed = "SUCCESS";
+					$("#success_dialog").dialog("open");
+					$scope.create_grams = "";
+					$scope.create_calories = "";
+					$scope.create_fat = "";
+					$scope.create_carbs = "";
+					$scope.create_protein = "";
+					$scope.create_fiber = "";
 				}
 				else
 				{
@@ -829,7 +857,13 @@ app.controller('myCtrl', function($scope, $http) {
 			{calories: $scope.goal_calories, fat: $scope.goal_fat, carbs: $scope.goal_carbs, protein: $scope.goal_protein, fiber: $scope.goal_fiber}
 			).then(function(response) {
 				if (response.data.success == true) {	
-					$scope.create_goal_confirmed = "SUCCESS";
+					//$scope.create_goal_confirmed = "SUCCESS";
+					$("#success_dialog").dialog("open");
+					$scope.goal_calories = "";
+					$scope.goal_fat = "";
+					$scope.goal_carbs = "";
+					$scope.goal_protein = "";
+					$scope.goal_fiber = "";
 				}
 				else
 				{
@@ -934,6 +968,7 @@ app.controller('myCtrl', function($scope, $http) {
 			).then(function(response) {
 				if (response.data.success == true) {		
 					$("#edit_food_dialog").dialog("close");
+					$("#success_dialog").dialog("open");
 				}
 				else
 				{
@@ -943,17 +978,21 @@ app.controller('myCtrl', function($scope, $http) {
 					
 		    });
 		}
-		
+
 		$scope.delete_edit_meal = function(event)
 		{
 			$http.delete("http://localhost:3000/meal/" + $scope.edit_meal_id).then(function(response) {
 				$("#edit_meal_dialog").dialog("close");
+				$scope.check_meals_click();
+				$("#success_dialog").dialog("open");
 			})
 		}
 
 		$scope.delete_goal_click = function(event)
 		{
-			$http.delete("http://localhost:3000/goal/" + event.target.id).then(function(response) {})
+			$http.delete("http://localhost:3000/goal/" + event.target.id).then(function(response) {
+				$("#success_dialog").dialog("open");
+			})
 		}
 
 });
