@@ -55,5 +55,17 @@ goal_router.get('/', function (req, res, next) {
   })
 })
 
+goal_router.delete('/:id', function (req, res, next) {
+
+    var id = req.params.id;
+
+    Mac_Goal.findByIdAndRemove(id, function(err) {
+        if (err)
+            res.send(err);
+        else
+            res.json({success: true});
+    });
+})
+
 
 module.exports = goal_router;

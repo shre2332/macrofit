@@ -680,6 +680,10 @@
 								    <th>Edit Food: </th>
 								    <th><button ng-attr-class="edit_goal_button" ng-click="edit_goal_click($event)" ng-attr-id="{{x._id}}">EDIT</button></th>
 								  </tr>
+								  <tr>
+								    <th>Edit Food: </th>
+								    <th><button ng-attr-class="delete_goal_button" ng-click="delete_goal_click($event)" ng-attr-id="{{x._id}}">EDIT</button></th>
+								  </tr>
 								</table>
 				    		</div>
 				  		</li>
@@ -807,13 +811,10 @@ app.controller('myCtrl', function($scope, $http) {
 		    //});
 	    }
 	    $scope.create_food_click = function() {
-	    	//$("#loading_dialog").dialog("open");
 			$http.post("http://localhost:3000/food", //$http.post("http://localhost:3000/create_food", 
 			{name: $scope.create_food_name, grams: $scope.create_grams, calories: $scope.create_calories, fat: $scope.create_fat, carbs: $scope.create_carbs, protein: $scope.create_protein, fiber: $scope.create_fiber}
 			).then(function(response) {
 				if (response.data.success == true) {
-					//$("#loading_dialog").dialog("close");
-					//$("#success_dialog").dialog("open");	
 					$scope.create_food_confirmed = "SUCCESS";
 				}
 				else
@@ -824,13 +825,10 @@ app.controller('myCtrl', function($scope, $http) {
 		    });
     	}
     	$scope.create_goal_click = function() {
-    		//$("#loading_dialog").dialog("open");
 			$http.post("http://localhost:3000/goal/macro", 
 			{calories: $scope.goal_calories, fat: $scope.goal_fat, carbs: $scope.goal_carbs, protein: $scope.goal_protein, fiber: $scope.goal_fiber}
 			).then(function(response) {
 				if (response.data.success == true) {	
-					//$("#loading_dialog").dialog("close");
-					//$("#success_dialog").dialog("open");	
 					$scope.create_goal_confirmed = "SUCCESS";
 				}
 				else
@@ -841,12 +839,7 @@ app.controller('myCtrl', function($scope, $http) {
 		    });
     	}
     	$scope.get_rem_click = function() {
-    		$("#loading_dialog").dialog("open");
-    		var k;
-    		for (k=0; k<100000; k++)
-    		{
-    			
-    		}
+
 	    	//$http.post("http://localhost:3000/macros", {username: "a"}).then(function(response) {
 	    	$http.get("http://localhost:3000/macro/remaining").then(function(response) {
 	    		//alert(response.data.Calories);
@@ -950,11 +943,17 @@ app.controller('myCtrl', function($scope, $http) {
 					
 		    });
 		}
+		
 		$scope.delete_edit_meal = function(event)
 		{
 			$http.delete("http://localhost:3000/meal/" + $scope.edit_meal_id).then(function(response) {
 				$("#edit_meal_dialog").dialog("close");
 			})
+		}
+
+		$scope.delete_goal_click = function(event)
+		{
+			$http.delete("http://localhost:3000/goal/" + event.target.id).then(function(response) {})
 		}
 
 });
