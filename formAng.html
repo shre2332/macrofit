@@ -259,6 +259,7 @@
   </div>
 	
   <div id="edit_meal_dialog" title="EDIT MEAL">
+  	<div type="text" id="edit_meal_id" name="edit_meal_id" ng-model="edit_meal_id" value="" hidden></div>
   	<select name="meal_size_edit" id="meal_size_edit">
 			<option selected="selected">Grams</option>
 			<option>Ounces</option>
@@ -283,6 +284,7 @@
   </div>
 	
   <div id="edit_food_dialog" title="EDIT FOOD">
+  	<div type="text" id="edit_food_id" name="edit_food_id" ng-model="edit_food_id" value="" hidden></div>
 	<label for="name">Name: </label>
     <input type="text" id="edit_food_name" name="edit_food_name" ng-model="edit_food_name" />
     <select name="food_size_edit" id="food_size_edit">
@@ -301,7 +303,7 @@
     <input type="text" id="edit_food_protein" name="edit_food_protein" ng-model="edit_food_protein" />
     <label for="edit_food_fiber">Fiber: </label>
     <input type="text" id="edit_food_fiber" name="edit_food_fiber" ng-model="edit_food_fiber" />
-    <button ng-click="save_edit_food()">More Fields</button>
+    <button ng-click="more_fields_edit_food_click()">More Fields</button>
     <button ng-click="create_food_dialog_click()">Create New</button>
     <button id="discard_edit_food_button">Discard</button>
   </div>
@@ -900,6 +902,8 @@ app.controller('myCtrl', function($scope, $http) {
 		$scope.meal_edit_click = function(event)
 		{
 			$http.get("http://localhost:3000/meal/" + event.target.id).then(function(response) {
+				$scope.edit_meal_id = response.data._id;
+				document.getElementById("edit_meal_id").value = response.data._id;
 				document.getElementById("edit_meal_amount").value = response.data.Grams;
 				$scope.edit_meal_calories =response.data.Calories;
 				$scope.edit_meal_fat =response.data.Fat;
@@ -946,7 +950,13 @@ app.controller('myCtrl', function($scope, $http) {
 					
 		    });
 		}
-		
+		$scope.delete_edit_meal = function(event)
+		{
+			$http.delete("http://localhost:3000/meal/" + $scope.edit_meal_id).then(function(response) {
+				$("#edit_meal_dialog").dialog("close");
+			})
+		}
+
 });
 </script>
 

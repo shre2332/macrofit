@@ -104,7 +104,7 @@ meal_router.get('/today', function (req, res, next) {
 
 // get /meal
 // get one meal
-meal_router.get('/:id', function (req, res) {
+meal_router.get('/:id', function (req, res, next) {
 
   var id = req.params.id;
 
@@ -113,7 +113,18 @@ meal_router.get('/:id', function (req, res) {
     res.setHeader('Content-Type', 'application/json');
       res.json(meal);
     })
+})
 
+meal_router.delete('/:id', function (req, res, next) {
+
+    var id = req.params.id;
+
+    Meal.findByIdAndRemove(id, function(err) {
+        if (err)
+            res.send(err);
+        else
+            res.json({success: true});
+    });
 })
 
 module.exports = meal_router;
