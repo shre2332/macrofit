@@ -777,7 +777,7 @@ app.controller('myCtrl', function($scope, $http) {
 	    	//$scope.password= "Doe";
     	}
     	
-    	$scope.search_food_click = function() {
+    	$scope.search_food_click_2 = function() {
     		$body.addClass("loading");
     		$http.get("http://localhost:3000/food").then(function(response) {//$http.get("http://localhost:3000/food").then(function(response) {
         		$scope.search_food_data = response.data;
@@ -994,6 +994,14 @@ app.controller('myCtrl', function($scope, $http) {
 				$("#success_dialog").dialog("open");
 			})
 		}
+
+		$scope.search_food_click = function()
+		{
+			$http.get("http://localhost:3000/food/search/apple").then(function(response) {
+				$("#success_dialog").dialog("open");
+			})
+		}
+		
 
 });
 </script>

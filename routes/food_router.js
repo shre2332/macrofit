@@ -79,6 +79,24 @@ food_router.get('/', function (req, res, next)  {
 })
 
 
+// get food search
+food_router.get('/search/:search_string', function (req, res, next)  {
+  console.log(req.params.search_string);
+
+  //how to search
+  Food.find({$text: {$search: req.params.search_string}})
+       .skip(20)
+       .limit(10)
+       .exec(function(err, docs) {
+         console.log(docs);
+      //var foodMap = {};
+
+      //foods.forEach(function(food) {
+        //foodMap[food._id] = food;
+    });
+    //res.setHeader('Content-Type', 'application/json');
+})
+
 
 
 // get /food/search_string
