@@ -374,7 +374,7 @@
 	  	<div class="accordion">
 		    <h3>FIND FOOD</h3>
 		    	<div>
-					  <p><input type="text" ng-model="search_food_text"></p>
+					  <p><input type="text" ng-model="search_food_text" ng-change="search_food_click()"></p>
 					  <button ng-click="search_food_click()">Search Food</button>
 					  <ul id="found_foods_list">
 					  	<li ng-repeat="x in search_food_data">
@@ -997,8 +997,8 @@ app.controller('myCtrl', function($scope, $http) {
 
 		$scope.search_food_click = function()
 		{
-			$http.get("http://localhost:3000/food/search/apple").then(function(response) {
-				$("#success_dialog").dialog("open");
+			$http.get("http://localhost:3000/food/search/"+$scope.search_food_text).then(function(response) {
+				$scope.search_food_data = response.data;
 			})
 		}
 		

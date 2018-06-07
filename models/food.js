@@ -3,8 +3,7 @@ var mongoose = require('mongoose');
 var FoodSchema = new mongoose.Schema({
   Name: {
     type: String,
-    required: true,
-    trim: true
+    required: true
   },
   Grams: {
     type: Number,
@@ -184,14 +183,6 @@ var FoodSchema = new mongoose.Schema({
 });
 
 FoodSchema.index({Name: 'text'});
-
-//how to search
-/*
-MyModel.find({$text: {$search: searchString}})
-       .skip(20)
-       .limit(10)
-       .exec(function(err, docs) { ... });
-       */
 
 var Food = mongoose.model('Food', FoodSchema);
 module.exports = Food;

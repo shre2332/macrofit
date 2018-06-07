@@ -81,20 +81,21 @@ food_router.get('/', function (req, res, next)  {
 
 // get food search
 food_router.get('/search/:search_string', function (req, res, next)  {
-  console.log(req.params.search_string);
 
-  //how to search
-  Food.find({$text: {$search: req.params.search_string}})
-       .skip(20)
-       .limit(10)
-       .exec(function(err, docs) {
-         console.log(docs);
-      //var foodMap = {};
+    Food.find(
+        { $text : { $search : String(req.params.search_string) } })
+    .exec(function(err, results) {
+        // callback
+        console.log(results);
 
-      //foods.forEach(function(food) {
-        //foodMap[food._id] = food;
+        var foodMap = {};
+
+        results.forEach(function(food) {
+          foodMap[food._id] = food;
+        });
+        res.setHeader('Content-Type', 'application/json');
+        res.json(foodMap);
     });
-    //res.setHeader('Content-Type', 'application/json');
 })
 
 
