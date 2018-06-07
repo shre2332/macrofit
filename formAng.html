@@ -375,7 +375,8 @@
 		    <h3>FIND FOOD</h3>
 		    	<div>
 					  <p><input type="text" ng-model="search_food_text" ng-change="search_food_click()"></p>
-					  <button ng-click="search_food_click()">Search Food</button>
+					  <button ng-click="search_food_click()">Search Foods</button>
+					  <button ng-click="list_food_click()">List Foods</button>
 					  <ul id="found_foods_list">
 					  	<li ng-repeat="x in search_food_data">
 					  		<div>
@@ -777,7 +778,7 @@ app.controller('myCtrl', function($scope, $http) {
 	    	//$scope.password= "Doe";
     	}
     	
-    	$scope.search_food_click_2 = function() {
+    	$scope.list_food_click = function() {
     		$body.addClass("loading");
     		$http.get("http://localhost:3000/food").then(function(response) {//$http.get("http://localhost:3000/food").then(function(response) {
         		$scope.search_food_data = response.data;
