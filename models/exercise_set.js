@@ -7,7 +7,7 @@ var ExerciseSetSchema = new mongoose.Schema({
   Exercise_Move_ID: {
     type: String,//should be object id
     required: true
-  }
+  },
   Reps: {
     type: Number,
     required: true,
