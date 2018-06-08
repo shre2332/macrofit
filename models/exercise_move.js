@@ -7,87 +7,108 @@ var ExerciseMoveSchema = new mongoose.Schema({
   },
   Pectorals: {
     type: Number,
-    required: true
+    required: true,
+    default: 0
   },
   Latimus_Dorsi: {
     type: Number,
     required: true,
+    default: 0
   },
   Bicep: {
     type: Number,
     required: true,
+    default: 0
   },
   Tricep: {
     type: Number,
     required: true,
+    default: 0
   },
   Mid_Deltiod: {
     type: Number,
     required: true,
+    default: 0
   },
   Front_Deltoid: {
     type: Number,
     required: true,
+    default: 0
   },
   Rear_Deltoid: {
     type: Number,
     required: true,
+    default: 0
   },
   Forarms: {
     type: Number,
     required: true,
+    default: 0
   },
   Abdominals: {
-    type: Date,
-    default: Date.now
+    type: Number,
+    required: true,
+    default: 0
   },
   Rhomboids: {
-    type: Date,
-    default: Date.now
+    type: Number,
+    required: true,
+    default: 0
   },
   Lower_Back: {
-    type: Date,
-    default: Date.now
+    type: Number,
+    required: true,
+    default: 0
   },
   Upper_Trapizius: {
-    type: Date,
-    default: Date.now
+    type: Number,
+    required: true,
+    default: 0
   },
   Mid_Trapizius: {
-    type: Date,
-    default: Date.now
+    type: Number,
+    required: true,
+    default: 0
   },
   Lower_Trapizius: {
-    type: Date,
-    default: Date.now
+    type: Number,
+    required: true,
+    default: 0
   },
   Obliques: {
-    type: Date,
-    default: Date.now
+    type: Number,
+    required: true,
+    default: 0
   },
   Quadriceps: {
-    type: Date,
-    default: Date.now
+    type: Number,
+    required: true,
+    default: 0
   },
   Hamstrings: {
-    type: Date,
-    default: Date.now
+    type: Number,
+    required: true,
+    default: 0
   },
   Glute_Max: {
-    type: Date,
-    default: Date.now
+    type: Number,
+    required: true,
+    default: 0
   },
   Glute_Min: {
-    type: Date,
-    default: Date.now
+    type: Number,
+    required: true,
+    default: 0
   },
   Calves: {
-    type: Date,
-    default: Date.now
+    type: Number,
+    required: true,
+    default: 0
   },
   Cardio: {
-    type: Date,
-    default: Date.now
+    type: Number,
+    required: true,
+    default: 0
   },
   Custom_Flag: {
     type: Boolean,
@@ -97,14 +118,6 @@ var ExerciseMoveSchema = new mongoose.Schema({
   Custom_Creator_ID: {
     type: String,//should be object id
     default: null
-  },
-  
-  //food label data
-  Serving_Size: {
-    type: Number
-  },
-  Calories_From_Fat: {
-    type: Number
   }
 
 });

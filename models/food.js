@@ -182,7 +182,7 @@ var FoodSchema = new mongoose.Schema({
 
 });
 
-FoodSchema.index({Name: 'text'});
+FoodSchema.index({Name: 'text'}, { match: "partial"});
 
 var Food = mongoose.model('Food', FoodSchema);
 module.exports = Food;
