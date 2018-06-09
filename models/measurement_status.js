@@ -3,14 +3,18 @@ var mongoose = require('mongoose');
 var MeasurementStatusSchema = new mongoose.Schema({
   User_ID: {
     type: String,//should be object id
-    required: true,
-    trim: true
+    required: true
   },
-  current_weight: {
-    type: Number,
-    unique: true,
+  Current_Weight: {
+    type: Number
   },
   Body_Fat_Percentage: {
+    type: Number
+  },
+  BP_D: {
+    type: Number
+  },
+  BP_S: {
     type: Number
   },
   Entry_Date: {

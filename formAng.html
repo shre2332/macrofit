@@ -490,18 +490,17 @@
 				  
 				  <h3>LOG PROGRESS UPDATE</h3>
 		    	<div>
-						<label for="date">Date: </label>
+					<label for="date">Date: </label>
     				<input type="text" id="pu_date" name="pu_date" ng-model="pu_date" />
     				<label for="me">Unit Type:</label>
-					  <select name="me" id="me">
-      				<option selected="selected">Pounds</option>
-      				<option>Kilograms</option>
+					<select name="me" id="me">
+      					<option selected="selected">Pounds</option>
+      					<option>Kilograms</option>
     				</select>
 					  <p>Weight: <br/><input type="text" ng-model="weight_pu"></p>
 					  <p>Blood Pressue: <br/><input class="spinner_bp" type="text" ng-model="bp_over_pu"><input class="spinner_bp" type="text" ng-model="bp_under_pu"></p>
 					  <p>Body Fat Percentage: <br/><input class="spinner_bf" type="text" ng-model="bf_pu"></p>
 					  <button ng-click="progress_update_click()">Add</button>
-					  <p ng-model="add_progress_confirmed">{{add_progress_confirmed}}</p>
 				  </div>
 				  
 					<h3>FIND EXERCISE</h3>
@@ -963,7 +962,7 @@ app.controller('myCtrl', function($scope, $http) {
 		}
 		$scope.create_food_dialog_click = function()
 		{
-			alert( $scope.edit_food_name +  $scope.edit_food_amount +  $scope.edit_food_calories +  $scope.edit_food_fat +  $scope.edit_food_carbs +  $scope.edit_food_protein +  $scope.edit_food_fiber);
+			//alert( $scope.edit_food_name +  $scope.edit_food_amount +  $scope.edit_food_calories +  $scope.edit_food_fat +  $scope.edit_food_carbs +  $scope.edit_food_protein +  $scope.edit_food_fiber);
 			$http.post("http://localhost:3000/food", //$http.post("http://localhost:3000/create_food", 
 			{name: $scope.edit_food_name, grams: $scope.edit_food_amount, calories: $scope.edit_food_calories, fat: $scope.edit_food_fat, carbs: $scope.edit_food_carbs, protein: $scope.edit_food_protein, fiber: $scope.edit_food_fiber}
 			).then(function(response) {
@@ -1002,6 +1001,24 @@ app.controller('myCtrl', function($scope, $http) {
 				$scope.search_food_data = response.data;
 			})
 		}
+		$scope.progress_update_click = function()
+		{
+			//alert(document.getElementById("pu_date").value + $scope.weight_pu + $scope.bp_over_pu + $scope.bp_under_pu + $scope.bf_pu);
+			$http.post("http://localhost:3000/progress", 
+			{date: document.getElementById("pu_date").value, weight: $scope.weight_pu, bp_s: $scope.bp_over_pu, bp_d: $scope.bp_under_pu, bf: $scope.bf_pu}
+			).then(function(response) {
+				if (response.data.success == true) {		
+					$("#success_dialog").dialog("open");
+				}
+				else
+				{
+					//do somthing
+					alert("failed");
+				}
+					
+		    });
+		}
+
 		
 
 });

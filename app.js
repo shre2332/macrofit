@@ -44,6 +44,9 @@ app.use('/goal', goal_routes);
 var macro_routes = require('./routes/macro_router.js');
 app.use('/macro', macro_routes);
 
+var progress_routes = require('./routes/progress_router.js');
+app.use('/progress', progress_routes);
+
 
 app.get('/create_account', function (req, res) {
   
