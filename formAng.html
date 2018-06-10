@@ -591,7 +591,22 @@
 			  </div>
 				<h3>CHECK PROGRESS</h3>
 			  <div>
-			  	<p>progress reporting will go here</p>
+				  <select name="check_progress_time_period" id="check_progress_time_period">
+						<option selected="selected">Past Week</option>
+						<option>Past 2 Weeks</option>
+						<option>Past Month</option>
+						<option>Past 2 Months</option>
+						<option>Past 3 Month</option>
+						<option>Past 4 Month</option>
+						<option>Past 6 Month</option>
+						<option>Past Year</option>
+						<option>Past 18 Months</option>
+						<option>Past 2 Year</option>
+						<option>Past 3 Year</option>
+						<option>Past 5 Year</option>
+				  </select>
+				  <br>
+				  <button ng-click="check_progress_click()">Check Progress</button>
 			  </div>
 			  <h3>CHECK EXERCISE</h3>
 				<div>
@@ -614,7 +629,7 @@
 				  <select name="food_create_amount_type" id="food_create_amount_type">
 						<option selected="selected">Grams</option>
 						<option>Ounces</option>
-					</select>
+				  </select>
 				  <p><br/><input type="text" ng-model="create_grams"></p>
 				  <p>Calories: <br/><input type="text" ng-model="create_calories"></p>
 				  <p>Fat: <br/><input type="text" ng-model="create_fat"></p>
