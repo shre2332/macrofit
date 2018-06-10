@@ -113,7 +113,7 @@ var ExerciseMoveSchema = new mongoose.Schema({
   Custom_Flag: {
     type: Boolean,
     required: true,
-    default: false
+    default: true
   },
   Custom_Creator_ID: {
     type: String,//should be object id
@@ -122,7 +122,7 @@ var ExerciseMoveSchema = new mongoose.Schema({
 
 });
 
-//ExerciseMoveSchema.index({Name: 'text'});
+ExerciseMoveSchema.index({Name: 'text'});
 
 var Exercise_Move = mongoose.model('Exercise_Move', ExerciseMoveSchema);
 module.exports = Exercise_Move;

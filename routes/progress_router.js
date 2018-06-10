@@ -10,8 +10,8 @@ var Mac_Goal = require('../models/mac_goal.js');
 var User_Stats = require('../models/user_stats.js');
 var Measurement_Status = require('../models/measurement_status.js');
 var Exercise_Move = require('../models/exercise_move.js');
-var Exercise_Move = require('../models/exercise_set.js');
-var Exercise_Move = require('../models/exercise.js');
+var Exercise_Set = require('../models/exercise_set.js');
+var Exercise = require('../models/exercise.js');
 
 progress_router.use(function (req, res, next) {
   console.log('progress router')
