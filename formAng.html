@@ -592,21 +592,24 @@
 				<h3>CHECK PROGRESS</h3>
 			  <div>
 				  <select name="check_progress_time_period" id="check_progress_time_period">
-						<option selected="selected">Past Week</option>
-						<option>Past 2 Weeks</option>
-						<option>Past Month</option>
-						<option>Past 2 Months</option>
-						<option>Past 3 Month</option>
-						<option>Past 4 Month</option>
-						<option>Past 6 Month</option>
-						<option>Past Year</option>
-						<option>Past 18 Months</option>
-						<option>Past 2 Year</option>
-						<option>Past 3 Year</option>
-						<option>Past 5 Year</option>
+						<option value="1" selected="selected">Past Week</option>
+						<option value="2">Past 2 Weeks</option>
+						<option value="3">Past Month</option>
+						<option value="4">Past 2 Months</option>
+						<option value="5">Past 3 Month</option>
+						<option value="6">Past 4 Month</option>
+						<option value="7">Past 6 Month</option>
+						<option value="8">Past Year</option>
+						<option value="9">Past 18 Months</option>
+						<option value="10">Past 2 Year</option>
+						<option value="11">Past 3 Year</option>
+						<option value="12">Past 5 Year</option>
 				  </select>
 				  <br>
 				  <button ng-click="check_progress_click()">Check Progress</button>
+				  <div id="prog_check_graph" height="20%" width="60%">
+						<canvas id="progressChart" width="400" height="400"></canvas>
+					</div>
 			  </div>
 			  <h3>CHECK EXERCISE</h3>
 				<div>
@@ -1245,6 +1248,47 @@ app.controller('myCtrl', function($scope, $http) {
 					
 		    });
 		}
+
+		$scope.check_progress_click = function()
+		{
+			$http.get("http://localhost:3000/progress/check/"+document.getElementById("check_progress_time_period").value).then(function(response) {
+				if (true){//response.data.success == true) {
+					var labels_ret = 0;
+					var data_ret = 0;
+
+					var ctx = document.getElementById("progressChart");
+					var progressChart = new Chart(ctx, {
+					    type: 'line',
+					    data: {
+					        labels: ["date 1", "date 2", "date 3", "date 4", "date 5", "date 6"],
+					        datasets: [{
+					            label: 'Remaining Macros',
+					            data: [23, 34, 25],
+					            backgroundColor: [
+					                'rgba(255, 99, 132, 0.2)',
+					                'rgba(54, 162, 235, 0.2)',
+					                'rgba(255, 206, 86, 0.2)'
+					            ],
+					            borderColor: [
+					                'rgba(255,99,132,1)',
+					                'rgba(54, 162, 235, 1)',
+					                'rgba(255, 206, 86, 1)'
+					            ],
+					            borderWidth: 1
+					        }]
+					    },
+					    options: {}
+					});
+				}
+				else
+				{
+					//do somthing
+					alert("failed");
+				}
+					
+		    });
+		}
+		
 
 
 });
