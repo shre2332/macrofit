@@ -59,32 +59,52 @@ progress_router.get('/check/:period', function (req, res, next)  {
         console.log(req.params.period);
         var now = moment();
         var start = moment();
+        var chart_time_span = 0;
+        var labels = [];
         if (req.params.period == 1){
             start = moment().subtract(1, 'weeks');
+            chart_time_span = 7;
         } else if (req.params.period == 2) {
             start = moment().subtract(2, 'weeks');
+            chart_time_span = 14;
         } else if (req.params.period == 3){
             start = moment().subtract(1, 'months');
+            chart_time_span = 30;
         } else if (req.params.period == 4){
             start = moment().subtract(2, 'months');
+            chart_time_span = 60;
         } else if (req.params.period == 5){
             start = moment().subtract(3, 'months');
+            chart_time_span = 90;
         } else if (req.params.period == 6){
             start = moment().subtract(4, 'months');
+            chart_time_span = 120;
         } else if (req.params.period == 7) {
             start = moment().subtract(6, 'months');
+            chart_time_span = 180;
         } else if (req.params.period == 8){
             start = moment().subtract(12, 'months');
+            chart_time_span = 365;
         } else if (req.params.period == 9){
             start = moment().subtract(18, 'months');
+            chart_time_span = 545;
         } else if (req.params.period == 10){
             start = moment().subtract(24, 'months');
+            chart_time_span = 730;
         } else if (req.params.period == 11){
             start = moment().subtract(36, 'months');
+            chart_time_span = 1095;
         } else if (req.params.period == 12){
             start = moment().subtract(60, 'months');
+            chart_time_span = 1825;
         }
-        console.log(start);
+        var data_set = [];
+        var i = 0;
+        for (i = 0; i < chart_time_span; i++) {
+            data_set[i] = null;
+            labels[i] = "day "+String(i);
+        }
+        
 
         var query = {
                 Entry_Date: {
@@ -101,8 +121,17 @@ progress_router.get('/check/:period', function (req, res, next)  {
             return next(error);
           } else {
             console.log(data);
+            for  (z in data)
+            {         
+                var p = (start.diff(moment(data[z].Entry_Date), 'days')*-1);
+                var w = data[z].Current_Weight;
+                console.log(p);
+                console.log(w);
+                data_set[p] = {x: p, y: w};
+            }
+            console.log(data_set);
             res.setHeader('Content-Type', 'application/json');
-            res.json({success: true});
+            res.json([labels,data_set]);
           }
         });
 })
