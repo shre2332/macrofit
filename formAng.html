@@ -1407,6 +1407,10 @@ app.controller('myCtrl', function($scope, $http) {
 	    		$scope.meals_dialog_list_data = response.data;
 		  	});
 		}
+
+		$scope.make_draggable = function() {
+			$( ".draggable" ).draggable();
+		}
 			
 });
 
@@ -1415,7 +1419,9 @@ app.directive('myPostRepeatDirective', function() {
 		    if (scope.$last){
 		      // iteration is complete, do whatever post-processing
 		      // is necessary
-		      $( ".draggable" ).draggable();
+		      $( function() {
+			    $( ".draggable" ).draggable();
+			  } );
 		    }
 		  };
 		});
