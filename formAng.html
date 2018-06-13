@@ -80,7 +80,6 @@
 				        duration: 250
 				    }
 				});
-
 				$("#login_dialog").dialog({
 				    autoOpen: false,
 				    show: {
@@ -131,6 +130,19 @@
 				        duration: 250
 				    }
 				});
+
+				$("#current_meals_dialog").dialog({
+				    autoOpen: false,
+				    show: {
+				        effect: "fade",
+				        duration: 500
+				    },
+				    hide: {
+				        effect: "fade",
+				        duration: 250
+				    }
+				});
+				
 				
 				$( "#edit_meal_date" ).datepicker();
 				$( "#edit_meal_date" ).datepicker("setDate", new Date());
@@ -172,6 +184,12 @@
 				$('#discard_edit_food_button').click(function () {
 				    $("#edit_food_dialog").dialog("close");
 				});
+
+				$('#meals_dialog_open_button').click(function () {
+				    $("#current_meals_dialog").dialog("open");
+				});
+
+				$( ".draggable" ).draggable();
 		    
 	  	} );
 	  	
@@ -212,7 +230,6 @@
 	  	#login_dialog {
       	display:none;
       }
-
       #success_dialog {
       	display:none;
       }
@@ -238,6 +255,16 @@
       	max-width: 300;
       	width:80%;
       }
+      .container_float {
+		    border: 3px solid #DDDDDD;
+		    width: 20%;
+		    height: 40%;
+		    position: absolute;
+		    right: 10%;
+		    z-index: 10;
+		    top: 30%;
+		    background-color: grey;
+		}
 	  </style>
 </head>
 
@@ -250,7 +277,7 @@
 </div>
 
 <div ng-app="myApp" ng-controller="myCtrl">
-	
+
   <div id="success_dialog">
     <p>SUCCESS</p>
   </div>
@@ -326,6 +353,18 @@
     <button ng-click="create_food_dialog_click()">Create New</button>
     <button id="discard_edit_food_button">Discard</button>
   </div>
+
+  <div id="current_meals_dialog" title="CURRENT MEALS">
+  	<button ng-click="meals_dialog_update()">UPDATE</button>
+  	<ul id="meals_dialog_list">
+	  	<li ng-repeat="x in meals_dialog_list_data" my-post-repeat-directive>
+  			<div ng-init="make_draggable()" ng-attr-class="draggable ui-widget-content" ng-attr-id="{{x._id}}">
+  				<p>{{x.Food_Name}} {{x.Calories}}</p>
+  			</div>
+  		</li>
+	</ul>
+  </div>
+
     
 	<div class="header">
 		<p>MACROFIT</p>
@@ -431,6 +470,9 @@
 				  
 				  <h3>CHECK MEAL</h3>
 				  <div>
+				  	  
+				  	  <button id="meals_dialog_open_button">Meals Dialog</button>
+				  	  <br/><br/>
 					  <p><input type="text" ng-model="search_meals_text"></p>
 					  <button ng-click="check_meals_click()">Check Meals</button>
 					  <ul id="found_meals_list">
@@ -503,11 +545,11 @@
 					  <button ng-click="progress_update_click()">Add</button>
 				  </div>
 				  
-					<h3>FIND EXERCISE</h3>
+					<h3>FIND EXERCISE SET</h3>
 					<div>
 						<p>exercise go here</p>
 					</div>
-					<h3>CHECK EXERCISES</h3>
+					<h3>FIND WORKOUT SET</h3>
 					<div>
 						<p>exercise go here</p>
 					</div>
@@ -615,10 +657,10 @@
 				<div>
 					<p>exercise go here</p>
 				</div>
-				<h3>REMAINING EXERCISE</h3>
+				<!--<h3>REMAINING EXERCISE</h3>
 				<div>
 					<p>exercise go here</p>
-				</div>
+				</div>-->
 			</div>
 		</div>
 	  </div>
@@ -802,10 +844,13 @@
 				</div>
 				<h3>EDIT EXERCISE MOVE</h3>
 				<div>
-					<p>exercise go here</p>
+					<p>Edit Exercise Move</p>
 				</div>
 				<h3>CREATE EXERCISE SET</h3>
 				<div>
+					  <p>Exercise sets are exercise moves with specific reps and sets specified, exercise are logged as instaces
+					  	of exercise sets.  Exercise Sets specify goal reps and sets while an exercise will log the actual reps sets
+					  	and weights performed</p>
 					  <p><input type="text" ng-model="search_exercise_move_text" ng-change="search_exercise_move_click()"></p>
 					  <button ng-click="search_exercise_move_click()">Search Exercise Moves</button>
 					  <button ng-click="list_exercise_move_click()">List Exercise Moves</button>
@@ -819,8 +864,8 @@
 								    <th>{{x.Grams}}</th>
 								  </tr>
 								  <tr>
-								    <th>Edit Exercise Move: </th>
-								    <th><button ng-attr-class="edit_exercise_move_button" ng-click="exercise_move_edit_click($event)" ng-attr-id="{{x._id}}">EDIT</button></th>
+								    <th>Add Exercise Move: </th>
+								    <th><button ng-attr-class="add_exercise_move_button" ng-click="add_exercise_move_click($event)" ng-attr-id="{{x._id}}">ADD</button></th>
 								  </tr>
 								</table>
 				    		</div>
@@ -828,7 +873,83 @@
 					  </ul>
 					  <label for="reps_sets_select">Reps:</label>
 					  <input name="reps_sets_select" id="reps_sets_select">
-				  </div>
+				</div>
+				<h3>CREATE WORKOUT SET</h3>
+				<div>
+					  <p>A Workout Set is a collection of Exercise Sets meant to be performed togther as a single workout.  Workout Sets
+					  	 will specify Exercise Sets to perform as well as the rest time between the sets.  A Workout is a logged instance of
+					  	  a Workout Set like an Exercise is a logged instance of an Exercise Set</p>
+					  <p><input type="text" ng-model="search_exercise_set_text" ng-change="search_exercise_set_click()"></p>
+					  <button ng-click="search_exercise_set_click()">Search Exercise Sets</button>
+					  <button ng-click="list_exercise_set_click()">List Exercise Sets</button>
+					  <ul id="found_exercise_set_list">
+					  	<li ng-repeat="x in search_exercise_set_data">
+					  		<div>
+					  			<h3>{{x.Name}}</h3>
+					  			<table>
+					  			  <tr>
+								    <th>Serving Size</th>
+								    <th>{{x.Grams}}</th>
+								  </tr>
+								  <tr>
+								    <th>Add Exercise Set: </th>
+								    <th><button ng-attr-class="add_exercise_set_button" ng-click="add_exercise_set_click($event)" ng-attr-id="{{x._id}}">ADD</button></th>
+								  </tr>
+								</table>
+				    		</div>
+				  		</li>
+					  </ul>
+				</div>
+				<h3>CREATE WORKOUT PLAN</h3>
+				<div>
+						<p>A Workout Plan is a series of Workout Sets meant to be a single workout cycle or week.</p>
+					  <p><input type="text" ng-model="search_workout_set_text" ng-change="search_workout_set_click()"></p>
+					  <button ng-click="search_workout_set_click()">Search Exercise Moves</button>
+					  <button ng-click="list_workout_set_click()">List Exercise Moves</button>
+					  <ul id="found_workout_set_list">
+					  	<li ng-repeat="x in search_workout_set_data">
+					  		<div>
+					  			<h3>{{x.Name}}</h3>
+					  			<table>
+					  			  <tr>
+								    <th>Serving Size</th>
+								    <th>{{x.Grams}}</th>
+								  </tr>
+								  <tr>
+								    <th>Add Workout Set: </th>
+								    <th><button ng-attr-class="add_workout_set_button" ng-click="add_workout_set_click($event)" ng-attr-id="{{x._id}}">ADD</button></th>
+								  </tr>
+								</table>
+				    		</div>
+				  		</li>
+					  </ul>
+				</div>
+				<h3>CREATE WORKOUT PROGRAM</h3>
+				<div>
+						<p>A Workout Program is a series of Workout Plans.  Workout Plans allow for programs that repeat segements (Workout Plans)
+							 but can then change to incorporate weekly or monthly periodization, muscle confusion, or general variability into an individuals 
+							 workouts.</p>
+					  <p><input type="text" ng-model="search_workout_plan_text" ng-change="search_workout_plan_click()"></p>
+					  <button ng-click="search_workout_plan_click()">Search Workout Plans</button>
+					  <button ng-click="list_workout_plan_click()">List Workout Plans</button>
+					  <ul id="found_workout_plan_list">
+					  	<li ng-repeat="x in search_workout_plan_data">
+					  		<div>
+					  			<h3>{{x.Name}}</h3>
+					  			<table>
+					  			  <tr>
+								    <th>Serving Size</th>
+								    <th>{{x.Grams}}</th>
+								  </tr>
+								  <tr>
+								    <th>Add Workout Plan: </th>
+								    <th><button ng-attr-class="add_workout_plan_button" ng-click="add_workout_plan_click($event)" ng-attr-id="{{x._id}}">EDIT</button></th>
+								  </tr>
+								</table>
+				    		</div>
+				  		</li>
+					  </ul>
+				</div>
 			</div>
 	  </div>
 	  
@@ -902,9 +1023,10 @@
 				  </div>
 			</div>
 	  </div>
-	  
+	
 	</div>
 
+  </div>
 </div>
 
 </body>
@@ -1065,7 +1187,6 @@ app.controller('myCtrl', function($scope, $http) {
 		    });
     	}
     	$scope.get_rem_click = function() {
-
 	    	//$http.post("http://localhost:3000/macros", {username: "a"}).then(function(response) {
 	    	$http.get("http://localhost:3000/macro/remaining").then(function(response) {
 	    		//alert(response.data.Calories);
@@ -1105,12 +1226,9 @@ app.controller('myCtrl', function($scope, $http) {
 					});
 	        	}
 		    });
-			$("#loading_dialog").dialog("close");
-			/*$(window).resize(function(){
-			    $("#rem_mac_accordion").accordion("refresh");
-			});*/
-	    }
-	    $scope.load_spinner = function()
+	  }
+	    
+	  $scope.load_spinner = function()
 		{
 		   $( ".spinner" ).spinner({
 		   		step: 10, 
@@ -1118,6 +1236,7 @@ app.controller('myCtrl', function($scope, $http) {
             	max: 10000
 		   });
 		}
+		
 		$scope.meal_edit_click = function(event)
 		{
 			$http.get("http://localhost:3000/meal/" + event.target.id).then(function(response) {
@@ -1170,7 +1289,6 @@ app.controller('myCtrl', function($scope, $http) {
 					
 		    });
 		}
-
 		$scope.delete_edit_meal = function(event)
 		{
 			$http.delete("http://localhost:3000/meal/" + $scope.edit_meal_id).then(function(response) {
@@ -1179,14 +1297,12 @@ app.controller('myCtrl', function($scope, $http) {
 				$("#success_dialog").dialog("open");
 			})
 		}
-
 		$scope.delete_goal_click = function(event)
 		{
 			$http.delete("http://localhost:3000/goal/" + event.target.id).then(function(response) {
 				$("#success_dialog").dialog("open");
 			})
 		}
-
 		$scope.search_food_click = function()
 		{
 			$http.get("http://localhost:3000/food/search/"+$scope.search_food_text).then(function(response) {
@@ -1210,7 +1326,6 @@ app.controller('myCtrl', function($scope, $http) {
 					
 		    });
 		}
-
 		$scope.create_exercise_move = function()
 		{
 			$http.post("http://localhost:3000/exercise/move", {
@@ -1248,14 +1363,12 @@ app.controller('myCtrl', function($scope, $http) {
 					
 		    });
 		}
-
 		$scope.check_progress_click = function()
 		{
 			$http.get("http://localhost:3000/progress/check/"+document.getElementById("check_progress_time_period").value).then(function(response) {
 				if (true){//response.data.success == true) {
 					var labels_ret = 0;
 					var data_ret = 0;
-
 					var ctx = document.getElementById("progressChart");
 					var progressChart = new Chart(ctx, {
 					    type: 'line',
@@ -1288,10 +1401,25 @@ app.controller('myCtrl', function($scope, $http) {
 					
 		    });
 		}
-		
 
-
+		$scope.meals_dialog_update = function() {
+			$http.get("http://localhost:3000/meal/today").then(function(response) {
+	    		$scope.meals_dialog_list_data = response.data;
+		  	});
+		}
+			
 });
+
+app.directive('myPostRepeatDirective', function() {
+		  return function(scope, element, attrs) {
+		    if (scope.$last){
+		      // iteration is complete, do whatever post-processing
+		      // is necessary
+		      $( ".draggable" ).draggable();
+		    }
+		  };
+		});
+
 </script>
 
 </html>
