@@ -106,7 +106,6 @@ exercise_router.post('/move', function (req, res, next)  {
           Cardio: req.body.cardio,
           Custom_Creator_ID: String(req.session.userId)
         }
-
         Exercise_Move.create(exerciseMoveData, function (error, food) {
           if (error) {
             return next(error);
@@ -121,11 +120,11 @@ exercise_router.post('/move', function (req, res, next)  {
 // get food search
 exercise_router.get('/move', function (req, res, next)  {
 
-  Exercise_Move.find({}, function(err, foods) {
+  Exercise_Move.find({}, function(err, moves) {
     var exerciseMoveMap = {};
 
-    Exercise_Move.forEach(function(execise_move) {
-      exerciseMoveMap[execise_move._id] = execise_move;
+    moves.forEach(function(exercise_move) {
+      exerciseMoveMap[exercise_move._id] = exercise_move;
     });
     res.setHeader('Content-Type', 'application/json');
     res.json(exerciseMoveMap);
@@ -150,6 +149,30 @@ exercise_router.get('/move/search/:search_string', function (req, res, next)  {
         res.setHeader('Content-Type', 'application/json');
         res.json(exerciseMoveMap);
     });
+})
+
+exercise_router.post('/set', function (req, res, next)  {
+  if (req.body.exercise_move_id) {
+
+        var exerciseSetData = {
+          Name: "temp",
+          Exercise_Move_ID: req.body.exercise_move_id,
+          Reps: req.body.reps,
+          Sets: req.body.sets,
+          Rest: req.body.rest,
+          Pace: req.body.pace,
+          Custom_Flag: true,
+          Custom_Creator_ID: String(req.session.userId)
+        }
+        Exercise_Set.create(exerciseSetData, function (error, set) {
+          if (error) {
+            return next(error);
+          } else {
+            res.setHeader('Content-Type', 'application/json');
+            res.json({success: true});
+          }
+        });
+  }
 })
 
 

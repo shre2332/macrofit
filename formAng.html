@@ -860,8 +860,12 @@
 					  			<h3>{{x.Name}}</h3>
 					  			<table>
 					  			  <tr>
-								    <th>Serving Size</th>
-								    <th>{{x.Grams}}</th>
+								    <th>Pectorals</th>
+								    <th>Latimus Dorsi</th>
+								  </tr>
+								  <tr>
+								    <th>{{x.Pectorals}}</th>
+								    <th>{{x.Latimus_Dorsi}}</th>
 								  </tr>
 								  <tr>
 								    <th>Add Exercise Move: </th>
@@ -871,8 +875,16 @@
 				    		</div>
 				  		</li>
 					  </ul>
-					  <label for="reps_sets_select">Reps:</label>
-					  <input name="reps_sets_select" id="reps_sets_select">
+					  <label for="create_exercise_set_reps">Reps:</label>
+					  <input name="create_exercise_set_reps" id="create_exercise_set_reps" ng-model="create_exercise_set_reps">
+					  <label for="create_exercise_set_sets">Sets:</label>
+					  <input name="create_exercise_set_sets" id="create_exercise_set_sets" ng-model="create_exercise_set_sets">
+					  <label for="create_exercise_set_rest">Rests:</label>
+					  <input name="create_exercise_set_rest" id="create_exercise_set_rest" ng-model="create_exercise_set_rest">
+					  <label for="create_exercise_set_pace">Pace:</label>
+					  <input name="create_exercise_set_pace" id="create_exercise_set_pace" ng-model="create_exercise_set_pace">
+					  <br>
+				  	  <button ng-click="create_exercise_set()">Add</button>
 				</div>
 				<h3>CREATE WORKOUT SET</h3>
 				<div>
@@ -1092,11 +1104,9 @@ app.controller('myCtrl', function($scope, $http) {
     	}
     	
     	$scope.list_food_click = function() {
-    		$body.addClass("loading");
     		$http.get("http://localhost:3000/food").then(function(response) {//$http.get("http://localhost:3000/food").then(function(response) {
         		$scope.search_food_data = response.data;
 		    });
-		    $body.removeClass("loading");
 	    }
 	    $scope.search_goals_click = function() {
     		$http.get("http://localhost:3000/goal").then(function(response) {
@@ -1273,7 +1283,6 @@ app.controller('myCtrl', function($scope, $http) {
 		}
 		$scope.create_food_dialog_click = function()
 		{
-			//alert( $scope.edit_food_name +  $scope.edit_food_amount +  $scope.edit_food_calories +  $scope.edit_food_fat +  $scope.edit_food_carbs +  $scope.edit_food_protein +  $scope.edit_food_fiber);
 			$http.post("http://localhost:3000/food", //$http.post("http://localhost:3000/create_food", 
 			{name: $scope.edit_food_name, grams: $scope.edit_food_amount, calories: $scope.edit_food_calories, fat: $scope.edit_food_fat, carbs: $scope.edit_food_carbs, protein: $scope.edit_food_protein, fiber: $scope.edit_food_fiber}
 			).then(function(response) {
@@ -1410,6 +1419,33 @@ app.controller('myCtrl', function($scope, $http) {
 
 		$scope.make_draggable = function() {
 			$( ".draggable" ).draggable();
+		}
+
+		$scope.list_exercise_move_click = function() {
+    		$http.get("http://localhost:3000/exercise/move").then(function(response) {
+        		$scope.search_exercise_move_data = response.data;
+		    });
+	    }
+
+	    $scope.create_exercise_set = function()
+		{
+			$http.post("http://localhost:3000/food", //$http.post("http://localhost:3000/create_food", 
+			{exercise_move_id: event.target.id, reps: $scope.create_exercise_set_reps, sets: $scope.create_exercise_set_sets, rest: $scope.create_exercise_set_rest, pace: $scope.create_exercise_set_pace}
+			).then(function(response) {
+				if (response.data.success == true) {		
+					$("#success_dialog").dialog("open");
+					$scope.create_exercise_set_reps = "";
+					$scope.create_exercise_set_sets = "";
+					$scope.create_exercise_set_rest = "";
+					$scope.create_exercise_set_pace = "";
+				}
+				else
+				{
+					//do somthing
+					alert("failed");
+				}
+					
+		    });
 		}
 			
 });
