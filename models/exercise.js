@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 
 var ExerciseSchema = new mongoose.Schema({
   Name: {
-    type: String,
+    type: String
   },
   Exercise_Set_ID: {
     type: String,//should be object id

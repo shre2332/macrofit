@@ -130,7 +130,6 @@
 				        duration: 250
 				    }
 				});
-
 				$("#current_meals_dialog").dialog({
 				    autoOpen: false,
 				    show: {
@@ -184,11 +183,9 @@
 				$('#discard_edit_food_button').click(function () {
 				    $("#edit_food_dialog").dialog("close");
 				});
-
 				$('#meals_dialog_open_button').click(function () {
 				    $("#current_meals_dialog").dialog("open");
 				});
-
 				$( ".draggable" ).draggable();
 		    
 	  	} );
@@ -360,6 +357,7 @@
 	  	<li ng-repeat="x in meals_dialog_list_data" my-post-repeat-directive>
   			<div ng-init="make_draggable()" ng-attr-class="draggable ui-widget-content" ng-attr-id="{{x._id}}">
   				<p>{{x.Food_Name}} {{x.Calories}}</p>
+  				{{load_draggable()}}
   			</div>
   		</li>
 	</ul>
@@ -379,6 +377,8 @@
 	    <li><a href="#tabs-3">Progress</a></li>
 	    <li><a href="#tabs-4">Create</a></li>
 	    <li><a href="#tabs-5">Goals</a></li>
+	    <li><a href="#tabs-6">Social</a></li>
+	    <li><a href="#tabs-7">Beta Feedback</a></li>
 	  </ul>
 	  
 	  <div id="tabs-1">
@@ -633,6 +633,7 @@
 			  </div>
 				<h3>CHECK PROGRESS</h3>
 			  <div>
+			  	<label for="time_period_progress_type">Time Period:</label>
 				  <select name="check_progress_time_period" id="check_progress_time_period">
 						<option value="1" selected="selected">Past Week</option>
 						<option value="2">Past 2 Weeks</option>
@@ -648,11 +649,44 @@
 						<option value="12">Past 5 Year</option>
 				  </select>
 				  <br>
+				  <label for="recorded_stats_progress_type">Recorded Stats:</label>
+				  <select name="check_progress_type" id="check_progress_type">
+						<option value="1" selected="selected">Weight</option>
+						<option value="2">Body Fat %</option>
+						<option value="3">Blood Pressure</option>
+				  </select>
+				  <br>
+				  <label for="meal_content_progress_type">Meal Content:</label>
+				  <select name="check_progress_type_against" id="check_progress_type_against">
+						<option value="1" selected="selected">None</option>
+						<option value="2">Calories</option>
+						<option value="3">Protein</option>
+						<option value="4">Fat</option>
+						<option value="5">Carbs</option>
+						<option value="6">Fiber</option>
+						<option value="7">All Macros</option>
+				  </select>
+				  <br>
+				  <label for="adherence_progress_type">Meal Adherence:</label>
+				  <select name="check_progress_type_against_ad" id="check_progress_type_against_ad">
+						<option value="1" selected="selected">None</option>
+						<option value="2">Calories</option>
+						<option value="3">Protein</option>
+						<option value="4">Fat</option>
+						<option value="5">Carbs</option>
+						<option value="6">Fiber</option>
+						<option value="7">All Macros</option>
+				  </select>
+				  <br>
 				  <button ng-click="check_progress_click()">Check Progress</button>
 				  <div id="prog_check_graph" height="20%" width="60%">
 						<canvas id="progressChart" width="400" height="400"></canvas>
 					</div>
 			  </div>
+			  <h3>CHECK MEAL ADHERENCE</h3>
+				<div>
+					<p>exercise go here</p>
+				</div>
 			  <h3>CHECK EXERCISE</h3>
 				<div>
 					<p>exercise go here</p>
@@ -1035,6 +1069,66 @@
 				  </div>
 			</div>
 	  </div>
+	  
+	  <div id="tabs-6">
+	  	<div class="accordion">
+		  	<h3>MY PAGE</h3>
+		  	<div>
+		  		<p>Main Photo</p>
+		  		<p>About</p>
+		  		<p>Text Posts</p>
+				  <p>Todays Meals:</p>
+				  <p>Todays Exercises:</p>
+				  <p>Recent Meals:</p>
+				  <p>Recent Exercises:</p>
+				  <p>Meal Plans:</p>
+				  <p>Workout Plans:</p>
+				</div>
+				<h3>FIND PEOPLE</h3>
+				<div>
+					<p>exercise go here</p>
+				</div>
+				<h3>MOST ACTIVE</h3>
+		  	<div>
+					  <p>ok</p>
+				</div>
+			</div>
+	  </div>
+	  
+	  <div id="tabs-7">
+	  	<div class="accordion">
+		  	<h3>ABOUT</h3>
+		  	<div>
+				  <p>What its all about</p>
+				</div>
+				<h3>NEWS</h3>
+				<div>
+					<p>NEW FEATURES:</p>
+					<ul>
+						<li>feature 2</li>
+						<li>feature 1</li>
+					</ul>
+				</div>
+				<h3>REPORT ISSUE</h3>
+				<div>
+				  <select name="report_issue_type_select" id="report_issue_type_select">
+      					<option selected="selected" value="non_functional">Non Functional</option>
+      					<option value="100">Partially Functional</option>
+      					<option value="60">secondary</option>
+      					<option value="30">tertiary</option>
+    			</select>
+					<p>exercise go here</p>
+					<textarea id="report_issue_textarea" ng-model="report_issue_textarea" rows="10" cols="120"></textarea>
+					</textarea>
+				</div>
+				<h3>SUGGESTIONS</h3>
+		  	<div>
+				  <p>ok</p>
+				  <textarea id="suggestions_textarea" ng-model="suggestions_textarea" rows="10" cols="120"></textarea>
+					</textarea>
+				</div>
+			</div>
+	  </div>
 	
 	</div>
 
@@ -1247,6 +1341,11 @@ app.controller('myCtrl', function($scope, $http) {
 		   });
 		}
 		
+		$scope.load_draggable = function()
+		{
+		   $( ".draggable" ).draggable();
+		}
+		
 		$scope.meal_edit_click = function(event)
 		{
 			$http.get("http://localhost:3000/meal/" + event.target.id).then(function(response) {
@@ -1410,23 +1509,19 @@ app.controller('myCtrl', function($scope, $http) {
 					
 		    });
 		}
-
 		$scope.meals_dialog_update = function() {
 			$http.get("http://localhost:3000/meal/today").then(function(response) {
 	    		$scope.meals_dialog_list_data = response.data;
 		  	});
 		}
-
 		$scope.make_draggable = function() {
 			$( ".draggable" ).draggable();
 		}
-
 		$scope.list_exercise_move_click = function() {
     		$http.get("http://localhost:3000/exercise/move").then(function(response) {
         		$scope.search_exercise_move_data = response.data;
 		    });
 	    }
-
 	    $scope.create_exercise_set = function()
 		{
 			$http.post("http://localhost:3000/food", //$http.post("http://localhost:3000/create_food", 
@@ -1449,7 +1544,6 @@ app.controller('myCtrl', function($scope, $http) {
 		}
 			
 });
-
 app.directive('myPostRepeatDirective', function() {
 		  return function(scope, element, attrs) {
 		    if (scope.$last){
@@ -1461,7 +1555,6 @@ app.directive('myPostRepeatDirective', function() {
 		    }
 		  };
 		});
-
 </script>
 
 </html>
