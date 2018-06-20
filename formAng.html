@@ -383,7 +383,7 @@
 	  
 	  <div id="tabs-1">
 			<div class="accordion">
-				<h3>LOGIN</h3>
+				<h3 id="log_in_ac">LOGIN</h3>
 				<div>
 					<p>Username: <br/><input type="text" ng-model="username"></p>
 					<p>Password: <br/><input type="text" ng-model="password"></p>
@@ -393,15 +393,15 @@
 				  
 				  <p ng-model="username_confirmed">{{username_confirmed}}</p>
 				</div>
-				<h3>ACCOUNT</h3>
+				<h3 id="account_ac">ACCOUNT</h3>
 				<div>
 					<p>account goes here</p>
 				</div>
-				<h3>PERSONAL STATS</h3>
+				<h3 id="personal_stats_ac">PERSONAL STATS</h3>
 				<div>
 					<p>stats go here</p>
 				</div>
-				<h3>SETTINGS</h3>
+				<h3 id="settings_ac">SETTINGS</h3>
 				<div>
 					<p>settings go here</p>
 				</div>
@@ -411,7 +411,7 @@
 	  
 	  <div id="tabs-2">
 	  	<div class="accordion">
-		    <h3>FIND FOOD</h3>
+		    <h3 id="find_food_ac">FIND FOOD</h3>
 		    	<div>
 					  <p><input type="text" ng-model="search_food_text" ng-change="search_food_click()"></p>
 					  <button ng-click="search_food_click()">Search Foods</button>
@@ -468,7 +468,7 @@
 					  <p ng-model="add_meal_confirmed">{{add_meal_confirmed}}</p>
 				  </div>
 				  
-				  <h3>CHECK MEAL</h3>
+				  <h3 id="check_meal_ac">CHECK MEAL</h3>
 				  <div>
 				  	  
 				  	  <button id="meals_dialog_open_button">Meals Dialog</button>
@@ -530,7 +530,7 @@
 					  </ul>	
 				  </div>
 				  
-				  <h3>LOG PROGRESS UPDATE</h3>
+				  <h3 id="log_progress_update_ac">LOG PROGRESS UPDATE</h3>
 		    	<div>
 					<label for="date">Date: </label>
     				<input type="text" id="pu_date" name="pu_date" ng-model="pu_date" />
@@ -545,11 +545,11 @@
 					  <button ng-click="progress_update_click()">Add</button>
 				  </div>
 				  
-					<h3>FIND EXERCISE SET</h3>
+					<h3 id="find_exercise_ac">FIND EXERCISE SET</h3>
 					<div>
 						<p>exercise go here</p>
 					</div>
-					<h3>FIND WORKOUT SET</h3>
+					<h3 id="find_workout_set_ac">FIND WORKOUT SET</h3>
 					<div>
 						<p>exercise go here</p>
 					</div>
@@ -560,7 +560,7 @@
 	  <div id="tabs-3">
 	  	<div class="container_a">
 	  	<div class="accordion">
-				<h3>CURRENT MACROS</h3>
+				<h3 id="current_macros_ac">CURRENT MACROS</h3>
 				<div>
 				  <button ng-click="check_macros_click()">Check Current Macro</button>
 				  <div id="current_macros_list">
@@ -593,7 +593,7 @@
 
 			  </div>
 			  	
-			  <h3>REMAINING MACROS</h3>
+			  <h3 id="remaining_macros_ac">REMAINING MACROS</h3>
 			  <div id="rem_mac_accordion">
 				  <button ng-click="get_rem_click()">Get remaining macros</button>
 
@@ -631,7 +631,7 @@
 
 				  </div>
 			  </div>
-				<h3>CHECK PROGRESS</h3>
+				<h3 id="check_progress_ac">CHECK PROGRESS</h3>
 			  <div>
 			  	<label for="time_period_progress_type">Time Period:</label>
 				  <select name="check_progress_time_period" id="check_progress_time_period">
@@ -683,11 +683,11 @@
 						<canvas id="progressChart" width="400" height="400"></canvas>
 					</div>
 			  </div>
-			  <h3>CHECK MEAL ADHERENCE</h3>
+			  <h3 id="check_meal_adherence_ac">CHECK MEAL ADHERENCE</h3>
 				<div>
 					<p>exercise go here</p>
 				</div>
-			  <h3>CHECK EXERCISE</h3>
+			  <h3 id="check_exercise_ac">CHECK EXERCISE</h3>
 				<div>
 					<p>exercise go here</p>
 				</div>
@@ -702,7 +702,7 @@
 	  
 	  <div id="tabs-4">
 	  	<div class="accordion">
-	    	<h3>CREATE FOOD</h3>
+	    	<h3 id="create_food_ac">CREATE FOOD</h3>
 	    	<div>
 				  <p>Name: <br/><input type="text" ng-model="create_food_name"></p>
 				  <select name="food_create_amount_type" id="food_create_amount_type">
@@ -719,11 +719,11 @@
 
 				  <p ng-model="create_food_confirmed">{{create_food_confirmed}}</p>
 			  </div>
-			  <h3>EDIT FOOD</h3>
+			  <h3 id="edit_food_ac">EDIT FOOD</h3>
 	    	<div>
 	    		<p>edit food will go here</p>
 	    	</div>
-	    	<h3>CREATE EXERCISE MOVE</h3>
+	    	<h3 id="create_exercise_move_ac">CREATE EXERCISE MOVE</h3>
 				<div>
 				  <p>Name: <br/><input type="text" ng-model="create_exercise_move_name" id="create_exercise_move_name"></p>
 				  <p> Pectorals </p>
@@ -876,11 +876,11 @@
     			  <br>
 				  <button ng-click="create_exercise_move()">Add</button>
 				</div>
-				<h3>EDIT EXERCISE MOVE</h3>
+				<h3 id="edit_exercise_move_ac">EDIT EXERCISE MOVE</h3>
 				<div>
 					<p>Edit Exercise Move</p>
 				</div>
-				<h3>CREATE EXERCISE SET</h3>
+				<h3 id="create_exercise_set_ac">CREATE EXERCISE SET</h3>
 				<div>
 					  <p>Exercise sets are exercise moves with specific reps and sets specified, exercise are logged as instaces
 					  	of exercise sets.  Exercise Sets specify goal reps and sets while an exercise will log the actual reps sets
@@ -920,7 +920,7 @@
 					  <br>
 				  	  <button ng-click="create_exercise_set()">Add</button>
 				</div>
-				<h3>CREATE WORKOUT SET</h3>
+				<h3 id="create_workout_set_ac">CREATE WORKOUT SET</h3>
 				<div>
 					  <p>A Workout Set is a collection of Exercise Sets meant to be performed togther as a single workout.  Workout Sets
 					  	 will specify Exercise Sets to perform as well as the rest time between the sets.  A Workout is a logged instance of
@@ -946,7 +946,7 @@
 				  		</li>
 					  </ul>
 				</div>
-				<h3>CREATE WORKOUT PLAN</h3>
+				<h3 id="create_workout_plan_ac">CREATE WORKOUT PLAN</h3>
 				<div>
 						<p>A Workout Plan is a series of Workout Sets meant to be a single workout cycle or week.</p>
 					  <p><input type="text" ng-model="search_workout_set_text" ng-change="search_workout_set_click()"></p>
@@ -970,7 +970,7 @@
 				  		</li>
 					  </ul>
 				</div>
-				<h3>CREATE WORKOUT PROGRAM</h3>
+				<h3 id="create_workout_program_ac">CREATE WORKOUT PROGRAM</h3>
 				<div>
 						<p>A Workout Program is a series of Workout Plans.  Workout Plans allow for programs that repeat segements (Workout Plans)
 							 but can then change to incorporate weekly or monthly periodization, muscle confusion, or general variability into an individuals 
@@ -1002,7 +1002,7 @@
 	  
 	  <div id="tabs-5">
 	  	<div class="accordion">
-		  	<h3>CREATE MACRO GOAL</h3>
+		  	<h3 id="create_macro_goal_ac">CREATE MACRO GOAL</h3>
 		  	<div>
 				  <p>Calories: <br/><input type="text" ng-model="goal_calories"></p>
 				  <p>Fat: <br/><input type="text" ng-model="goal_fat"></p>
@@ -1013,11 +1013,11 @@
 
 				  <p ng-model="create_goal_confirmed">{{create_goal_confirmed}}</p>
 				</div>
-				<h3>CREATE EXERCISE GOAL</h3>
+				<h3 id="create_exercise_goal_ac">CREATE EXERCISE GOAL</h3>
 				<div>
 					<p>exercise go here</p>
 				</div>
-				<h3>CURRENT GOALS</h3>
+				<h3 id="current_goals_ac">CURRENT GOALS</h3>
 		  	<div>
 					  <p><input type="text" ng-model="search_goals_text"></p>
 					  <button ng-click="search_goals_click()">Search Goals</button>
@@ -1072,7 +1072,7 @@
 	  
 	  <div id="tabs-6">
 	  	<div class="accordion">
-		  	<h3>MY PAGE</h3>
+		  	<h3 id="my_page_ac">MY PAGE</h3>
 		  	<div>
 		  		<p>Main Photo</p>
 		  		<p>About</p>
@@ -1084,11 +1084,11 @@
 				  <p>Meal Plans:</p>
 				  <p>Workout Plans:</p>
 				</div>
-				<h3>FIND PEOPLE</h3>
+				<h3 id="find_people_ac">FIND PEOPLE</h3>
 				<div>
 					<p>exercise go here</p>
 				</div>
-				<h3>MOST ACTIVE</h3>
+				<h3 id="most_active_ac">MOST ACTIVE</h3>
 		  	<div>
 					  <p>ok</p>
 				</div>
@@ -1097,11 +1097,11 @@
 	  
 	  <div id="tabs-7">
 	  	<div class="accordion">
-		  	<h3>ABOUT</h3>
+		  	<h3 id="about_ac">ABOUT</h3>
 		  	<div>
 				  <p>What its all about</p>
 				</div>
-				<h3>NEWS</h3>
+				<h3 id="news_ac">NEWS</h3>
 				<div>
 					<p>NEW FEATURES:</p>
 					<ul>
@@ -1109,7 +1109,7 @@
 						<li>feature 1</li>
 					</ul>
 				</div>
-				<h3>REPORT ISSUE</h3>
+				<h3 id="report_issue_ac">REPORT ISSUE</h3>
 				<div>
 				  <select name="report_issue_type_select" id="report_issue_type_select">
       					<option selected="selected" value="non_functional">Non Functional</option>
@@ -1121,7 +1121,7 @@
 					<textarea id="report_issue_textarea" ng-model="report_issue_textarea" rows="10" cols="120"></textarea>
 					</textarea>
 				</div>
-				<h3>SUGGESTIONS</h3>
+				<h3 id="suggestions_ac">SUGGESTIONS</h3>
 		  	<div>
 				  <p>ok</p>
 				  <textarea id="suggestions_textarea" ng-model="suggestions_textarea" rows="10" cols="120"></textarea>
@@ -1522,7 +1522,8 @@ app.controller('myCtrl', function($scope, $http) {
         		$scope.search_exercise_move_data = response.data;
 		    });
 	    }
-	    $scope.create_exercise_set = function()
+	   
+	   $scope.create_exercise_set = function()
 		{
 			$http.post("http://localhost:3000/food", //$http.post("http://localhost:3000/create_food", 
 			{exercise_move_id: event.target.id, reps: $scope.create_exercise_set_reps, sets: $scope.create_exercise_set_sets, rest: $scope.create_exercise_set_rest, pace: $scope.create_exercise_set_pace}
@@ -1542,7 +1543,138 @@ app.controller('myCtrl', function($scope, $http) {
 					
 		    });
 		}
-			
+		
+		$("#log_in_ac").on("click", function() {
+    	//alert("hey there");
+		});
+		
+		$("#account_ac").on("click", function() {
+    	//alert("hey there");
+		});
+		
+		$("#personal_stats_ac").on("click", function() {
+    	//alert("hey there");
+		});
+		
+		$("#settings_ac").on("click", function() {
+    	//alert("hey there");
+		});
+		
+		$("#find_food_ac").on("click", function() {
+    	//alert("hey there");
+		});
+		
+		$("#check_meal_ac").on("click", function() {
+    	//$scope.check_meals_click();
+		});
+		
+		$("#log_progress_update_ac").on("click", function() {
+    	//alert("hey there");
+		});
+		
+		$("#find_exercise_set_ac").on("click", function() {
+    	//alert("hey there");
+		});
+		
+		$("#find_workout_set_ac").on("click", function() {
+    	//alert("hey there");
+		});
+		
+		$("#current_macros_ac").on("click", function() {
+      $scope.check_macros_click();
+		});
+		
+		$("#remaining_macros_ac").on("click", function() {
+    	$scope.get_rem_click();
+		});
+		
+		$("#check_progress_ac").on("click", function() {
+    	//alert("hey there");
+		});
+		
+		$("#check_meal_adherence_ac").on("click", function() {
+    	//alert("hey there");
+		});
+		
+		$("#check_exercise_ac").on("click", function() {
+    	//alert("hey there");
+		});
+		
+		$("#check_meal_ac").on("click", function() {
+    	//alert("hey there");
+		});
+		
+		$("#create_food_ac").on("click", function() {
+    	//alert("hey there");
+		});
+		
+		$("#edit_food_ac").on("click", function() {
+    	//alert("hey there");
+		});
+		
+		$("#create_exercise_move_ac").on("click", function() {
+    	//alert("hey there");
+		});
+		
+		$("#edit_exercise_move_ac").on("click", function() {
+    	//alert("hey there");
+		});
+		
+		$("#create_exercise_set_ac").on("click", function() {
+    	//alert("hey there");
+		});
+		
+		$("#create_workout_set_ac").on("click", function() {
+    	//alert("hey there");
+		});
+		
+		$("#create_workout_plan_ac").on("click", function() {
+    	//alert("hey there");
+		});
+		
+		$("#create_workout_program_ac").on("click", function() {
+    	//alert("hey there");
+		});
+		
+		$("#create_macro_goal_ac").on("click", function() {
+    	//alert("hey there");
+		});
+		
+		$("#create_exercise_goal_ac").on("click", function() {
+    	//alert("hey there");
+		});
+		
+		$("#current_goals_ac").on("click", function() {
+    	//alert("hey there");
+		});
+		
+		$("#my_page_ac").on("click", function() {
+    	//alert("hey there");
+		});
+		
+		$("#find_people_ac").on("click", function() {
+    	//alert("hey there");
+		});
+		
+		$("#most_active_ac").on("click", function() {
+    	//alert("hey there");
+		});
+		
+		$("#about_ac").on("click", function() {
+    	//alert("hey there");
+		});
+		
+		$("#news_ac").on("click", function() {
+    	//alert("hey there");
+		});
+		
+		$("#report_issue_ac").on("click", function() {
+    	//alert("hey there");
+		});
+		
+		$("#suggestions_ac").on("click", function() {
+    	//alert("hey there");
+		});
 });
 app.directive('myPostRepeatDirective', function() {
 		  return function(scope, element, attrs) {
