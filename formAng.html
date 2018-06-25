@@ -374,7 +374,7 @@
 	  <ul>
 	    <li><a href="#tabs-1">Profile</a></li>
 	    <li><a href="#tabs-2">Log</a></li>
-	    <li><a href="#tabs-3">Progress</a></li>
+	    <li><a id="progress_tab_head" href="#tabs-3">Progress</a></li>
 	    <li><a href="#tabs-4">Create</a></li>
 	    <li><a href="#tabs-5">Goals</a></li>
 	    <li><a href="#tabs-6">Social</a></li>
@@ -1675,7 +1675,14 @@ app.controller('myCtrl', function($scope, $http) {
 		$("#suggestions_ac").on("click", function() {
     	//alert("hey there");
 		});
+		
+		$("#progress_tab_head").on("click", function() {
+    	$scope.check_macros_click();
+    	$scope.get_rem_click();
+		});
+		
 });
+
 app.directive('myPostRepeatDirective', function() {
 		  return function(scope, element, attrs) {
 		    if (scope.$last){
