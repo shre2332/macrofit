@@ -49,32 +49,39 @@ exercise_router.post('/', function (req, res, next)  {
 })
 
 exercise_router.post('/set', function (req, res, next)  {
-  if (req.body.name &&
-      req.body.grams &&
-      req.body.calories &&
-      req.body.fat &&
-      req.body.carbs &&
-      req.body.protein &&
-      req.body.fiber) {
+  if (req.body.exercise_move) {
 
-        var foodData = {
-          Name: req.body.name,
-          Grams: req.body.grams,
-          Calories: req.body.calories,
-          Fat: req.body.fat,
-          Carbs: req.body.carbs,
-          Protein: req.body.protein,
-          Fiber: req.body.fiber
+    Exercise_Move.findOne({ _id: req.body.exercise_move })
+    .exec(function (err, move) {
+      if (err) {
+        return callback(err)
+      } else if (!move) {
+        var err = new Error('move not found.');
+        err.status = 401;
+        return callback(err);
+      }
+    
+        var exerciseSetData = {
+          Name: move["Name"],
+          Exercise_Move_ID: req.body.exercise_move,
+          Reps: req.body.reps,
+          Sets: req.body.sets,
+          Rest: req.body.rest,
+          Pace: req.body.pace,
+          Custom_Flag: true,
+          Custom_Creator_ID: String(req.session.userId)
         }
 
-        Food.create(foodData, function (error, food) {
+        Exercise_Set.create(exerciseSetData, function (error, set) {
           if (error) {
             return next(error);
           } else {
             res.setHeader('Content-Type', 'application/json');
-          res.json({success: true});
+            res.json({success: true});
           }
         });
+
+    });
   }
 })
 
@@ -106,7 +113,7 @@ exercise_router.post('/move', function (req, res, next)  {
           Cardio: req.body.cardio,
           Custom_Creator_ID: String(req.session.userId)
         }
-        Exercise_Move.create(exerciseMoveData, function (error, food) {
+        Exercise_Move.create(exerciseMoveData, function (error, move) {
           if (error) {
             return next(error);
           } else {

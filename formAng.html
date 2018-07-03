@@ -377,7 +377,7 @@
 	    <li><a id="progress_tab_head" href="#tabs-3">Progress</a></li>
 	    <li><a href="#tabs-4">Create</a></li>
 	    <li><a href="#tabs-5">Goals</a></li>
-	    <li><a href="#tabs-6">Social</a></li>
+	    <li><a id="social_tab_head" href="#tabs-6">Social</a></li>
 	    <li><a href="#tabs-7">Beta Feedback</a></li>
 	  </ul>
 	  
@@ -903,7 +903,7 @@
 								  </tr>
 								  <tr>
 								    <th>Add Exercise Move: </th>
-								    <th><button ng-attr-class="add_exercise_move_button" ng-click="add_exercise_move_click($event)" ng-attr-id="{{x._id}}">ADD</button></th>
+								    <th><button ng-attr-class="add_exercise_move_button" ng-click="add_exercise_set_click($event)" ng-attr-id="{{x._id}}">ADD</button></th>
 								  </tr>
 								</table>
 				    		</div>
@@ -1078,6 +1078,42 @@
 		  		<p>About</p>
 		  		<p>Text Posts</p>
 				  <p>Todays Meals:</p>
+				  <ul id="my_page_todays_meals">
+					  	<li ng-repeat="x in my_page_todays_meal_data">
+					  	<div>
+					  		<table>
+					  		  <tr>
+								    <th>Food Name</th>
+								    <th>{{x.Food_Name}}</th>
+								  </tr>
+					  			<tr>
+								    <th>Size</th>
+								    <th>{{x.Grams}}</th>
+								  </tr>
+								  <tr>
+								    <th>Calories</th>
+								    <th>{{x.Calories}}</th>
+								  </tr>
+								  <tr>
+								    <th>Fat</th>
+								    <th>{{x.Fat}}</th>
+								  </tr>
+								  <tr>
+								    <th>Carbs</th>
+								    <th>{{x.Carbs}}</th>
+								  </tr>
+								  <tr>
+								    <th>Protein</th>
+								    <th>{{x.Protein}}</th>
+								  </tr>
+								  <tr>
+								    <th>Fiber</th>
+								    <th>{{x.Fiber}}</th>
+								  </tr>
+								</table>
+				    		</div>
+				  		</li>
+					  </ul>
 				  <p>Todays Exercises:</p>
 				  <p>Recent Meals:</p>
 				  <p>Recent Exercises:</p>
@@ -1543,6 +1579,32 @@ app.controller('myCtrl', function($scope, $http) {
 					
 		    });
 		}
+
+		$scope.get_my_page_meals = function() {
+    		$http.get("http://localhost:3000/meal/today").then(function(response) {
+        		$scope.my_page_todays_meal_data = response.data;
+		  	});
+		  }
+
+		$scope.add_exercise_set_click = function() {
+			$http.post("http://localhost:3000/exercise/set", 
+			{exercise_move: event.target.id, reps: $scope.create_exercise_set_reps, sets: $scope.create_exercise_set_sets, rest: $scope.create_exercise_set_rest, pace: $scope.create_exercise_set_pace}
+			).then(function(response) {
+				if (response.data.success == true) {	
+					$("#success_dialog").dialog("open");
+					$scope.create_exercise_set_reps = "";
+					$scope.create_exercise_set_sets = "";
+					$scope.create_exercise_set_rest = "";
+					$scope.create_exercise_set_pace = "";
+				}
+				else
+				{
+					//
+				}
+					
+		    });
+    	}
+		
 		
 		$("#log_in_ac").on("click", function() {
     	//alert("hey there");
@@ -1677,8 +1739,12 @@ app.controller('myCtrl', function($scope, $http) {
 		});
 		
 		$("#progress_tab_head").on("click", function() {
-    	$scope.check_macros_click();
-    	$scope.get_rem_click();
+    		$scope.check_macros_click();
+    		$scope.get_rem_click();
+		});
+
+		$("#social_tab_head").on("click", function() {
+    		$scope.get_my_page_meals();
 		});
 		
 });
