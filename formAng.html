@@ -20,6 +20,11 @@
 	<script src="https://cdn.jsdelivr.net/npm/chart.js@2.7.2/dist/Chart.js"></script>
     <!--<link rel="stylesheet" href="style.css" />-->
     
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.0.7/js/all.js"></script>
+    
     <script>
 		  $( function() {
 		  	$body = $("body");
@@ -567,7 +572,7 @@
 				    <p ng-model="date">{{date}}</p>
 				    
 				    <h3>Current Macros</h3>
-		  			<table>
+		  			<table class="table">
 					  <tr>
 					    <th>Calories</th>
 					    <th><p ng-model="calories">{{calories}}</p></th>
@@ -896,10 +901,48 @@
 					  			  <tr>
 								    <th>Pectorals</th>
 								    <th>Latimus Dorsi</th>
+								    <th>Bicep</th>
+								    <th>Tricep</th>
+								    <th>Mid Delt</th>
+								    <th>Front Delt</th>
+								    <th>Rear Delt</th>
+								    <th>Forearms</th>
+								    <th>Abdominals</th>
+								    <th>Rhomboids</th>
+								    <th>Lower Back</th>
+								    <th>Upper Trapzius</th>
+								    <th>Mid Trapizius</th>
+								    <th>Lower Trapizius</th>
+								    <th>Obliques</th>
+								    <th>Quadriceps</th>
+								    <th>Hamstrings</th>
+								    <th>Glute Max</th>
+								    <th>Glute Min</th>
+								    <th>Calves</th>
+								    <th>Cardio</th>
 								  </tr>
 								  <tr>
 								    <th>{{x.Pectorals}}</th>
 								    <th>{{x.Latimus_Dorsi}}</th>
+								    <th>{{x.Bicep}}</th>
+								    <th>{{x.Tricep}}</th>
+								    <th>{{x.Mid_Delt}}</th>
+								    <th>{{x.Front_Delt}}</th>
+								    <th>{{x.Rear_Delt}}</th>
+								    <th>{{x.Forearms}}</th>
+								    <th>{{x.Abdominals}}</th>
+								    <th>{{x.Rhomboids}}</th>
+								    <th>{{x.Lower_Back}}</th>
+								    <th>{{x.Upper_Trapzius}}</th>
+								    <th>{{x.Mid_Trapizius}}</th>
+								    <th>{{x.Lower_Trapizius}}</th>
+								    <th>{{x.Obliques}}</th>
+								    <th>{{x.Quadriceps}}</th>
+								    <th>{{x.Hamstrings}}</th>
+								    <th>{{x.Glute_Max}}</th>
+								    <th>{{x.Glute_Min}}</th>
+								    <th>{{x.Calves}}</th>
+								    <th>{{x.Cardio}}</th>
 								  </tr>
 								  <tr>
 								    <th>Add Exercise Move: </th>
@@ -933,15 +976,36 @@
 					  		<div>
 					  			<h3>{{x.Name}}</h3>
 					  			<table>
-					  			  <tr>
-								    <th>Serving Size</th>
-								    <th>{{x.Grams}}</th>
-								  </tr>
+						  			<tr>
+									    <th>Reps</th>
+									    <th>{{x.Reps}}</th>
+									  </tr>
+									  <tr>
+									    <th>Sets</th>
+									    <th>{{x.Sets}}</th>
+									  </tr>
+									  <tr>
+									    <th>Rest</th>
+									    <th>{{x.Rest}}</th>
+									  </tr>
+									  <tr>
+									    <th>Pace</th>
+									    <th>{{x.Pace}}</th>
+									  </tr>
 								  <tr>
 								    <th>Add Exercise Set: </th>
-								    <th><button ng-attr-class="add_exercise_set_button" ng-click="add_exercise_set_click($event)" ng-attr-id="{{x._id}}">ADD</button></th>
+								    <th><button ng-attr-class="add_exercise_set_button" ng-click="add_exercise_set_to_working_click($event)" ng-attr-id="{{x._id}}">ADD</button></th>
 								  </tr>
 								</table>
+				    		</div>
+				  		</li>
+					  </ul>
+
+					  <ul id="working_workout_set_list">
+					  	<li ng-repeat="x in working_workout_set_list_data">
+					  		<div>
+					  			<h3>{{x.Name}}</h3>
+								<button ng-attr-class="add_exercise_set_button" ng-click="remove_exercise_set_from_workout_set_click($event)" ng-attr-id="{{x._id}}">REMOVE</button>
 				    		</div>
 				  		</li>
 					  </ul>
@@ -957,10 +1021,6 @@
 					  		<div>
 					  			<h3>{{x.Name}}</h3>
 					  			<table>
-					  			  <tr>
-								    <th>Serving Size</th>
-								    <th>{{x.Grams}}</th>
-								  </tr>
 								  <tr>
 								    <th>Add Workout Set: </th>
 								    <th><button ng-attr-class="add_workout_set_button" ng-click="add_workout_set_click($event)" ng-attr-id="{{x._id}}">ADD</button></th>
@@ -1579,14 +1639,12 @@ app.controller('myCtrl', function($scope, $http) {
 					
 		    });
 		}
-
 		$scope.get_my_page_meals = function() {
     		$http.get("http://localhost:3000/meal/today").then(function(response) {
         		$scope.my_page_todays_meal_data = response.data;
 		  	});
 		  }
-
-		$scope.add_exercise_set_click = function() {
+		$scope.add_exercise_set_click = function(event) {
 			$http.post("http://localhost:3000/exercise/set", 
 			{exercise_move: event.target.id, reps: $scope.create_exercise_set_reps, sets: $scope.create_exercise_set_sets, rest: $scope.create_exercise_set_rest, pace: $scope.create_exercise_set_pace}
 			).then(function(response) {
@@ -1603,6 +1661,10 @@ app.controller('myCtrl', function($scope, $http) {
 				}
 					
 		    });
+    	}
+ 	
+    	$scope.add_exercise_set_to_working_click = function(event) {
+    		//$scope.working_workout_set_list_data.append({Name: , id: event.id});
     	}
 		
 		
@@ -1742,13 +1804,11 @@ app.controller('myCtrl', function($scope, $http) {
     		$scope.check_macros_click();
     		$scope.get_rem_click();
 		});
-
 		$("#social_tab_head").on("click", function() {
     		$scope.get_my_page_meals();
 		});
 		
 });
-
 app.directive('myPostRepeatDirective', function() {
 		  return function(scope, element, attrs) {
 		    if (scope.$last){
