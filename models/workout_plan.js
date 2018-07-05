@@ -11,9 +11,15 @@ var WorkoutPlanSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
-  Exercise_Sets_IDs: {[String]},//should be object id
-  Reps: {[Number]},
-  Rest_Set_Length: {[Number]},
+  Exercise_Sets_IDs: {
+    type:[String]
+  },//should be object id
+  Reps: {
+    type: [Number]
+  },
+  Rest_Set_Length: {
+      type: [Number]
+  },
   User_ID: {
     type: String,//should be object id
   },

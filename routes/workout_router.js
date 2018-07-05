@@ -1,7 +1,7 @@
 var express = require('express');
 
 var app = express()
-var exercise_router = express.Router()
+var workout_router = express.Router()
 
 var User = require('../models/user.js');
 var Meal = require('../models/meal.js');
@@ -12,13 +12,15 @@ var Measurement_Status = require('../models/measurement_status.js');
 var Exercise_Move = require('../models/exercise_move.js');
 var Exercise_Set = require('../models/exercise_set.js');
 var Exercise = require('../models/exercise.js');
+var Workout_Set = require('../models/workout_set.js');
+var Workout_Plan = require('../models/workout_plan.js');
 
-exercise_router.use(function (req, res, next) {
-  console.log('exercise router')
+workout_router.use(function (req, res, next) {
+  console.log('workout router')
   next()
 })
 
-exercise_router.post('/', function (req, res, next)  {
+workout_router.post('/', function (req, res, next)  {
   if (req.body.name &&
       req.body.grams &&
       req.body.calories &&
@@ -48,31 +50,17 @@ exercise_router.post('/', function (req, res, next)  {
   }
 })
 
-exercise_router.post('/set', function (req, res, next)  {
-  if (req.body.exercise_move) {
-
-    Exercise_Move.findOne({ _id: req.body.exercise_move })
-    .exec(function (err, move) {
-      if (err) {
-        return callback(err)
-      } else if (!move) {
-        var err = new Error('move not found.');
-        err.status = 401;
-        return callback(err);
-      }
+workout_router.post('/set', function (req, res, next)  {
+  if (req.body.Name) {
     
-        var exerciseSetData = {
-          Name: move["Name"],
-          Exercise_Move_ID: req.body.exercise_move,
-          Reps: req.body.reps,
-          Sets: req.body.sets,
-          Rest: req.body.rest,
-          Pace: req.body.pace,
-          Custom_Flag: true,
-          Custom_Creator_ID: String(req.session.userId)
+        var workoutSetData = {
+          Name: req.body.Name,
+          Exercises_IDs: req.body.Exercises_IDs,
+          Actual_Rest_Set_Length: req.body.Actual_Rest_Set_Length,
+          User_ID: String(req.session.userId)
         }
 
-        Exercise_Set.create(exerciseSetData, function (error, set) {
+        Workout_Set.create(workoutSetData, function (error, set) {
           if (error) {
             return next(error);
           } else {
@@ -80,12 +68,10 @@ exercise_router.post('/set', function (req, res, next)  {
             res.json({success: true});
           }
         });
-
-    });
   }
 })
 
-exercise_router.post('/move', function (req, res, next)  {
+workout_router.post('/move', function (req, res, next)  {
   if (req.body.name) {
 
         var exerciseMoveData = {
@@ -125,7 +111,7 @@ exercise_router.post('/move', function (req, res, next)  {
 })
 
 // get food search
-exercise_router.get('/move', function (req, res, next)  {
+workout_router.get('/move', function (req, res, next)  {
 
   Exercise_Move.find({}, function(err, moves) {
     var exerciseMoveMap = {};
@@ -140,7 +126,7 @@ exercise_router.get('/move', function (req, res, next)  {
 
 
 // get food search
-exercise_router.get('/move/search/:search_string', function (req, res, next)  {
+workout_router.get('/move/search/:search_string', function (req, res, next)  {
 
     Exercise_Move.find(
         { $text : { $search : String(req.params.search_string) } })
@@ -158,34 +144,29 @@ exercise_router.get('/move/search/:search_string', function (req, res, next)  {
     });
 })
 
-exercise_router.get('/set', function (req, res, next)  {
-  Exercise_Set.find({}, function(err, sets) {
-    var exerciseSetMap = {};
+workout_router.post('/set', function (req, res, next)  {
+  if (req.body.exercise_move_id) {
 
-    sets.forEach(function(exercise_set) {
-      exerciseSetMap[exercise_set._id] = exercise_set;
-    });
-    res.setHeader('Content-Type', 'application/json');
-    res.json(exerciseSetMap);
-  })
-})
-
-exercise_router.get('/set/:id', function (req, res, next)  {
-
-    Exercise_Set.findOne({ _id: String(req.params.id)  })
-    .exec(function (err, set) {
-      if (err) {
-        return callback(err)
-      } else if (!set) {
-        var err = new Error('set not found.');
-        err.status = 401;
-        return callback(err);
-      }
+        var exerciseSetData = {
+          Name: "temp",
+          Exercise_Move_ID: req.body.exercise_move_id,
+          Reps: req.body.reps,
+          Sets: req.body.sets,
+          Rest: req.body.rest,
+          Pace: req.body.pace,
+          Custom_Flag: true,
+          Custom_Creator_ID: String(req.session.userId)
+        }
+        Exercise_Set.create(exerciseSetData, function (error, set) {
+          if (error) {
+            return next(error);
+          } else {
             res.setHeader('Content-Type', 'application/json');
-            res.json(set);
-
-    });
+            res.json({success: true});
+          }
+        });
+  }
 })
 
 
-module.exports = exercise_router;
+module.exports = workout_router;

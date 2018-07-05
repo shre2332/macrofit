@@ -1005,10 +1005,22 @@
 					  	<li ng-repeat="x in working_workout_set_list_data">
 					  		<div>
 					  			<h3>{{x.Name}}</h3>
+					  			<label for="rest">Rest:</label>
+					  			<input name="workout_set_rest_input">
+					  			<p style="visibility:hidden;">{{x._id}}</p>
 								<button ng-attr-class="add_exercise_set_button" ng-click="remove_exercise_set_from_workout_set_click($event)" ng-attr-id="{{x._id}}">REMOVE</button>
 				    		</div>
 				  		</li>
 					  </ul>
+
+					  <br/>
+					  <label for="workout_set_name">Workout Name:</label>
+					  <input name="workout_set_input_name" id="workout_set_input_name" ng-model="workout_set_input_name">
+					  <label for="default_rest">Default Rest:</label>
+					  <input name="workout_set_rest_input_default" id="workout_set_rest_input_default" ng-model="workout_set_rest_input_default">
+					  <br/>
+
+					  <button ng-click="create_workout_set()">Create Workout Set</button>
 				</div>
 				<h3 id="create_workout_plan_ac">CREATE WORKOUT PLAN</h3>
 				<div>
@@ -1662,10 +1674,47 @@ app.controller('myCtrl', function($scope, $http) {
 					
 		    });
     	}
+
+    	$scope.list_exercise_set_click = function() {
+    		$http.get("http://localhost:3000/exercise/set").then(function(response) {
+        		$scope.search_exercise_set_data = response.data;
+		    });
+	    }
  	
+ 		//var working_workout_set_list_data_js = [];
+ 		$scope.working_workout_set_list_data = [];
+
     	$scope.add_exercise_set_to_working_click = function(event) {
-    		//$scope.working_workout_set_list_data.append({Name: , id: event.id});
+    		$http.get("http://localhost:3000/exercise/set/"+String(event.target.id)).then(function(response){
+    			//working_workout_set_list_data_js.append();
+    			$scope.working_workout_set_list_data.push(response.data);
+    		});
     	}
+
+    	$scope.create_workout_set = function()
+		{
+			var Actual_Rest_Set_Length_list = [];
+			for (x in $scope.working_workout_set_list_data)
+			{
+				Actual_Rest_Set_Length_list.push($scope.workout_set_rest_input_default);
+			}
+
+			$http.post("http://localhost:3000/workout/set", 
+			{Name: $scope.workout_set_input_name, Exercises_IDs: $scope.working_workout_set_list_data, Actual_Rest_Set_Length: Actual_Rest_Set_Length_list}
+			).then(function(response) {
+				if (response.data.success == true) {		
+					$("#success_dialog").dialog("open");
+					$scope.workout_set_rest_input_default = "";
+					$scope.workout_set_input_name = "";
+				}
+				else
+				{
+					//do somthing
+					alert("failed");
+				}
+					
+		    });
+		}
 		
 		
 		$("#log_in_ac").on("click", function() {
