@@ -168,5 +168,72 @@ workout_router.post('/set', function (req, res, next)  {
   }
 })
 
+workout_router.get('/set', function (req, res, next)  {
+  Workout_Set.find({}, function(err, sets) {
+    var workoutSetMap = {};
+
+    sets.forEach(function(workout_set) {
+      workoutSetMap[workout_set._id] = workout_set;
+    });
+    res.setHeader('Content-Type', 'application/json');
+    res.json(workoutSetMap);
+  })
+})
+
+// get exercise_set search
+workout_router.get('/set/search/:search_string', function (req, res, next)  {
+
+    Workout_Set.find(
+        { $text : { $search : String(req.params.search_string) } })
+    .exec(function(err, results) {
+        // callback
+        console.log(results);
+
+        var workoutSetMap = {};
+
+        results.forEach(function(set) {
+          workoutSetMap[set._id] = set;
+        });
+        res.setHeader('Content-Type', 'application/json');
+        res.json(workoutSetMap);
+    });
+})
+
+workout_router.get('/set/:id', function (req, res, next)  {
+
+    Workout_Set.findOne({ _id: String(req.params.id)  })
+    .exec(function (err, set) {
+      if (err) {
+        return callback(err)
+      } else if (!set) {
+        var err = new Error('set not found.');
+        err.status = 401;
+        return callback(err);
+      }
+            res.setHeader('Content-Type', 'application/json');
+            res.json(set);
+
+    });
+})
+
+// get exercise_set search
+workout_router.get('/plan/search/:search_string', function (req, res, next)  {
+
+    Workout_Plan.find(
+        { $text : { $search : String(req.params.search_string) } })
+    .exec(function(err, results) {
+        // callback
+        console.log(results);
+
+        var workoutPlanMap = {};
+
+        results.forEach(function(plan) {
+          workoutPlanMap[plan._id] = plan;
+        });
+        res.setHeader('Content-Type', 'application/json');
+        res.json(workoutPlanMap);
+    });
+})
+
 
 module.exports = workout_router;

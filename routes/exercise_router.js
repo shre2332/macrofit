@@ -187,5 +187,24 @@ exercise_router.get('/set/:id', function (req, res, next)  {
     });
 })
 
+// get exercise_set search
+exercise_router.get('/set/search/:search_string', function (req, res, next)  {
+
+    Exercise_Set.find(
+        { $text : { $search : String(req.params.search_string) } })
+    .exec(function(err, results) {
+        // callback
+        console.log(results);
+
+        var exerciseSetMap = {};
+
+        results.forEach(function(set) {
+          exerciseSetMap[set._id] = set;
+        });
+        res.setHeader('Content-Type', 'application/json');
+        res.json(exerciseSetMap);
+    });
+})
+
 
 module.exports = exercise_router;

@@ -1026,8 +1026,8 @@
 				<div>
 						<p>A Workout Plan is a series of Workout Sets meant to be a single workout cycle or week.</p>
 					  <p><input type="text" ng-model="search_workout_set_text" ng-change="search_workout_set_click()"></p>
-					  <button ng-click="search_workout_set_click()">Search Exercise Moves</button>
-					  <button ng-click="list_workout_set_click()">List Exercise Moves</button>
+					  <button ng-click="search_workout_set_click()">Search Workout Sets</button>
+					  <button ng-click="list_workout_set_click()">List Workout Sets</button>
 					  <ul id="found_workout_set_list">
 					  	<li ng-repeat="x in search_workout_set_data">
 					  		<div>
@@ -1035,12 +1035,26 @@
 					  			<table>
 								  <tr>
 								    <th>Add Workout Set: </th>
-								    <th><button ng-attr-class="add_workout_set_button" ng-click="add_workout_set_click($event)" ng-attr-id="{{x._id}}">ADD</button></th>
+								    <th><button ng-attr-class="add_workout_set_button" ng-click="add_workout_set_to_working_click($event)" ng-attr-id="{{x._id}}">ADD</button></th>
 								  </tr>
 								</table>
 				    		</div>
 				  		</li>
 					  </ul>
+
+					  <ul id="working_workout_plan_list">
+					  	<li ng-repeat="x in working_workout_plan_list_data">
+					  		<div>
+					  			<h3>{{x.Name}}</h3>
+					  			<label for="rest">Day:</label>
+					  			<input name="workout_set_rest_input">
+					  			<p style="visibility:hidden;">{{x._id}}</p>
+								<button ng-attr-class="add_exercise_set_button" ng-click="remove_exercise_set_from_workout_set_click($event)" ng-attr-id="{{x._id}}">REMOVE</button>
+				    		</div>
+				  		</li>
+					  </ul>
+
+					  <button ng-click="create_workout_plan()">Create Workout Plan</button>
 				</div>
 				<h3 id="create_workout_program_ac">CREATE WORKOUT PROGRAM</h3>
 				<div>
@@ -1715,6 +1729,56 @@ app.controller('myCtrl', function($scope, $http) {
 					
 		    });
 		}
+
+		$scope.list_workout_set_click = function() {
+    		$http.get("http://localhost:3000/workout/set").then(function(response) {
+        		$scope.search_workout_set_data = response.data;
+		    });
+	    }
+
+	    $scope.working_workout_plan_list_data = [];
+
+    	$scope.add_workout_set_to_working_click = function(event) {
+    		$http.get("http://localhost:3000/workout/set/"+String(event.target.id)).then(function(response){
+    			$scope.working_workout_plan_list_data.push(response.data);
+    		});
+    	}
+
+    	$scope.create_workout_plan = function()
+		{
+			for (child in document.getElementById("working_workout_plan_list").children)
+			{
+				alert(child);
+			}
+
+			/*var Actual_Rest_Set_Length_list = [];
+			for (x in $scope.working_workout_set_list_data)
+			{
+				Actual_Rest_Set_Length_list.push($scope.workout_set_rest_input_default);
+			}
+
+			$http.post("http://localhost:3000/workout/set", 
+			{Name: $scope.workout_set_input_name, Exercises_IDs: $scope.working_workout_set_list_data, Actual_Rest_Set_Length: Actual_Rest_Set_Length_list}
+			).then(function(response) {
+				if (response.data.success == true) {		
+					$("#success_dialog").dialog("open");
+					$scope.workout_set_rest_input_default = "";
+					$scope.workout_set_input_name = "";
+				}
+				else
+				{
+					//do somthing
+					alert("failed");
+				}
+					
+		    });*/
+		}
+
+	    $scope.list_workout_plan_click = function() {
+    		$http.get("http://localhost:3000/workout/plan").then(function(response) {
+        		$scope.search_workout_plan_data = response.data;
+		    });
+	    }
 		
 		
 		$("#log_in_ac").on("click", function() {
