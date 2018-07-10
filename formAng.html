@@ -154,6 +154,12 @@
 				$( "#pu_date" ).datepicker();
 				$( "#pu_date" ).datepicker("setDate", new Date());
 				
+				$( "#weight_goal_end_date" ).datepicker();
+				$( "#weight_goal_end_date" ).datepicker("setDate", new Date());
+				
+				$( "#weight_goal_start_date" ).datepicker();
+				$( "#weight_goal_start_date" ).datepicker("setDate", new Date());
+				
 				
 				//$("#edit_meal_dialog").dialog("open");
 				
@@ -355,6 +361,7 @@
     <button ng-click="create_food_dialog_click()">Create New</button>
     <button id="discard_edit_food_button">Discard</button>
   </div>
+  
 
   <div id="current_meals_dialog" title="CURRENT MEALS">
   	<button ng-click="meals_dialog_update()">UPDATE</button>
@@ -1099,6 +1106,26 @@
 
 				  <p ng-model="create_goal_confirmed">{{create_goal_confirmed}}</p>
 				</div>
+				
+				<h3 id="create_weight_goal_ac">SET WEIGHT GOAL</h3>
+		  	<div>
+				  <p>Current Weight: <br/><input type="text" ng-model="weight_goal_current"></p>
+				  <p>Goal Weight: <br/><input type="text" ng-model="weight_goal_goal"></p>
+				  <label for="date">Start Date: </label>
+    			<input type="text" id="weight_goal_start_date" name="weight_goal_start_date" ng-model="weight_goal_start_date" />
+				  <label for="date">End Date: </label>
+    			<input type="text" id="weight_goal_end_date" name="weight_goal_end_date" ng-model="weight_goal_end_date" />
+    			<br/>
+    			<select>
+    				<option value="0">Set Goal Date</option>
+    				<option value="1">Generate Goal Date</option>
+    			</select>
+    			<br/>
+    			<br/>
+				  <button ng-click="create_weight_goal_click()">Create Weight Goal</button>
+
+				  <p ng-model="create_goal_confirmed">{{create_goal_confirmed}}</p>
+				</div>
 				<h3 id="create_exercise_goal_ac">CREATE EXERCISE GOAL</h3>
 				<div>
 					<p>exercise go here</p>
@@ -1688,7 +1715,6 @@ app.controller('myCtrl', function($scope, $http) {
 					
 		    });
     	}
-
     	$scope.list_exercise_set_click = function() {
     		$http.get("http://localhost:3000/exercise/set").then(function(response) {
         		$scope.search_exercise_set_data = response.data;
@@ -1697,14 +1723,12 @@ app.controller('myCtrl', function($scope, $http) {
  	
  		//var working_workout_set_list_data_js = [];
  		$scope.working_workout_set_list_data = [];
-
     	$scope.add_exercise_set_to_working_click = function(event) {
     		$http.get("http://localhost:3000/exercise/set/"+String(event.target.id)).then(function(response){
     			//working_workout_set_list_data_js.append();
     			$scope.working_workout_set_list_data.push(response.data);
     		});
     	}
-
     	$scope.create_workout_set = function()
 		{
 			var Actual_Rest_Set_Length_list = [];
@@ -1712,7 +1736,6 @@ app.controller('myCtrl', function($scope, $http) {
 			{
 				Actual_Rest_Set_Length_list.push($scope.workout_set_rest_input_default);
 			}
-
 			$http.post("http://localhost:3000/workout/set", 
 			{Name: $scope.workout_set_input_name, Exercises_IDs: $scope.working_workout_set_list_data, Actual_Rest_Set_Length: Actual_Rest_Set_Length_list}
 			).then(function(response) {
@@ -1729,34 +1752,28 @@ app.controller('myCtrl', function($scope, $http) {
 					
 		    });
 		}
-
 		$scope.list_workout_set_click = function() {
     		$http.get("http://localhost:3000/workout/set").then(function(response) {
         		$scope.search_workout_set_data = response.data;
 		    });
 	    }
-
 	    $scope.working_workout_plan_list_data = [];
-
     	$scope.add_workout_set_to_working_click = function(event) {
     		$http.get("http://localhost:3000/workout/set/"+String(event.target.id)).then(function(response){
     			$scope.working_workout_plan_list_data.push(response.data);
     		});
     	}
-
     	$scope.create_workout_plan = function()
 		{
 			for (child in document.getElementById("working_workout_plan_list").children)
 			{
 				alert(child);
 			}
-
 			/*var Actual_Rest_Set_Length_list = [];
 			for (x in $scope.working_workout_set_list_data)
 			{
 				Actual_Rest_Set_Length_list.push($scope.workout_set_rest_input_default);
 			}
-
 			$http.post("http://localhost:3000/workout/set", 
 			{Name: $scope.workout_set_input_name, Exercises_IDs: $scope.working_workout_set_list_data, Actual_Rest_Set_Length: Actual_Rest_Set_Length_list}
 			).then(function(response) {
@@ -1773,7 +1790,6 @@ app.controller('myCtrl', function($scope, $http) {
 					
 		    });*/
 		}
-
 	    $scope.list_workout_plan_click = function() {
     		$http.get("http://localhost:3000/workout/plan").then(function(response) {
         		$scope.search_workout_plan_data = response.data;
