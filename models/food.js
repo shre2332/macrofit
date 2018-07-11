@@ -178,7 +178,9 @@ var FoodSchema = new mongoose.Schema({
   },
   Carotenoids: {
     type: Number
-  }
+  },
+
+  Food_Image: { data: Buffer, contentType: String }
 
 });
 
