@@ -146,10 +146,24 @@
 				        duration: 250
 				    }
 				});
+				$("#add_meal_dialog").dialog({
+				    autoOpen: false,
+				    show: {
+				        effect: "fade",
+				        duration: 500
+				    },
+				    hide: {
+				        effect: "fade",
+				        duration: 250
+				    }
+				});
 				
 				
 				$( "#edit_meal_date" ).datepicker();
 				$( "#edit_meal_date" ).datepicker("setDate", new Date());
+				
+				$( "#add_meal_date_dialog" ).datepicker();
+				$( "#add_meal_date_dialog" ).datepicker("setDate", new Date());
 				
 				$( "#pu_date" ).datepicker();
 				$( "#pu_date" ).datepicker("setDate", new Date());
@@ -160,6 +174,14 @@
 				$( "#weight_goal_start_date" ).datepicker();
 				$( "#weight_goal_start_date" ).datepicker("setDate", new Date());
 				
+				$( "#check_meals_date" ).datepicker();
+				$( "#check_meals_date" ).datepicker("setDate", new Date());
+				
+				$( "#current_macros_date" ).datepicker();
+				$( "#current_macros_date" ).datepicker("setDate", new Date());
+				
+				$( "#rem_macros_date" ).datepicker();
+				$( "#rem_macros_date" ).datepicker("setDate", new Date());
 				
 				//$("#edit_meal_dialog").dialog("open");
 				
@@ -362,6 +384,20 @@
     <button id="discard_edit_food_button">Discard</button>
   </div>
   
+  <div id="add_meal_dialog" title="ADD MEAL">
+  	<div type="text" id="add_meal_dialog_id" name="add_meal_dialog_id" ng-model="add_meal_dialog_id" style="hidden: true">{{add_meal_dialog_id}}</div>
+  	<p id="add_meal_dialog_name" ng-model="add_meal_dialog_name">{{add_meal_dialog_name}}</p>
+  	<select name="meal_size_dialog" id="meal_size_dialog">
+			<option selected="selected">Grams</option>
+			<option>Ounces</option>
+		</select>
+  	<label for="amount">Amount: </label>
+    <input type="text" id="add_meal_amount_dialog" name="add_meal_amount_dialog" ng-model="add_meal_amount_dialog" />
+    <label for="date">Date: </label>
+    <input type="text" id="add_meal_date_dialog" name="add_meal_date_dialog" ng-model="add_meal_date_dialog" />
+    <button ng-click="add_meal_from_dialog()">Add</button>
+    <button ng-click="discard_meal_from_dialog()">Discard</button>
+  </div>
 
   <div id="current_meals_dialog" title="CURRENT MEALS">
   	<button ng-click="meals_dialog_update()">UPDATE</button>
@@ -461,6 +497,10 @@
 								    <th>Grams: <input class="spinner" name="value" ng-attr-id="{{ 'add_meal_grams-' + x._id}}" style="width:30%;">{{load_spinner()}}</th>
 								    <th><button ng-click="food_select_click($event)" ng-attr-id="{{x._id}}">ADD</button></th>
 								  </tr>
+								   <tr>
+								    <th>Grams: <input class="spinner" name="value" ng-attr-id="{{ 'add_meal_grams-' + x._id}}" style="width:30%;">{{load_spinner()}}</th>
+								    <th><button ng-click="food_select_dialog_click($event)" ng-attr-id="{{x._id}}">ADD DIALOG</button></th>
+								  </tr>
 								  <tr>
 								    <th>Edit Food: </th>
 								    <th><button ng-attr-class="edit_food_button" ng-click="food_edit_click($event)" ng-attr-id="{{x._id}}">EDIT</button></th>
@@ -482,7 +522,9 @@
 				  
 				  <h3 id="check_meal_ac">CHECK MEAL</h3>
 				  <div>
-				  	  
+				  	  <label for="date">Date: </label>
+    					<input type="text" id="check_meals_date" name="check_meals_date" ng-model="check_meals_date" />
+    					<br/>
 				  	  <button id="meals_dialog_open_button">Meals Dialog</button>
 				  	  <br/><br/>
 					  <p><input type="text" ng-model="search_meals_text"></p>
@@ -574,6 +616,9 @@
 	  	<div class="accordion">
 				<h3 id="current_macros_ac">CURRENT MACROS</h3>
 				<div>
+					<label for="date">Date: </label>
+    			<input type="text" id="current_macros_date" name="current_macros_date" ng-model="current_macros_date" />
+    			<br/>
 				  <button ng-click="check_macros_click()">Check Current Macro</button>
 				  <div id="current_macros_list">
 				    <p ng-model="date">{{date}}</p>
@@ -607,6 +652,9 @@
 			  	
 			  <h3 id="remaining_macros_ac">REMAINING MACROS</h3>
 			  <div id="rem_mac_accordion">
+			  	<label for="date">Date: </label>
+    			<input type="text" id="rem_macros_date" name="rem_macros_date" ng-model="rem_macros_date" />
+    			<br/>
 				  <button ng-click="get_rem_click()">Get remaining macros</button>
 
 				  <div id="remaining_macros_list">
@@ -1793,6 +1841,36 @@ app.controller('myCtrl', function($scope, $http) {
 	    $scope.list_workout_plan_click = function() {
     		$http.get("http://localhost:3000/workout/plan").then(function(response) {
         		$scope.search_workout_plan_data = response.data;
+		    });
+	    }
+	    
+	  $scope.food_select_dialog_click = function(event) {
+    		$http.get("http://localhost:3000/food/" + event.target.id).then(function(response) {
+				$("#add_meal_dialog").dialog("open");
+				document.getElementById("add_meal_dialog_id").value = response.data._id;
+				document.getElementById("add_meal_dialog_name").value = response.data.Name;
+				$scope.add_meal_dialog_id = response.data._id;
+				$scope.add_meal_dialog_name = response.data.Name;
+
+			})
+	  }  
+	    
+	   $scope.add_meal_from_dialog = function(event) {
+    		$http.post("http://localhost:3000/meal", 
+			{food_id: $scope.add_meal_dialog_id, grams: $scope.add_meal_amount_dialog}
+			).then(function(response) {
+				if (response.data.success == true) {		
+					//$scope.add_meal_confirmed = "SUCCESS";
+					$scope.add_meal_amount_dialog = "";
+					$("#add_meal_dialog").dialog("close");
+					$("#success_dialog").dialog("open");
+					$scope.add_meal_grams = "";
+				}
+				else
+				{
+					$scope.add_meal_confirmed = "Failed to add meal";
+				}
+					
 		    });
 	    }
 		
