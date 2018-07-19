@@ -19,15 +19,15 @@ food_router.use(function (req, res, next) {
 })
 
 food_router.post('/', function (req, res, next)  {
-  if (req.body.name &&
-      req.body.grams &&
-      req.body.calories &&
-      req.body.fat &&
-      req.body.carbs &&
-      req.body.protein &&
-      req.body.fiber) {
+  if (req.body.Name &&
+      req.body.Grams &&
+      req.body.Calories &&
+      req.body.Fat &&
+      req.body.Carbs &&
+      req.body.Protein &&
+      req.body.Fiber) {
 
-        var foodData = {
+        /*var foodData = {
           Name: req.body.name,
           Grams: req.body.grams,
           Calories: req.body.calories,
@@ -35,9 +35,10 @@ food_router.post('/', function (req, res, next)  {
           Carbs: req.body.carbs,
           Protein: req.body.protein,
           Fiber: req.body.fiber
-        }
+        }*/
+        var foodData = req.body;
 
-        Food.create(foodData, function (error, food) {
+        Food.create(foodData, function (error, food) {//(foodData, function (error, food) {
           if (error) {
             return next(error);
           } else {

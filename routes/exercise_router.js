@@ -19,15 +19,15 @@ exercise_router.use(function (req, res, next) {
 })
 
 exercise_router.post('/', function (req, res, next)  {
-  if (req.body.name &&
-      req.body.grams &&
-      req.body.calories &&
-      req.body.fat &&
-      req.body.carbs &&
-      req.body.protein &&
-      req.body.fiber) {
+  if (req.body.Name &&
+      req.body.Grams &&
+      req.body.Calories &&
+      req.body.Fat &&
+      req.body.Carbs &&
+      req.body.Protein &&
+      req.body.Fiber) {
 
-        var foodData = {
+        /*var foodData = {
           Name: req.body.name,
           Grams: req.body.grams,
           Calories: req.body.calories,
@@ -35,7 +35,8 @@ exercise_router.post('/', function (req, res, next)  {
           Carbs: req.body.carbs,
           Protein: req.body.protein,
           Fiber: req.body.fiber
-        }
+        }*/
+        var foodData = req.body;
 
         Food.create(foodData, function (error, food) {
           if (error) {
@@ -49,9 +50,9 @@ exercise_router.post('/', function (req, res, next)  {
 })
 
 exercise_router.post('/set', function (req, res, next)  {
-  if (req.body.exercise_move) {
+  if (req.body.Exercise_Move_ID) {
 
-    Exercise_Move.findOne({ _id: req.body.exercise_move })
+    Exercise_Move.findOne({ _id: req.body.Exercise_Move_ID })
     .exec(function (err, move) {
       if (err) {
         return callback(err)
@@ -61,7 +62,7 @@ exercise_router.post('/set', function (req, res, next)  {
         return callback(err);
       }
     
-        var exerciseSetData = {
+        /*var exerciseSetData = {
           Name: move["Name"],
           Exercise_Move_ID: req.body.exercise_move,
           Reps: req.body.reps,
@@ -70,7 +71,12 @@ exercise_router.post('/set', function (req, res, next)  {
           Pace: req.body.pace,
           Custom_Flag: true,
           Custom_Creator_ID: String(req.session.userId)
-        }
+        }*/
+        
+        var exerciseSetData = req.body;
+        exerciseSetData.Name= move["Name"];
+        exerciseSetData.Custom_Flag= true;
+        exerciseSetData.Custom_Creator_ID= String(req.session.userId);
 
         Exercise_Set.create(exerciseSetData, function (error, set) {
           if (error) {
@@ -86,9 +92,30 @@ exercise_router.post('/set', function (req, res, next)  {
 })
 
 exercise_router.post('/move', function (req, res, next)  {
-  if (req.body.name) {
+  if (req.body.Name,
+      req.body.Pectorals,
+      req.body.Latimus_Dorsi,
+      req.body.Bicep,
+      req.body.Tricep,
+      req.body.Mid_Deltiod,
+      req.body.Front_Deltoid,
+      req.body.Rear_Deltoid,
+      req.body.Forarms,
+      req.body.Abdominals,
+      req.body.Rhomboids,
+      req.body.Lower_Back,
+      req.body.Upper_Trapizius,
+      req.body.Mid_Trapizius,
+      req.body.Lower_Trapizius,
+      req.body.Obliques,
+      req.body.Quadriceps,
+      req.body.Hamstrings,
+      req.body.Glute_Max,
+      req.body.Glute_Min,
+      req.body.Calves,
+      req.body.Cardio) {
 
-        var exerciseMoveData = {
+        /*var exerciseMoveData = {
           Name: req.body.name,
           Pectorals: req.body.pecs,
           Latimus_Dorsi: req.body.lats,
@@ -112,7 +139,11 @@ exercise_router.post('/move', function (req, res, next)  {
           Calves: req.body.calves,
           Cardio: req.body.cardio,
           Custom_Creator_ID: String(req.session.userId)
-        }
+        }*/
+        
+        var exerciseMoveData = req.body;
+        exerciseMoveData.Custom_Creator_ID = String(req.session.userId);
+        
         Exercise_Move.create(exerciseMoveData, function (error, move) {
           if (error) {
             return next(error);

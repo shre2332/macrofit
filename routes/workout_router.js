@@ -20,45 +20,21 @@ workout_router.use(function (req, res, next) {
   next()
 })
 
-workout_router.post('/', function (req, res, next)  {
-  if (req.body.name &&
-      req.body.grams &&
-      req.body.calories &&
-      req.body.fat &&
-      req.body.carbs &&
-      req.body.protein &&
-      req.body.fiber) {
-
-        var foodData = {
-          Name: req.body.name,
-          Grams: req.body.grams,
-          Calories: req.body.calories,
-          Fat: req.body.fat,
-          Carbs: req.body.carbs,
-          Protein: req.body.protein,
-          Fiber: req.body.fiber
-        }
-
-        Food.create(foodData, function (error, food) {
-          if (error) {
-            return next(error);
-          } else {
-            res.setHeader('Content-Type', 'application/json');
-          res.json({success: true});
-          }
-        });
-  }
-})
 
 workout_router.post('/set', function (req, res, next)  {
-  if (req.body.Name) {
+  if (req.body.Name,
+      req.body.Exercises_IDs,
+      req.body.Actual_Rest_Set_Length) {
     
-        var workoutSetData = {
+        /*var workoutSetData = {
           Name: req.body.Name,
           Exercises_IDs: req.body.Exercises_IDs,
           Actual_Rest_Set_Length: req.body.Actual_Rest_Set_Length,
           User_ID: String(req.session.userId)
-        }
+        }*/
+        
+        var workoutSetData = req.body;
+        workoutSetData.User_ID = String(req.session.userId);
 
         Workout_Set.create(workoutSetData, function (error, set) {
           if (error) {
@@ -72,9 +48,30 @@ workout_router.post('/set', function (req, res, next)  {
 })
 
 workout_router.post('/move', function (req, res, next)  {
-  if (req.body.name) {
+  if (req.body.Name,
+      req.body.Pectorals,
+      req.body.Latimus_Dorsi,
+      req.body.Bicep,
+      req.body.Tricep,
+      req.body.Mid_Deltiod,
+      req.body.Front_Deltoid,
+      req.body.Rear_Deltoid,
+      req.body.Forarms,
+      req.body.Abdominals,
+      req.body.Rhomboids,
+      req.body.Lower_Back,
+      req.body.Upper_Trapizius,
+      req.body.Mid_Trapizius,
+      req.body.Lower_Trapizius,
+      req.body.Obliques,
+      req.body.Quadriceps,
+      req.body.Hamstrings,
+      req.body.Glute_Max,
+      req.body.Glute_Min,
+      req.body.Calves,
+      req.body.Cardio) {
 
-        var exerciseMoveData = {
+        /*var exerciseMoveData = {
           Name: req.body.name,
           Pectorals: req.body.pecs,
           Latimus_Dorsi: req.body.lats,
@@ -98,7 +95,11 @@ workout_router.post('/move', function (req, res, next)  {
           Calves: req.body.calves,
           Cardio: req.body.cardio,
           Custom_Creator_ID: String(req.session.userId)
-        }
+        }*/
+        
+        var exerciseMoveData = req.body;
+        exerciseMoveData.Custom_Creator_ID = String(req.session.userId);
+        
         Exercise_Move.create(exerciseMoveData, function (error, move) {
           if (error) {
             return next(error);
@@ -145,9 +146,13 @@ workout_router.get('/move/search/:search_string', function (req, res, next)  {
 })
 
 workout_router.post('/set', function (req, res, next)  {
-  if (req.body.exercise_move_id) {
+  if (req.body.Exercise_Move_ID,
+      req.body.Reps,
+      req.body.Sets,
+      req.body.Rest,
+      req.body.Pace) {
 
-        var exerciseSetData = {
+        /*var exerciseSetData = {
           Name: "temp",
           Exercise_Move_ID: req.body.exercise_move_id,
           Reps: req.body.reps,
@@ -156,7 +161,12 @@ workout_router.post('/set', function (req, res, next)  {
           Pace: req.body.pace,
           Custom_Flag: true,
           Custom_Creator_ID: String(req.session.userId)
-        }
+        }*/
+        
+        var exerciseSetData = req.body;
+        exerciseSetData.Custom_Creator_ID = String(req.session.userId);
+        exerciseSetData.Name = "temp";
+        
         Exercise_Set.create(exerciseSetData, function (error, set) {
           if (error) {
             return next(error);

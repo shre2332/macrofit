@@ -1406,7 +1406,7 @@ app.controller('myCtrl', function($scope, $http) {
 	    }
 	    $scope.food_select_click = function(event) {
     		$http.post("http://localhost:3000/meal", 
-			{food_id: event.target.id, grams: $scope.add_meal_grams}
+			{Food_ID: event.target.id, Grams: $scope.add_meal_grams}
 			).then(function(response) {
 				if (response.data.success == true) {		
 					//$scope.add_meal_confirmed = "SUCCESS";
@@ -1448,7 +1448,7 @@ app.controller('myCtrl', function($scope, $http) {
 	    }
 	    $scope.create_food_click = function() {
 			$http.post("http://localhost:3000/food", //$http.post("http://localhost:3000/create_food", 
-			{name: $scope.create_food_name, grams: $scope.create_grams, calories: $scope.create_calories, fat: $scope.create_fat, carbs: $scope.create_carbs, protein: $scope.create_protein, fiber: $scope.create_fiber}
+			{Name: $scope.create_food_name, Grams: $scope.create_grams, Calories: $scope.create_calories, Fat: $scope.create_fat, Carbs: $scope.create_carbs, Protein: $scope.create_protein, Fiber: $scope.create_fiber}
 			).then(function(response) {
 				if (response.data.success == true) {
 					//$scope.create_food_confirmed = "SUCCESS";
@@ -1469,7 +1469,7 @@ app.controller('myCtrl', function($scope, $http) {
     	}
     	$scope.create_goal_click = function() {
 			$http.post("http://localhost:3000/goal/macro", 
-			{calories: $scope.goal_calories, fat: $scope.goal_fat, carbs: $scope.goal_carbs, protein: $scope.goal_protein, fiber: $scope.goal_fiber}
+			{Calories: $scope.goal_calories, Fat: $scope.goal_fat, Carbs: $scope.goal_carbs, Protein: $scope.goal_protein, Fiber: $scope.goal_fiber}
 			).then(function(response) {
 				if (response.data.success == true) {	
 					//$scope.create_goal_confirmed = "SUCCESS";
@@ -1580,7 +1580,7 @@ app.controller('myCtrl', function($scope, $http) {
 		$scope.create_food_dialog_click = function()
 		{
 			$http.post("http://localhost:3000/food", //$http.post("http://localhost:3000/create_food", 
-			{name: $scope.edit_food_name, grams: $scope.edit_food_amount, calories: $scope.edit_food_calories, fat: $scope.edit_food_fat, carbs: $scope.edit_food_carbs, protein: $scope.edit_food_protein, fiber: $scope.edit_food_fiber}
+			{Name: $scope.edit_food_name, Grams: $scope.edit_food_amount, Calories: $scope.edit_food_calories, Fat: $scope.edit_food_fat, Carbs: $scope.edit_food_carbs, Protein: $scope.edit_food_protein, Fiber: $scope.edit_food_fiber}
 			).then(function(response) {
 				if (response.data.success == true) {		
 					$("#edit_food_dialog").dialog("close");
@@ -1618,7 +1618,7 @@ app.controller('myCtrl', function($scope, $http) {
 		{
 			//alert(document.getElementById("pu_date").value + $scope.weight_pu + $scope.bp_over_pu + $scope.bp_under_pu + $scope.bf_pu);
 			$http.post("http://localhost:3000/progress", 
-			{date: document.getElementById("pu_date").value, weight: $scope.weight_pu, bp_s: $scope.bp_over_pu, bp_d: $scope.bp_under_pu, bf: $scope.bf_pu}
+			{Entry_Date: document.getElementById("pu_date").value, Current_Weight: $scope.weight_pu, BP_S: $scope.bp_over_pu, BP_D: $scope.bp_under_pu, Body_Fat_Percentage: $scope.bf_pu}
 			).then(function(response) {
 				if (response.data.success == true) {		
 					$("#success_dialog").dialog("open");
@@ -1634,28 +1634,28 @@ app.controller('myCtrl', function($scope, $http) {
 		$scope.create_exercise_move = function()
 		{
 			$http.post("http://localhost:3000/exercise/move", {
-			name: document.getElementById("create_exercise_move_name").value,  
-			pecs: document.getElementById("pec_sel").value,
-			lats: document.getElementById("lats_sel").value,
-			bis: document.getElementById("bis_sel").value,
-			tris: document.getElementById("tris_sel").value,
-			mdelt: document.getElementById("mdelt_sel").value,
-			fdelt: document.getElementById("fdelt_sel").value,
-			rdelt: document.getElementById("rdelt_sel").value,
-			forearms: document.getElementById("forearms_sel").value,
-			abs: document.getElementById("abs_sel").value,
-			rhomboids: document.getElementById("rhomboids_sel").value,
-			lback: document.getElementById("lback_sel").value,
-			utrap: document.getElementById("utrap_sel").value,
-			mtrap: document.getElementById("mtrap_sel").value,
-			ltraps: document.getElementById("ltraps_sel").value,
-			obs: document.getElementById("ob_sel").value,
-			quads: document.getElementById("quads_sel").value,
-			hams: document.getElementById("hams_sel").value,
-			glutemax: document.getElementById("glutemax_sel").value,
-			glutemin: document.getElementById("glutemin_sel").value,
-			calves: document.getElementById("calves_sel").value,
-			cardio: document.getElementById("cardio_sel").value
+			Name: document.getElementById("create_exercise_move_name").value,  
+			Pectorals: document.getElementById("pec_sel").value,
+			Latimus_Dorsi: document.getElementById("lats_sel").value,
+			Bicep: document.getElementById("bis_sel").value,
+			Tricep: document.getElementById("tris_sel").value,
+			Mid_Deltiod: document.getElementById("mdelt_sel").value,
+			Front_Deltoid: document.getElementById("fdelt_sel").value,
+			Rear_Deltoid: document.getElementById("rdelt_sel").value,
+			Forarms: document.getElementById("forearms_sel").value,
+			Abdominals: document.getElementById("abs_sel").value,
+			Rhomboids: document.getElementById("rhomboids_sel").value,
+			Lower_Back: document.getElementById("lback_sel").value,
+			Upper_Trapizius: document.getElementById("utrap_sel").value,
+			Mid_Trapizius: document.getElementById("mtrap_sel").value,
+			Lower_Trapizius: document.getElementById("ltraps_sel").value,
+			Obliques: document.getElementById("ob_sel").value,
+			Quadriceps: document.getElementById("quads_sel").value,
+			Hamstrings: document.getElementById("hams_sel").value,
+			Glute_Max: document.getElementById("glutemax_sel").value,
+			Glute_Min: document.getElementById("glutemin_sel").value,
+			Calves: document.getElementById("calves_sel").value,
+			Cardio: document.getElementById("cardio_sel").value
 			}).then(function(response) {
 				if (response.data.success == true) {		
 					$("#success_dialog").dialog("open");
@@ -1720,6 +1720,8 @@ app.controller('myCtrl', function($scope, $http) {
 		    });
 	    }
 	   
+	   
+	   //probably not used------------------------------------------------------------------
 	   $scope.create_exercise_set = function()
 		{
 			$http.post("http://localhost:3000/food", //$http.post("http://localhost:3000/create_food", 
@@ -1747,7 +1749,7 @@ app.controller('myCtrl', function($scope, $http) {
 		  }
 		$scope.add_exercise_set_click = function(event) {
 			$http.post("http://localhost:3000/exercise/set", 
-			{exercise_move: event.target.id, reps: $scope.create_exercise_set_reps, sets: $scope.create_exercise_set_sets, rest: $scope.create_exercise_set_rest, pace: $scope.create_exercise_set_pace}
+			{Exercise_Move_ID: event.target.id, Reps: $scope.create_exercise_set_reps, Sets: $scope.create_exercise_set_sets, Rest: $scope.create_exercise_set_rest, Pace: $scope.create_exercise_set_pace}
 			).then(function(response) {
 				if (response.data.success == true) {	
 					$("#success_dialog").dialog("open");
@@ -1851,13 +1853,12 @@ app.controller('myCtrl', function($scope, $http) {
 				document.getElementById("add_meal_dialog_name").value = response.data.Name;
 				$scope.add_meal_dialog_id = response.data._id;
 				$scope.add_meal_dialog_name = response.data.Name;
-
 			})
 	  }  
 	    
 	   $scope.add_meal_from_dialog = function(event) {
     		$http.post("http://localhost:3000/meal", 
-			{food_id: $scope.add_meal_dialog_id, grams: $scope.add_meal_amount_dialog}
+			{Food_ID: $scope.add_meal_dialog_id, Grams: $scope.add_meal_amount_dialog}
 			).then(function(response) {
 				if (response.data.success == true) {		
 					//$scope.add_meal_confirmed = "SUCCESS";

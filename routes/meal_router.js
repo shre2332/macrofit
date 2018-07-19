@@ -19,12 +19,12 @@ meal_router.use(function (req, res, next) {
 })
 
 meal_router.post('/', function (req, res, next) {
-  if (req.body.food_id &&
-      req.body.grams) {
+  if (req.body.Food_ID &&
+      req.body.Grams) {
 
       var mealData = {};
 
-      Food.findById(req.body.food_id)
+      Food.findById(req.body.Food_ID)
       .exec(function (error, food) {
           if (error) {
             return next(error);
@@ -35,12 +35,12 @@ meal_router.post('/', function (req, res, next) {
               return next(err);
             } else {
               //foodMap = food;
-              var new_grams = req.body.grams;
+              var new_grams = req.body.Grams;
               var food_grams = food["Grams"];
               var gram_ratio = new_grams/food_grams;
 
               mealData = {
-                Food_ID: String(req.body.food_id),
+                Food_ID: String(req.body.Food_ID),
                 Food_Name: String(food["Name"]),
                 User_ID: String(req.session.userId),
                 Grams: new_grams,
