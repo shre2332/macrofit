@@ -19,20 +19,22 @@ goal_router.use(function (req, res, next) {
 })
 
 goal_router.post('/macro', function (req, res, next) {
-  if (req.body.calories &&
-      req.body.protein &&
-      req.body.fat &&
-      req.body.carbs &&
-      req.body.fiber) {
+  if (req.body.Calories &&
+      req.body.Protein &&
+      req.body.Fat &&
+      req.body.Carbs &&
+      req.body.Fiber) {
 
-        var macGoalData = {
+        /*var macGoalData = {
           User_ID: String(req.session.userId),
           Calories: req.body.calories,
           Protein: req.body.protein,
           Fat: req.body.fat,
           Carbs: req.body.carbs,
           Fiber: req.body.fiber
-        }
+        }*/
+        var macGoalData = req.body;
+        macGoalData.User_ID = String(req.session.userId);
 
         Mac_Goal.create(macGoalData, function (error, goal) {
           if (error) {
