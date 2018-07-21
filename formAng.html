@@ -385,7 +385,7 @@
   </div>
   
   <div id="add_meal_dialog" title="ADD MEAL">
-  	<div type="text" id="add_meal_dialog_id" name="add_meal_dialog_id" ng-model="add_meal_dialog_id" style="hidden: true">{{add_meal_dialog_id}}</div>
+  	<div type="text" id="add_meal_dialog_id" name="add_meal_dialog_id" ng-model="add_meal_dialog_id" style=" display:none">{{add_meal_dialog_id}}</div>
   	<p id="add_meal_dialog_name" ng-model="add_meal_dialog_name">{{add_meal_dialog_name}}</p>
   	<select name="meal_size_dialog" id="meal_size_dialog">
 			<option selected="selected">Grams</option>
@@ -493,13 +493,13 @@
 								    <th>Fiber</th>
 								    <th>{{x.Fiber}}</th>
 								  </tr>
-								  <tr>
+								  <!--<tr>
 								    <th>Grams: <input class="spinner" name="value" ng-attr-id="{{ 'add_meal_grams-' + x._id}}" style="width:30%;">{{load_spinner()}}</th>
 								    <th><button ng-click="food_select_click($event)" ng-attr-id="{{x._id}}">ADD</button></th>
-								  </tr>
+								  </tr>-->
 								   <tr>
-								    <th>Grams: <input class="spinner" name="value" ng-attr-id="{{ 'add_meal_grams-' + x._id}}" style="width:30%;">{{load_spinner()}}</th>
-								    <th><button ng-click="food_select_dialog_click($event)" ng-attr-id="{{x._id}}">ADD DIALOG</button></th>
+								    <th>Add Meal Dialog<!--Grams: <input class="spinner" name="value" ng-attr-id="{{ 'add_meal_grams-' + x._id}}" style="width:30%;">{{load_spinner()}}--></th>
+								    <th><button ng-click="food_select_dialog_click($event)" ng-attr-id="{{x._id}}">ADD</button></th>
 								  </tr>
 								  <tr>
 								    <th>Edit Food: </th>
@@ -511,13 +511,13 @@
 				    		</div>
 				  		</li>
 					  </ul>
-					  <label for="meal_size_select">Unit Type:</label>
+					  <!--<label for="meal_size_select">Unit Type:</label>
 					  <select name="meal_size_select" id="meal_size_select">
       				<option selected="selected">Grams</option>
       				<option>Ounces</option>
     				</select>
 					  <input class="spinner" type="text" ng-model="add_meal_grams">
-					  <p ng-model="add_meal_confirmed">{{add_meal_confirmed}}</p>
+					  <p ng-model="add_meal_confirmed">{{add_meal_confirmed}}</p>-->
 				  </div>
 				  
 				  <h3 id="check_meal_ac">CHECK MEAL</h3>
@@ -569,17 +569,17 @@
 								  </tr>
 								  <tr>
 								    <th>Delete:</th>
-								    <th><button ng-click="meal_select_click($event)" ng-attr-id="{{x._id}}">delete</button></th>
+								    <th><button ng-click="delete_meal_click($event)" ng-attr-id="{{x._id}}">delete</button></th>
 								  </tr>
 								</table>
 
 						  		<!--<button ng-click="food_select_click($event)" ng-attr-id="{{x._id}}">add</button>-->
 				    		</div>
 
-					  		<div>
+					  		<!--<div>
 					  			<p>{{x.Name}}</p>
 						  		<button ng-click="meal_select_click($event)" ng-attr-id="{{x._id}}">delete</button>
-					    	</div>
+					    	</div>-->
 				  		</li>
 					  </ul>	
 				  </div>
@@ -1600,6 +1600,13 @@ app.controller('myCtrl', function($scope, $http) {
 				$("#edit_meal_dialog").dialog("close");
 				$scope.check_meals_click();
 				$("#success_dialog").dialog("open");
+			})
+		}
+		$scope.delete_meal_click = function(event)
+		{
+			$http.delete("http://localhost:3000/meal/" + event.target.id).then(function(response) {
+				$("#success_dialog").dialog("open");
+				$scope.check_meals_click();
 			})
 		}
 		$scope.delete_goal_click = function(event)
