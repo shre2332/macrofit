@@ -596,6 +596,7 @@
 					  <p>Weight: <br/><input type="text" ng-model="weight_pu"></p>
 					  <p>Blood Pressue: <br/><input class="spinner_bp" type="text" ng-model="bp_over_pu"><input class="spinner_bp" type="text" ng-model="bp_under_pu"></p>
 					  <p>Body Fat Percentage: <br/><input class="spinner_bf" type="text" ng-model="bf_pu"></p>
+					  <br/>
 					  <button ng-click="progress_update_click()">Add</button>
 				  </div>
 				  
@@ -737,7 +738,8 @@
 						<option value="6">Fiber</option>
 						<option value="7">All Macros</option>
 				  </select>
-				  <br>
+				  <br/>
+				  <br/>
 				  <button ng-click="check_progress_click()">Check Progress</button>
 				  <div id="prog_check_graph" height="20%" width="60%">
 						<canvas id="progressChart" width="400" height="400"></canvas>
@@ -934,6 +936,7 @@
       					<option value="30">tertiary</option>
     			  </select>
     			  <br>
+    			  <br/>
 				  <button ng-click="create_exercise_move()">Add</button>
 				</div>
 				<h3 id="edit_exercise_move_ac">EDIT EXERCISE MOVE</h3>
@@ -1016,6 +1019,7 @@
 					  <label for="create_exercise_set_pace">Pace:</label>
 					  <input name="create_exercise_set_pace" id="create_exercise_set_pace" ng-model="create_exercise_set_pace">
 					  <br>
+					  <br/>
 				  	  <button ng-click="create_exercise_set()">Add</button>
 				</div>
 				<h3 id="create_workout_set_ac">CREATE WORKOUT SET</h3>
@@ -1074,7 +1078,7 @@
 					  <label for="default_rest">Default Rest:</label>
 					  <input name="workout_set_rest_input_default" id="workout_set_rest_input_default" ng-model="workout_set_rest_input_default">
 					  <br/>
-
+					  <br/>
 					  <button ng-click="create_workout_set()">Create Workout Set</button>
 				</div>
 				<h3 id="create_workout_plan_ac">CREATE WORKOUT PLAN</h3>
@@ -1108,6 +1112,7 @@
 				    		</div>
 				  		</li>
 					  </ul>
+					  <br/>
 
 					  <button ng-click="create_workout_plan()">Create Workout Plan</button>
 				</div>
