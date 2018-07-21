@@ -783,8 +783,27 @@
 			  </div>
 			  <h3 id="edit_food_ac">EDIT FOOD</h3>
 	    	<div>
-	    		<p>edit food will go here</p>
-	    	</div>
+	    		   <p><input type="text" ng-model="search_edit_food_text" ng-change="search_edit_food_click()"></p>
+					<button ng-click="search_edit_food_click()">Search Foods</button>
+					<button ng-click="list_edit_food_click()">List Foods</button>
+					  <ul id="found_edit_foods_list">
+					  	<li ng-repeat="x in search_edit_food_data">
+					  		<div>
+					  			<h3>{{x.Name}}</h3>
+					  			<table>
+					  			  <tr>
+								    <th>Serving Size</th>
+								    <th>{{x.Grams}}</th>
+								  </tr>
+								   <tr>
+								    <th>Edit:</th>
+								    <th><button ng-attr-class="load_edit_food_button" ng-click="food_edit_click($event)" ng-attr-id="{{x._id}}">EDIT</button></th>
+								  </tr>
+								</table>
+							</div>
+						</li>
+					  </ul>
+			  </div>
 	    	<h3 id="create_exercise_move_ac">CREATE EXERCISE MOVE</h3>
 				<div>
 				  <p>Name: <br/><input type="text" ng-model="create_exercise_move_name" id="create_exercise_move_name"></p>
@@ -1404,6 +1423,12 @@ app.controller('myCtrl', function($scope, $http) {
         		$scope.search_food_data = response.data;
 		    });
 	    }
+	    
+	    $scope.list_edit_food_click = function() {
+    		$http.get("http://localhost:3000/food").then(function(response) {//$http.get("http://localhost:3000/food").then(function(response) {
+        		$scope.search_edit_food_data = response.data;
+		    });
+	    }
 	    $scope.search_goals_click = function() {
     		$http.get("http://localhost:3000/goal").then(function(response) {
         		$scope.search_goals_data = response.data;
@@ -1624,6 +1649,13 @@ app.controller('myCtrl', function($scope, $http) {
 		{
 			$http.get("http://localhost:3000/food/search/"+$scope.search_food_text).then(function(response) {
 				$scope.search_food_data = response.data;
+			})
+		}
+		
+		$scope.search_edit_food_click = function()
+		{
+			$http.get("http://localhost:3000/food/search/"+$scope.search_edit_food_text).then(function(response) {
+				$scope.search_edit_food_data = response.data;
 			})
 		}
 		$scope.progress_update_click = function()
