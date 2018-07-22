@@ -19,26 +19,13 @@ exercise_router.use(function (req, res, next) {
 })
 
 exercise_router.post('/', function (req, res, next)  {
-  if (req.body.Name &&
-      req.body.Grams &&
-      req.body.Calories &&
-      req.body.Fat &&
-      req.body.Carbs &&
-      req.body.Protein &&
-      req.body.Fiber) {
+  if (req.body.Exercise_Move_ID &&
+      req.body.Sets) {
 
-        /*var foodData = {
-          Name: req.body.name,
-          Grams: req.body.grams,
-          Calories: req.body.calories,
-          Fat: req.body.fat,
-          Carbs: req.body.carbs,
-          Protein: req.body.protein,
-          Fiber: req.body.fiber
-        }*/
-        var foodData = req.body;
+        var exerciseData = req.body;
+        exerciseData.User_ID= String(req.session.userId);
 
-        Food.create(foodData, function (error, food) {
+        exercise.create(exerciseData, function (error, exercise) {
           if (error) {
             return next(error);
           } else {
@@ -92,27 +79,27 @@ exercise_router.post('/set', function (req, res, next)  {
 })
 
 exercise_router.post('/move', function (req, res, next)  {
-  if (req.body.Name,
-      req.body.Pectorals,
-      req.body.Latimus_Dorsi,
-      req.body.Bicep,
-      req.body.Tricep,
-      req.body.Mid_Deltiod,
-      req.body.Front_Deltoid,
-      req.body.Rear_Deltoid,
-      req.body.Forarms,
-      req.body.Abdominals,
-      req.body.Rhomboids,
-      req.body.Lower_Back,
-      req.body.Upper_Trapizius,
-      req.body.Mid_Trapizius,
-      req.body.Lower_Trapizius,
-      req.body.Obliques,
-      req.body.Quadriceps,
-      req.body.Hamstrings,
-      req.body.Glute_Max,
-      req.body.Glute_Min,
-      req.body.Calves,
+  if (req.body.Name &&
+      req.body.Pectorals &&
+      req.body.Latimus_Dorsi &&
+      req.body.Bicep &&
+      req.body.Tricep &&
+      req.body.Mid_Deltiod &&
+      req.body.Front_Deltoid &&
+      req.body.Rear_Deltoid &&
+      req.body.Forarms &&
+      req.body.Abdominals &&
+      req.body.Rhomboids &&
+      req.body.Lower_Back &&
+      req.body.Upper_Trapizius &&
+      req.body.Mid_Trapizius &&
+      req.body.Lower_Trapizius &&
+      req.body.Obliques &&
+      req.body.Quadriceps &&
+      req.body.Hamstrings &&
+      req.body.Glute_Max &&
+      req.body.Glute_Min &&
+      req.body.Calves &&
       req.body.Cardio) {
 
         /*var exerciseMoveData = {

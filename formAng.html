@@ -157,6 +157,17 @@
 				        duration: 250
 				    }
 				});
+				$("#add_exercise_dialog").dialog({
+				    autoOpen: false,
+				    show: {
+				        effect: "fade",
+				        duration: 500
+				    },
+				    hide: {
+				        effect: "fade",
+				        duration: 250
+				    }
+				});
 				
 				
 				$( "#edit_meal_date" ).datepicker();
@@ -399,6 +410,26 @@
     <button ng-click="discard_meal_from_dialog()">Discard</button>
   </div>
 
+  <div id="add_exercise_dialog" title="ADD EXERCISE">
+  	<div type="text" id="add_exercise_dialog_id" name="add_exercise_dialog_id" ng-model="add_exercise_dialog_id" style=" display:none">{{add_exercise_dialog_id}}</div>
+  	<p id="add_exercise_dialog_name" ng-model="add_exercise_dialog_name">{{add_exercise_dialog_name}}</p>
+  	<p id="add_exercise_dialog_rec_sets" ng-model="add_exercise_dialog_rec_sets">Recommended Sets: {{add_exercise_dialog_rec_sets}}</p>
+  	<label for="sets">Actual Sets: </label>
+    <input type="text" id="add_exercise_dialog_set" name="add_exercise_dialog_set" ng-model="add_exercise_dialog_set" />
+    <p id="add_exercise_dialog_rec_reps" ng-model="add_exercise_dialog_rec_reps">Recommended Reps: {{add_exercise_dialog_rec_reps}}</p>
+    <label for="sets">Actual Reps: </label>
+    <input type="text" id="add_exercise_dialog_reps" name="add_exercise_dialog_reps" ng-model="add_exercise_dialog_reps" />
+    <label for="sets">Weight: </label>
+    <input type="text" id="add_exercise_dialog_weight" name="add_exercise_dialog_weight" ng-model="add_exercise_dialog_weight" />
+    <p id="add_exercise_dialog_rec_pace" ng-model="add_exercise_dialog_rec_pace">Recommended Pace: {{add_exercise_dialog_rec_pace}}</p>
+    <label for="sets">Actual Pace: </label>
+    <input type="text" id="add_exercise_dialog_pace" name="add_exercise_dialog_pace" ng-model="add_exercise_dialog_pace" />
+    <label for="date">Date: </label>
+    <input type="text" id="add_exercise_dialog_date" name="add_exercise_dialog_date" ng-model="add_exercise_dialog_date" />
+    <button ng-click="add_exercise_from_dialog()">Add</button>
+    <button ng-click="discard_exercise_from_dialog()">Discard</button>
+  </div>
+
   <div id="current_meals_dialog" title="CURRENT MEALS">
   	<button ng-click="meals_dialog_update()">UPDATE</button>
   	<ul id="meals_dialog_list">
@@ -603,6 +634,38 @@
 					<h3 id="find_exercise_ac">FIND EXERCISE SET</h3>
 					<div>
 						<p>exercise go here</p>
+						  <p><input type="text" ng-model="find_search_exercise_set_text" ng-change="find_search_exercise_set_click()"></p>
+						  <button ng-click="find_search_exercise_set_click()">Search Exercise Sets</button>
+						  <button ng-click="find_list_exercise_set_click()">List Exercise Sets</button>
+						  <ul id="find_found_exercise_set_list">
+						  	<li ng-repeat="x in find_search_exercise_set_data">
+						  		<div>
+						  			<h3>{{x.Name}}</h3>
+						  			<table>
+							  			<tr>
+										    <th>Reps</th>
+										    <th>{{x.Reps}}</th>
+										  </tr>
+										  <tr>
+										    <th>Sets</th>
+										    <th>{{x.Sets}}</th>
+										  </tr>
+										  <tr>
+										    <th>Rest</th>
+										    <th>{{x.Rest}}</th>
+										  </tr>
+										  <tr>
+										    <th>Pace</th>
+										    <th>{{x.Pace}}</th>
+										  </tr>
+									  <tr>
+									    <th>Add Exercise Set: </th>
+									    <th><button ng-attr-class="find_add_exercise_set_button" ng-click="exercise_select_dialog_click($event)" ng-attr-id="{{x._id}}">ADD</button></th>
+									  </tr>
+									</table>
+					    		</div>
+					  		</li>
+						  </ul>
 					</div>
 					<h3 id="find_workout_set_ac">FIND WORKOUT SET</h3>
 					<div>
@@ -1814,6 +1877,12 @@ app.controller('myCtrl', function($scope, $http) {
         		$scope.search_exercise_set_data = response.data;
 		    });
 	    }
+
+	    $scope.find_list_exercise_set_click = function() {
+    		$http.get("http://localhost:3000/exercise/set").then(function(response) {
+        		$scope.find_search_exercise_set_data = response.data;
+		    });
+	    }
  	
  		//var working_workout_set_list_data_js = [];
  		$scope.working_workout_set_list_data = [];
@@ -1898,7 +1967,18 @@ app.controller('myCtrl', function($scope, $http) {
 				$scope.add_meal_dialog_id = response.data._id;
 				$scope.add_meal_dialog_name = response.data.Name;
 			})
-	  }  
+	  }
+
+	  $scope.exercise_select_dialog_click = function(event) {
+    		$http.get("http://localhost:3000/exercise/set/" + event.target.id).then(function(response) {
+				$("#add_exercise_dialog").dialog("open");
+				$scope.add_exercise_dialog_id = response.data._id;
+				$scope.add_exercise_dialog_name = response.data.Name;
+				$scope.add_exercise_dialog_rec_sets = response.data.Sets;
+				$scope.add_exercise_dialog_rec_reps = response.data.Reps;
+				$scope.add_exercise_dialog_rec_pace = response.data.Pace;
+			})
+	  } 
 	    
 	   $scope.add_meal_from_dialog = function(event) {
     		$http.post("http://localhost:3000/meal", 
@@ -1918,6 +1998,8 @@ app.controller('myCtrl', function($scope, $http) {
 					
 		    });
 	    }
+
+
 		
 		
 		$("#log_in_ac").on("click", function() {

@@ -15,6 +15,7 @@ var ExerciseSchema = new mongoose.Schema({
     default: 0
   },
   Rest: [Number],
+  Weight: [Number],
   Pace: [Number],
   User_ID: {
     type: String,//should be object id
