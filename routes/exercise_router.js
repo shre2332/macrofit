@@ -25,6 +25,14 @@ exercise_router.post('/', function (req, res, next)  {
         var exerciseData = req.body;
         exerciseData.User_ID= String(req.session.userId);
 
+        var i;
+        for (i = 0; i < req.body.Sets; i++) {
+            exerciseData.Reps[i] = req.body.Reps;
+            exerciseData.Weight[i] = req.body.Weight;
+            exerciseData.Pace[i] = req.body.Pace;
+            exerciseData.Rest[i] = req.body.Rest;
+        }
+
         exercise.create(exerciseData, function (error, exercise) {
           if (error) {
             return next(error);
@@ -34,6 +42,23 @@ exercise_router.post('/', function (req, res, next)  {
           }
         });
   }
+})
+
+exercise_router.get('/today', function (req, res, next) {
+
+  var day = new Date();
+
+  Exercise.find({"User_ID": req.session.userId, "Entry_Date": {$gte: new Date(day.getFullYear(),day.getMonth(),day.getDate())}}, function(err, exercise) {
+    var exerciseMap = {};
+
+    exercise.forEach(function(exercise) {
+      exerciseMap[exercise._id] = exercise;
+    });
+
+  res.setHeader('Content-Type', 'application/json');
+    res.json(exerciseMap);
+  })
+
 })
 
 exercise_router.post('/set', function (req, res, next)  {

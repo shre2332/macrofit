@@ -1,7 +1,7 @@
 var express = require('express');
 
 var app = express()
-var social_router = express.Router()
+var relationship_router = express.Router()
 
 var User = require('../models/user.js');
 var Meal = require('../models/meal.js');
@@ -13,12 +13,12 @@ var Exercise_Move = require('../models/exercise_move.js');
 var Exercise_Set = require('../models/exercise_set.js');
 var Exercise = require('../models/exercise.js');
 
-social_router.use(function (req, res, next) {
-  console.log('social router')
+relationship_router.use(function (req, res, next) {
+  console.log('relationship router')
   next()
 })
 
-social_router.post('/', function (req, res, next) {
+relationship_router.post('/', function (req, res, next) {
   if (req.body.Food_ID &&
       req.body.Grams) {
 
@@ -67,17 +67,25 @@ social_router.post('/', function (req, res, next) {
   }
 })
 
-social_router.get('/', function (req, res, next)  {
+// get /meals/day
+// meals for specified day
+relationship_router.get('/day/:day', function (req, res, next) {
 
-  User.find({}, function(err, users) {
-    var userMap = [];
+  var day = new Date();
+  
+  day = req.params.day;
 
-    users.forEach(function(user) {
-      userMap.push(user.username);
+  Meal.find({"User_ID": req.session.userId, "Entry_Date": {$gte: new Date(day.getFullYear(),day.getMonth(),day.getDate())}}, function(err, meals) {
+    var mealMap = {};
+
+    meals.forEach(function(meal) {
+      mealMap[meal._id] = meal;
     });
-    res.setHeader('Content-Type', 'application/json');
-    res.json(userMap);
+
+  res.setHeader('Content-Type', 'application/json');
+    res.json(mealMap);
   })
+
 })
 
-module.exports = social_router;
+module.exports = relationship_router;

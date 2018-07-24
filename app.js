@@ -53,6 +53,12 @@ app.use('/exercise', exercise_router);
 var workout_router = require('./routes/workout_router.js');
 app.use('/workout', workout_router);
 
+var social_router = require('./routes/social_router.js');
+app.use('/social', social_router);
+
+var relationship_router = require('./routes/relationship_router.js');
+app.use('/relationship', relationship_router);
+
 app.get('/create_account', function (req, res) {
   
   res.sendFile(__dirname + '/form2.html');

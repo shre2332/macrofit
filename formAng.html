@@ -59,7 +59,8 @@
 			   	$(".accordion").accordion({
 			      //heightStyle: "fill"
 			      heightStyle: "content",
-			      widthStyle: "content"
+			      widthStyle: "content",
+			      collapsible: true
 			    });
 		 
 		    $( "#accordion-resizer" ).resizable({
@@ -226,6 +227,12 @@
 		    //When the button in the form is clicked, take the input value and set that as the value of `.myTarget`
 				$('#discard_edit_food_button').click(function () {
 				    $("#edit_food_dialog").dialog("close");
+				});
+				$('#discard_meal_from_dialog').click(function () {
+				    $("#add_meal_dialog").dialog("close");
+				});
+				$('#discard_exercise_from_dialog').click(function () {
+				    $("#add_exercise_dialog").dialog("close");
 				});
 				$('#meals_dialog_open_button').click(function () {
 				    $("#current_meals_dialog").dialog("open");
@@ -407,7 +414,7 @@
     <label for="date">Date: </label>
     <input type="text" id="add_meal_date_dialog" name="add_meal_date_dialog" ng-model="add_meal_date_dialog" />
     <button ng-click="add_meal_from_dialog()">Add</button>
-    <button ng-click="discard_meal_from_dialog()">Discard</button>
+    <button id="discard_meal_from_dialog" ng-click="discard_meal_from_dialog()">Discard</button>
   </div>
 
   <div id="add_exercise_dialog" title="ADD EXERCISE">
@@ -421,13 +428,16 @@
     <input type="text" id="add_exercise_dialog_reps" name="add_exercise_dialog_reps" ng-model="add_exercise_dialog_reps" />
     <label for="sets">Weight: </label>
     <input type="text" id="add_exercise_dialog_weight" name="add_exercise_dialog_weight" ng-model="add_exercise_dialog_weight" />
+    <p id="add_exercise_dialog_rec_rest" ng-model="add_exercise_dialog_rec_rest">Recommended Rest: {{add_exercise_dialog_rec_rest}}</p>
+    <label for="sets">Actual Rest: </label>
+    <input type="text" id="add_exercise_dialog_rest" name="add_exercise_dialog_rest" ng-model="add_exercise_dialog_rest" />
     <p id="add_exercise_dialog_rec_pace" ng-model="add_exercise_dialog_rec_pace">Recommended Pace: {{add_exercise_dialog_rec_pace}}</p>
     <label for="sets">Actual Pace: </label>
     <input type="text" id="add_exercise_dialog_pace" name="add_exercise_dialog_pace" ng-model="add_exercise_dialog_pace" />
     <label for="date">Date: </label>
     <input type="text" id="add_exercise_dialog_date" name="add_exercise_dialog_date" ng-model="add_exercise_dialog_date" />
     <button ng-click="add_exercise_from_dialog()">Add</button>
-    <button ng-click="discard_exercise_from_dialog()">Discard</button>
+    <button id="discard_exercise_from_dialog" ng-click="discard_exercise_from_dialog()">Discard</button>
   </div>
 
   <div id="current_meals_dialog" title="CURRENT MEALS">
@@ -1370,7 +1380,20 @@
 				</div>
 				<h3 id="find_people_ac">FIND PEOPLE</h3>
 				<div>
-					<p>exercise go here</p>
+					<div>
+					  <p><input type="text" ng-model="search_usernames_text"></p>
+					  <button ng-click="search_usernames_click()">Search Usernames</button>
+					  <button ng-click="list_usernames_click()">List Usernames</button>
+					  <ul id="found_username_list">
+					  	<li ng-repeat="x in search_username_data">
+
+					  		<div>
+					  			<h3>{{x}}</h3>
+					  			<button ng-click="view_account_click()">View Account</button>
+				    		</div>
+				  		</li>
+					  </ul>	
+				  </div>
 				</div>
 				<h3 id="most_active_ac">MOST ACTIVE</h3>
 		  	<div>
@@ -1976,6 +1999,7 @@ app.controller('myCtrl', function($scope, $http) {
 				$scope.add_exercise_dialog_name = response.data.Name;
 				$scope.add_exercise_dialog_rec_sets = response.data.Sets;
 				$scope.add_exercise_dialog_rec_reps = response.data.Reps;
+				$scope.add_exercise_dialog_rec_rest = response.data.Rest;
 				$scope.add_exercise_dialog_rec_pace = response.data.Pace;
 			})
 	  } 
@@ -1999,7 +2023,31 @@ app.controller('myCtrl', function($scope, $http) {
 		    });
 	    }
 
+	    $scope.add_exercise_from_dialog = function(event) {
+    		$http.post("http://localhost:3000/exercise", 
+			{Food_ID: $scope.add_meal_dialog_id, Grams: $scope.add_meal_amount_dialog}
+			).then(function(response) {
+				if (response.data.success == true) {		
+					//$scope.add_meal_confirmed = "SUCCESS";
+					$scope.add_meal_amount_dialog = "";
+					$("#add_meal_dialog").dialog("close");
+					$("#success_dialog").dialog("open");
+					$scope.add_meal_grams = "";
+				}
+				else
+				{
+					$scope.add_meal_confirmed = "Failed to add meal";
+				}
+					
+		    });
+	    }
 
+	    $scope.list_usernames_click = function() {
+    		$http.get("http://localhost:3000/social").then(function(response) {
+        		$scope.search_username_data = response.data;
+		    });
+	    }
+	    
 		
 		
 		$("#log_in_ac").on("click", function() {
