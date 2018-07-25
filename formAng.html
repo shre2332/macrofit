@@ -169,6 +169,29 @@
 				        duration: 250
 				    }
 				});
+				$("#view_user_dialog").dialog({
+				    autoOpen: false,
+				    show: {
+				        effect: "fade",
+				        duration: 500
+				    },
+				    hide: {
+				        effect: "fade",
+				        duration: 250
+				    }
+				});
+				
+				$("#account_dialog").dialog({
+				    autoOpen: false,
+				    show: {
+				        effect: "fade",
+				        duration: 500
+				    },
+				    hide: {
+				        effect: "fade",
+				        duration: 250
+				    }
+				});
 				
 				
 				$( "#edit_meal_date" ).datepicker();
@@ -451,11 +474,58 @@
   		</li>
 	</ul>
   </div>
+  
+  <div id="view_user_dialog" title="USER">
+  	<button ng-click="view_user_dialog_close()">Close</button>
+  	<ul id="user_meal_list">
+	  	<li ng-repeat="x in user_meal_list_data">
+  				<h3>{{x.Name}}</h3>
+	  			<table>
+	  			  <tr>
+				    <th>Serving Size</th>
+				    <th>{{x.Grams}}</th>
+				  </tr>
+				  <tr>
+				    <th>Calories</th>
+				    <th>{{x.Calories}}</th>
+				  </tr>
+				  <tr>
+				    <th>Fat</th>
+				    <th>{{x.Fat}}</th>
+				  </tr>
+				  <tr>
+				    <th>Carbs</th>
+				    <th>{{x.Carbs}}</th>
+				  </tr>
+				  <tr>
+				    <th>Protein</th>
+				    <th>{{x.Protein}}</th>
+				  </tr>
+				  <tr>
+				    <th>Fiber</th>
+				    <th>{{x.Fiber}}</th>
+				  </tr>
+				</table>
+  		</li>
+		</ul>
+  </div>
+  
+  <div id="account_dialog" title="ACCOUNT">
+  	<button ng-click="account_dialog_close()">Close</button>
+  	<br/>
+  	<p ng-model="account_name">Username: {{account_name}}</p>
+  	<p ng-model="account_email">Email: {{account_email}}</p>
+  	<button ng-click="account_dialog_update_email_click()">Update Email</button>
+  	<br/>
+  	<button ng-click="account_dialog_change_password_click()">Change Password</button>
+  	<br/>
+  	<button ng-click="account_dialog_logout_click()">Logout</button>
+  </div>
 
     
 	<div class="header">
 		<p>MACROFIT</p>
-		<button id="account_button" class="account_button ui-button" ng-click="account_button_click()" ng-model="username_account_button">{{username_account_button}}</p>
+		<button id="account_button" class="account_button ui-button" ng-click="view_account_dialog()" ng-model="username_account_button">{{username_account_button}}</p>
 		<button id="logout_button" class="logout_button ui-button" ng-click="logout_click()" ng-model="login_logout_button_text" ng-init="login_logout_button_text ='LOGIN'">{{login_logout_button_text}}</button>
 	</div>
 
@@ -1380,6 +1450,7 @@
 				</div>
 				<h3 id="find_people_ac">FIND PEOPLE</h3>
 				<div>
+					<button ng-click="view_user_dialog_open()">View Account</button>
 					<div>
 					  <p><input type="text" ng-model="search_usernames_text"></p>
 					  <button ng-click="search_usernames_click()">Search Usernames</button>
@@ -1389,7 +1460,7 @@
 
 					  		<div>
 					  			<h3>{{x}}</h3>
-					  			<button ng-click="view_account_click()">View Account</button>
+					  			<button ng-click="view_user_dialog_open()">View Account</button>
 				    		</div>
 				  		</li>
 					  </ul>	
@@ -1900,7 +1971,6 @@ app.controller('myCtrl', function($scope, $http) {
         		$scope.search_exercise_set_data = response.data;
 		    });
 	    }
-
 	    $scope.find_list_exercise_set_click = function() {
     		$http.get("http://localhost:3000/exercise/set").then(function(response) {
         		$scope.find_search_exercise_set_data = response.data;
@@ -1991,7 +2061,6 @@ app.controller('myCtrl', function($scope, $http) {
 				$scope.add_meal_dialog_name = response.data.Name;
 			})
 	  }
-
 	  $scope.exercise_select_dialog_click = function(event) {
     		$http.get("http://localhost:3000/exercise/set/" + event.target.id).then(function(response) {
 				$("#add_exercise_dialog").dialog("open");
@@ -2022,7 +2091,6 @@ app.controller('myCtrl', function($scope, $http) {
 					
 		    });
 	    }
-
 	    $scope.add_exercise_from_dialog = function(event) {
     		$http.post("http://localhost:3000/exercise", 
 			{Food_ID: $scope.add_meal_dialog_id, Grams: $scope.add_meal_amount_dialog}
@@ -2041,13 +2109,35 @@ app.controller('myCtrl', function($scope, $http) {
 					
 		    });
 	    }
-
 	    $scope.list_usernames_click = function() {
     		$http.get("http://localhost:3000/social").then(function(response) {
         		$scope.search_username_data = response.data;
 		    });
 	    }
 	    
+	    
+	    $scope.view_user_dialog_close = function() {
+    		$("#view_user_dialog").dialog("close");
+	    }
+	    
+	    $scope.view_user_dialog_open = function(event) {
+    		$("#view_user_dialog").dialog("open");
+	    }
+	    
+	    $scope.view_account_dialog = function(event) {
+
+    		$http.get("http://localhost:3000/account").then(function(response) {
+        		$scope.account_name = response.data[0].username;
+        		$scope.account_email = response.data[0].email;
+
+        		$("#account_dialog").dialog("open");
+		    });
+	    }
+
+	    
+	    $scope.account_dialog_close = function(event) {
+    		$("#account_dialog").dialog("close");
+	    }
 		
 		
 		$("#log_in_ac").on("click", function() {

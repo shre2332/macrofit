@@ -59,6 +59,9 @@ app.use('/social', social_router);
 var relationship_router = require('./routes/relationship_router.js');
 app.use('/relationship', relationship_router);
 
+var account_router = require('./routes/account_router.js');
+app.use('/account', account_router);
+
 app.get('/create_account', function (req, res) {
   
   res.sendFile(__dirname + '/form2.html');
