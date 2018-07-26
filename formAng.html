@@ -554,15 +554,35 @@
 				</div>
 				<h3 id="account_ac">ACCOUNT</h3>
 				<div>
-					<p>account goes here</p>
+					<p ng-model="account_name">Username: {{account_name}}</p>
+			  	<p ng-model="account_email">Email: {{account_email}}</p>
+			  	<button ng-click="account_dialog_update_email_click()">Update Email</button>
+			  	<br/>
+			  	<button ng-click="account_dialog_change_password_click()">Change Password</button>
+			  	<br/>
+			  	<button ng-click="account_dialog_logout_click()">Logout</button>
 				</div>
 				<h3 id="personal_stats_ac">PERSONAL STATS</h3>
 				<div>
-					<p>stats go here</p>
+					<p>Age: <br/><input type="text" ng-model="user_age"></p>
+					<p>Height: <br/><input type="text" ng-model="user_height"></p>
+					<p>Weight: <br/><input type="text" ng-model="user_weight"></p>
+					<p>Sex: <br/>
+						<select name="user_sex" id="user_sex" ng-model="user_sex">
+      					<option selected="selected">Male</option>
+      					<option>Female</option>
+    				</select>
+    			</p>
 				</div>
 				<h3 id="settings_ac">SETTINGS</h3>
 				<div>
-					<p>settings go here</p>
+					<p>Publicity Type: <br/>
+						<select name="account_privacy_type" id="account_privacy_type" ng-model="account_privacy_type">
+      					<option selected="selected">completely open</option>
+      					<option>private except followers</option>
+      					<option>completely private</option>
+    				</select>
+    			</p>
 				</div>
 			</div>
 	  </div>
@@ -630,6 +650,11 @@
 					  <input class="spinner" type="text" ng-model="add_meal_grams">
 					  <p ng-model="add_meal_confirmed">{{add_meal_confirmed}}</p>-->
 				  </div>
+				  
+				  <h3 id="find_mp_food_ac">FIND MEAL PLAN FOOD</h3>
+					<div>
+						<p>meal plan food search</p>
+					</div>
 				  
 				  <h3 id="check_meal_ac">CHECK MEAL</h3>
 				  <div>
@@ -713,7 +738,6 @@
 				  
 					<h3 id="find_exercise_ac">FIND EXERCISE SET</h3>
 					<div>
-						<p>exercise go here</p>
 						  <p><input type="text" ng-model="find_search_exercise_set_text" ng-change="find_search_exercise_set_click()"></p>
 						  <button ng-click="find_search_exercise_set_click()">Search Exercise Sets</button>
 						  <button ng-click="find_list_exercise_set_click()">List Exercise Sets</button>
@@ -747,10 +771,98 @@
 					  		</li>
 						  </ul>
 					</div>
+					
+					<h3 id="check_meal_ac">CHECK EXERCISE</h3>
+				  <div>
+				  	  <label for="date">Date: </label>
+    					<input type="text" id="check_exercise_date" name="check_exercise_date" ng-model="check_exercise_date" />
+    					<br/>
+				  	  <button id="exercise_dialog_open_button">Exercise Dialog</button>
+				  	  <br/><br/>
+					  <p><input type="text" ng-model="search_exercise_text"></p>
+					  <button ng-click="check_exercise_click()">Check Exercise</button>
+					  <ul id="found_exercise_list">
+					  	<li ng-repeat="x in search_exercise_data">
+
+					  		<div>
+					  			<h3>exercise</h3>
+					  			<table>
+					  		  <tr>
+								    <th>Exercise Name</th>
+								    <th>{{x.Exercise_Name}}</th>
+								  </tr>
+
+								  <tr>
+								    <th>Edit:</th>
+								    <th><button ng-attr-class="edit_exercise_button" ng-click="exercise_edit_click($event)" ng-attr-id="{{x._id}}">edit</button></th>
+								  </tr>
+								  <tr>
+								    <th>Delete:</th>
+								    <th><button ng-click="delete_exercise_click($event)" ng-attr-id="{{x._id}}">delete</button></th>
+								  </tr>
+								</table>
+
+				  		</li>
+					  </ul>	
+				  </div>
+					
 					<h3 id="find_workout_set_ac">FIND WORKOUT SET</h3>
 					<div>
-						<p>exercise go here</p>
+						  <p><input type="text" ng-model="find_search_workout_set_text" ng-change="find_search_workout_set_click()"></p>
+						  <button ng-click="find_search_workout_set_click()">Search Workout Sets</button>
+						  <button ng-click="find_list_workout_set_click()">List Workout Sets</button>
+						  <ul id="find_found_workout_set_list">
+						  	<li ng-repeat="x in find_search_workout_set_data">
+						  		<div>
+						  			<h3>{{x.Name}}</h3>
+						  			<table>
+							  			<tr>
+										    <th>Exercise Set</th>
+										    <th>{{x.exercise}}</th>
+										  </tr>
+									  <tr>
+									    <th>Add Exercise Set: </th>
+									    <th><button ng-attr-class="find_add_workout_set_button" ng-click="workout_select_dialog_click($event)" ng-attr-id="{{x._id}}">ADD</button></th>
+									  </tr>
+									</table>
+					    		</div>
+					  		</li>
+						  </ul>
 					</div>
+					
+					<h3 id="check_meal_ac">CHECK WORKOUT</h3>
+				  <div>
+				  	  <label for="date">Date: </label>
+    					<input type="text" id="check_workout_date" name="check_workout_date" ng-model="check_workout_date" />
+    					<br/>
+				  	  <button id="workout_dialog_open_button">Workout Dialog</button>
+				  	  <br/><br/>
+					  <p><input type="text" ng-model="search_workout_text"></p>
+					  <button ng-click="check_workout_click()">Check Workout</button>
+					  <ul id="found_workout_list">
+					  	<li ng-repeat="x in search_workout_data">
+
+					  		<div>
+					  			<h3>workout</h3>
+					  			<table>
+					  		  <tr>
+								    <th>Workout Name</th>
+								    <th>{{x.Workout_Name}}</th>
+								  </tr>
+
+								  <tr>
+								    <th>Edit:</th>
+								    <th><button ng-attr-class="edit_workout_button" ng-click="workout_edit_click($event)" ng-attr-id="{{x._id}}">edit</button></th>
+								  </tr>
+								  <tr>
+								    <th>Delete:</th>
+								    <th><button ng-click="delete_workout_click($event)" ng-attr-id="{{x._id}}">delete</button></th>
+								  </tr>
+								</table>
+
+				  		</li>
+					  </ul>	
+				  </div>
 			</div>
 	  </div>
 	  
@@ -1465,6 +1577,11 @@
 				  		</li>
 					  </ul>	
 				  </div>
+				</div>
+				<h3 id="most_active_ac">FOLLOWING</h3>
+		  		<div>
+					  <p>ok</p>
+				
 				</div>
 				<h3 id="most_active_ac">MOST ACTIVE</h3>
 		  	<div>
