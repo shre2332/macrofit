@@ -653,7 +653,50 @@
 				  
 				  <h3 id="find_mp_food_ac">FIND MEAL PLAN FOOD</h3>
 					<div>
-						<p>meal plan food search</p>
+						<p><input type="text" ng-model="search_food_plan_text" ng-change="search_food_plan_click()"></p>
+					  <button ng-click="search_food_plan_click()">Search Plan Foods</button>
+					  <button ng-click="list_food_plan_click()">List Plan Foods</button>
+					  <ul id="found_foods_list">
+					  	<li ng-repeat="x in search_food_plan_data">
+					  		<div>
+					  			<h3>{{x.Name}}</h3>
+					  			<table>
+					  			  <tr>
+								    <th>Serving Size</th>
+								    <th>{{x.Grams}}</th>
+								  </tr>
+								  <tr>
+								    <th>Calories</th>
+								    <th>{{x.Calories}}</th>
+								  </tr>
+								  <tr>
+								    <th>Fat</th>
+								    <th>{{x.Fat}}</th>
+								  </tr>
+								  <tr>
+								    <th>Carbs</th>
+								    <th>{{x.Carbs}}</th>
+								  </tr>
+								  <tr>
+								    <th>Protein</th>
+								    <th>{{x.Protein}}</th>
+								  </tr>
+								  <tr>
+								    <th>Fiber</th>
+								    <th>{{x.Fiber}}</th>
+								  </tr>
+								   <tr>
+								    <th>Add Meal Dialog<!--Grams: <input class="spinner" name="value" ng-attr-id="{{ 'add_meal_grams-' + x._id}}" style="width:30%;">{{load_spinner()}}--></th>
+								    <th><button ng-click="food_select_dialog_click($event)" ng-attr-id="{{x._id}}">ADD</button></th>
+								  </tr>
+								  <tr>
+								    <th>Edit Food: </th>
+								    <th><button ng-attr-class="edit_food_button" ng-click="food_edit_click($event)" ng-attr-id="{{x._id}}">EDIT</button></th>
+								  </tr>
+								</table>
+				    		</div>
+				  		</li>
+					  </ul>
 					</div>
 				  
 				  <h3 id="check_meal_ac">CHECK MEAL</h3>
@@ -1006,12 +1049,55 @@
 				</div>
 			  <h3 id="check_exercise_ac">CHECK EXERCISE</h3>
 				<div>
-					<p>exercise go here</p>
+					<label for="date">Date: </label>
+    			<input type="text" id="current_exercise_date" name="current_exercise_date" ng-model="current_exercise_date" />
+    			<br/>
+				  <button ng-click="check_exercise_click()">Check Current Exercise</button>
+				  <div id="current_exercise_list">
+				    <p ng-model="date">{{date}}</p>
+				    
+				    <h3>Current Exercise</h3>
+		  			<table class="table">
+					  <tr>
+					    <th>Total Estimated Calories Burned</th>
+					    <th><p ng-model="total_est_cals_burned">{{total_est_cals_burned}}</p></th>
+					  </tr>
+					  <tr>
+					    <th>Strength Training Estimated Calories Burned</th>
+					    <th><p ng-model="strength_est_cals_burned">{{strength_est_cals_burned}}</p></th>
+					  </tr>
+					  <tr>
+					    <th>Total Reps</th>
+					    <th><p ng-model="total_reps">{{total_reps}}</p></th>
+					  </tr>
+					  <tr>
+					    <th>Total Sets</th>
+					    <th><p ng-model="total_sets">{{total_sets}}</p></th>
+					  </tr>
+					  <tr>
+					    <th>Total Pace</th>
+					    <th><p ng-model="total_pace">{{total_pace}}</p></th>
+					  </tr>
+					  <tr>
+					    <th>Average Pace</th>
+					    <th><p ng-model="av_pace">{{av_pace}}</p></th>
+					  </tr>
+					  <tr>
+					    <th>Average Rest</th>
+					    <th><p ng-model="av_rest">{{av_rest}}</p></th>
+					  </tr>
+					  <tr>
+					    <th>Cardio Estimated Calories Burned</th>
+					    <th><p ng-model="cardio_est_cals_burned">{{cardio_est_cals_burned}}</p></th>
+					  </tr>
+					  <tr>
+					    <th>Total Cardio Time</th>
+					    <th><p ng-model="total_cardio_time">{{total_cardio_time}}</p></th>
+					  </tr>
+					</table>	
+				  </div>
 				</div>
-				<!--<h3>REMAINING EXERCISE</h3>
-				<div>
-					<p>exercise go here</p>
-				</div>-->
+
 			</div>
 		</div>
 	  </div>
@@ -2242,15 +2328,12 @@ app.controller('myCtrl', function($scope, $http) {
 	    }
 	    
 	    $scope.view_account_dialog = function(event) {
-
     		$http.get("http://localhost:3000/account").then(function(response) {
         		$scope.account_name = response.data[0].username;
         		$scope.account_email = response.data[0].email;
-
         		$("#account_dialog").dialog("open");
 		    });
 	    }
-
 	    
 	    $scope.account_dialog_close = function(event) {
     		$("#account_dialog").dialog("close");
