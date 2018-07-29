@@ -427,12 +427,13 @@
   
   <div id="add_meal_dialog" title="ADD MEAL">
   	<div type="text" id="add_meal_dialog_id" name="add_meal_dialog_id" ng-model="add_meal_dialog_id" style=" display:none">{{add_meal_dialog_id}}</div>
+  	<div type="text" id="add_meal_dialog_serving_size" name="add_meal_dialog_serving_size" ng-model="add_meal_dialog_serving_size" style=" display:none">{{add_meal_dialog_serving_size}}</div>
+  	<div type="text" id="add_meal_dialog_serving_grams" name="add_meal_dialog_serving_grams" ng-model="add_meal_dialog_serving_grams" style=" display:none">{{add_meal_dialog_serving_grams}}</div>
+
   	<p id="add_meal_dialog_name" ng-model="add_meal_dialog_name">{{add_meal_dialog_name}}</p>
-  	<select name="meal_size_dialog" id="meal_size_dialog">
-			<option value="1" selected="selected">Cups</option>
-			<option value="2">Ounces</option>
-			<option value="3">Grams</option>
-		</select>
+  	<p name="meal_size_type_dialog" id="meal_size_type_dialog" ng-model="meal_size_type_dialog">{{meal_size_type_dialog}}</p>
+	<label for="size">Size: </label>
+    <input type="text" id="add_meal_size_dialog" name="add_meal_size_dialog" ng-change="cal_grams()" ng-model="add_meal_size_dialog" />
   	<label for="amount">Amount: </label>
     <input type="text" id="add_meal_amount_dialog" name="add_meal_amount_dialog" ng-model="add_meal_amount_dialog" />
     <label for="date">Date: </label>
@@ -2322,6 +2323,22 @@ app.controller('myCtrl', function($scope, $http) {
 				document.getElementById("add_meal_dialog_name").value = response.data.Name;
 				$scope.add_meal_dialog_id = response.data._id;
 				$scope.add_meal_dialog_name = response.data.Name;
+
+				$scope.add_meal_dialog_serving_size = response.data.Default_Serving_Size;
+				$scope.add_meal_dialog_serving_grams = response.data.Grams;
+
+				if (response.data.Serving_Size_Type == 1)
+				{
+					$scope.meal_size_type_dialog = "Cups";
+				}
+				else if (response.data.Serving_Size_Type == 2)
+				{
+					$scope.meal_size_type_dialog = "Ounces";
+				}
+				else //3 = grams
+				{
+					$scope.meal_size_type_dialog = "Grams";
+				}
 			})
 	  }
 	  $scope.exercise_select_dialog_click = function(event) {
@@ -2397,6 +2414,12 @@ app.controller('myCtrl', function($scope, $http) {
 	    
 	    $scope.account_dialog_close = function(event) {
     		$("#account_dialog").dialog("close");
+	    }
+
+	    $scope.cal_grams = function() {
+	    	var coef = $scope.add_meal_dialog_serving_grams / $scope.add_meal_dialog_serving_size ;
+	    	var res = $scope.add_meal_size_dialog * coef;
+    		$scope.add_meal_amount_dialog = res;
 	    }
 		
 		
