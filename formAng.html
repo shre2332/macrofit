@@ -429,8 +429,9 @@
   	<div type="text" id="add_meal_dialog_id" name="add_meal_dialog_id" ng-model="add_meal_dialog_id" style=" display:none">{{add_meal_dialog_id}}</div>
   	<p id="add_meal_dialog_name" ng-model="add_meal_dialog_name">{{add_meal_dialog_name}}</p>
   	<select name="meal_size_dialog" id="meal_size_dialog">
-			<option selected="selected">Grams</option>
-			<option>Ounces</option>
+			<option value="1" selected="selected">Cups</option>
+			<option value="2">Ounces</option>
+			<option value="3">Grams</option>
 		</select>
   	<label for="amount">Amount: </label>
     <input type="text" id="add_meal_amount_dialog" name="add_meal_amount_dialog" ng-model="add_meal_amount_dialog" />
@@ -536,8 +537,9 @@
 	    <li><a id="progress_tab_head" href="#tabs-3">Progress</a></li>
 	    <li><a href="#tabs-4">Create</a></li>
 	    <li><a href="#tabs-5">Goals</a></li>
-	    <li><a id="social_tab_head" href="#tabs-6">Social</a></li>
-	    <li><a href="#tabs-7">Beta Feedback</a></li>
+	    <li><a href="#tabs-6">Plans</a></li>
+	    <li><a id="social_tab_head" href="#tabs-7">Social</a></li>
+	    <li><a href="#tabs-8">Beta Feedback</a></li>
 	  </ul>
 	  
 	  <div id="tabs-1">
@@ -1109,10 +1111,12 @@
 	    	<div>
 				  <p>Name: <br/><input type="text" ng-model="create_food_name"></p>
 				  <select name="food_create_amount_type" id="food_create_amount_type">
-						<option selected="selected">Grams</option>
-						<option>Ounces</option>
+						<option selected="selected" value="1">Cups</option>
+						<option value="2">Ounces</option>
+						<option value="3">Grams</option>
 				  </select>
-				  <p><br/><input type="text" ng-model="create_grams"></p>
+				  <p>Serving Size: <br/><input type="text" ng-model="create_serving_size"></p>
+				  <p>Grams Per Serving<br/><input type="text" ng-model="create_grams"></p>
 				  <p>Calories: <br/><input type="text" ng-model="create_calories"></p>
 				  <p>Fat: <br/><input type="text" ng-model="create_fat"></p>
 				  <p>Carbs: <br/><input type="text" ng-model="create_carbs"></p>
@@ -1593,10 +1597,61 @@
 				  		</li>
 					  </ul>
 				  </div>
+				</div>
+	  </div>
+				  
+				  
+		<div id="tabs-6">
+	  	<div class="accordion">		  
+				<h3 id="saved_meal_plans_ac">SAVED MEAL PLANS</h3>
+				<div>
+					<p>exercise go here</p>
+				</div>
+				
+				<h3 id="saved_workouts_ac">SAVED WORKOUTS</h3>
+				<div>
+					<p>exercise go here</p>
+				</div>
+				
+				<h3 id="saved_workout_plans_ac">SAVED WORKOUT PLANS</h3>
+				<div>
+					<p>exercise go here</p>
+				</div>
+				
+			  <h3 id="active_meal_plan_ac">ACTIVE MEAL PLAN</h3>
+				<div>
+					<p>exercise go here</p>
+				</div>
+				
+				<h3 id="active_workout_ac">ACTIVE WORKOUTS</h3>
+				<div>
+					<p>exercise go here</p>
+				</div>
+				
+				<h3 id="active_workout_plan_ac">ACTIVE WORKOUT PLAN</h3>
+				<div>
+					<p>exercise go here</p>
+				</div>
+				
+				<h3 id="search_meal_plans_ac">SEARCH MEAL PLANS</h3>
+				<div>
+					<p>exercise go here</p>
+				</div>
+				
+				<h3 id="search_workout_ac">SEARCH WORKOUTS</h3>
+				<div>
+					<p>exercise go here</p>
+				</div>
+				
+				<h3 id="search_workout_plans_ac">SEARCH WORKOUT PLANS</h3>
+				<div>
+					<p>exercise go here</p>
+				</div>
 			</div>
 	  </div>
+
 	  
-	  <div id="tabs-6">
+	  <div id="tabs-7">
 	  	<div class="accordion">
 		  	<h3 id="my_page_ac">MY PAGE</h3>
 		  	<div>
@@ -1676,7 +1731,7 @@
 			</div>
 	  </div>
 	  
-	  <div id="tabs-7">
+	  <div id="tabs-8">
 	  	<div class="accordion">
 		  	<h3 id="about_ac">ABOUT</h3>
 		  	<div>
@@ -1837,12 +1892,17 @@ app.controller('myCtrl', function($scope, $http) {
 		    //});
 	    }
 	    $scope.create_food_click = function() {
+	    	var amount_type = document.getElementById("food_create_amount_type").value;
+
 			$http.post("http://localhost:3000/food", //$http.post("http://localhost:3000/create_food", 
-			{Name: $scope.create_food_name, Grams: $scope.create_grams, Calories: $scope.create_calories, Fat: $scope.create_fat, Carbs: $scope.create_carbs, Protein: $scope.create_protein, Fiber: $scope.create_fiber}
+			{Name: $scope.create_food_name, Serving_Size_Type: amount_type, Default_Serving_Size: $scope.create_serving_size, Grams: $scope.create_grams, Calories: $scope.create_calories, Fat: $scope.create_fat, Carbs: $scope.create_carbs, Protein: $scope.create_protein, Fiber: $scope.create_fiber}
 			).then(function(response) {
 				if (response.data.success == true) {
 					//$scope.create_food_confirmed = "SUCCESS";
 					$("#success_dialog").dialog("open");
+					$scope.create_food_name = "";
+					document.getElementById("food_create_amount_type").value = 1;
+					$scope.create_serving_size = "";
 					$scope.create_grams = "";
 					$scope.create_calories = "";
 					$scope.create_fat = "";

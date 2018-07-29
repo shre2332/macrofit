@@ -43,6 +43,13 @@ var FoodSchema = new mongoose.Schema({
     default: null
   },
   
+  Serving_Size_Type: {
+    //1=cups, 2=ounces, 2=grams
+    type: Number
+  },
+  Default_Serving_Size: {
+    type: Number
+  },
   //food label data
   Serving_Size: {
     type: Number

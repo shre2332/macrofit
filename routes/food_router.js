@@ -20,6 +20,8 @@ food_router.use(function (req, res, next) {
 
 food_router.post('/', function (req, res, next)  {
   if (req.body.Name &&
+      req.body.Serving_Size_Type &&
+      req.body.Default_Serving_Size &&
       req.body.Grams &&
       req.body.Calories &&
       req.body.Fat &&
