@@ -431,10 +431,10 @@
   	<div type="text" id="add_meal_dialog_serving_grams" name="add_meal_dialog_serving_grams" ng-model="add_meal_dialog_serving_grams" style=" display:none">{{add_meal_dialog_serving_grams}}</div>
 
   	<p id="add_meal_dialog_name" ng-model="add_meal_dialog_name">{{add_meal_dialog_name}}</p>
-  	<p name="meal_size_type_dialog" id="meal_size_type_dialog" ng-model="meal_size_type_dialog">{{meal_size_type_dialog}}</p>
-	<label for="size">Size: </label>
+  	<p name="meal_size_type_dialog" id="meal_size_type_dialog" ng-model="meal_size_type_dialog">{{meal_size_type_dialog}}:</p>
+	<!--<label for="size">Size: </label>-->
     <input type="text" id="add_meal_size_dialog" name="add_meal_size_dialog" ng-change="cal_grams()" ng-model="add_meal_size_dialog" />
-  	<label for="amount">Amount: </label>
+  	<label for="amount">Grams Amount: </label>
     <input type="text" id="add_meal_amount_dialog" name="add_meal_amount_dialog" ng-model="add_meal_amount_dialog" />
     <label for="date">Date: </label>
     <input type="text" id="add_meal_date_dialog" name="add_meal_date_dialog" ng-model="add_meal_date_dialog" />
@@ -2324,6 +2324,7 @@ app.controller('myCtrl', function($scope, $http) {
 				$scope.add_meal_dialog_id = response.data._id;
 				$scope.add_meal_dialog_name = response.data.Name;
 
+				$scope.add_meal_dialog_serving_size_type = response.data.Serving_Size_Type
 				$scope.add_meal_dialog_serving_size = response.data.Default_Serving_Size;
 				$scope.add_meal_dialog_serving_grams = response.data.Grams;
 
@@ -2359,6 +2360,7 @@ app.controller('myCtrl', function($scope, $http) {
 			).then(function(response) {
 				if (response.data.success == true) {		
 					//$scope.add_meal_confirmed = "SUCCESS";
+					$scope.add_meal_size_dialog = "";
 					$scope.add_meal_amount_dialog = "";
 					$("#add_meal_dialog").dialog("close");
 					$("#success_dialog").dialog("open");
@@ -2417,9 +2419,16 @@ app.controller('myCtrl', function($scope, $http) {
 	    }
 
 	    $scope.cal_grams = function() {
-	    	var coef = $scope.add_meal_dialog_serving_grams / $scope.add_meal_dialog_serving_size ;
-	    	var res = $scope.add_meal_size_dialog * coef;
-    		$scope.add_meal_amount_dialog = res;
+			if ($scope.add_meal_dialog_serving_size_type != 3)
+			{
+		    	var coef = $scope.add_meal_dialog_serving_grams / $scope.add_meal_dialog_serving_size ;
+		    	var res = $scope.add_meal_size_dialog * coef;
+	    		$scope.add_meal_amount_dialog = res;
+	    	}
+	    	else
+	    	{
+	    		$scope.add_meal_amount_dialog = $scope.add_meal_size_dialog;
+	    	}
 	    }
 		
 		
