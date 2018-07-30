@@ -22,9 +22,41 @@ account_router.get('/', function (req, res, next) {
 
   User.find({"_id": req.session.userId}, function(err, account) {
     console.log(account);
-  res.setHeader('Content-Type', 'application/json');
+    res.setHeader('Content-Type', 'application/json');
     res.json(account);
   })
+
+})
+
+account_router.get('/stats', function (req, res, next) {
+
+  User_Stats.find({"User_ID": req.session.userId}, function(err, account) {
+    if (err) {
+      res.setHeader('Content-Type', 'application/json');
+      res.json({success: false});
+      //return next(error);
+    } else {
+      console.log(account);
+      res.setHeader('Content-Type', 'application/json');
+      res.json(account);
+    }
+  })
+
+})
+
+account_router.post('/stats', function (req, res, next) {
+
+  var statsData = req.body;
+  statsData.User_ID= String(req.session.userId);
+
+  User_Stats.create(statsData, function (error, stats) {
+          if (error) {
+            return next(error);
+          } else {
+            res.setHeader('Content-Type', 'application/json');
+          res.json({success: true});
+          }
+        });
 
 })
 

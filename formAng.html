@@ -570,7 +570,8 @@
 					<p>Age: <br/><input type="text" ng-model="user_age"></p>
 					<p>Height: <br/><input type="text" ng-model="user_height"></p>
 					<p>Weight: <br/><input type="text" ng-model="user_weight"></p>
-					<p>Sex: <br/>
+					<p>Body Fat %: <br/><input type="text" ng-model="user_bf"></p>
+					<p>Gender: <br/>
 						<select name="user_sex" id="user_sex" ng-model="user_sex">
       					<option selected="selected">Male</option>
       					<option>Female</option>
@@ -1782,13 +1783,15 @@ app.controller('myCtrl', function($scope, $http) {
 				{login_email: $scope.username, login_username: $scope.username, login_password: $scope.password}
 				).then(function(response) {
 					if (response.data.success == true) {
-						/*var x = document.getElementById("login_block");
-					    if (x.style.display === "none") {
-					        x.style.display = "block";
-					    } else {
-					        x.style.display = "none";
-					    }*/
 						
+						$http.get("http://localhost:3000/account/stats").then(function(response) {
+								$scope.user_age = response.data.Age;
+								$scope.user_height = response.data.Height;
+								$scope.user_weight = response.data.Weight;
+								$scope.user_bf = response.data.Body_Fat_Percentage;
+								$scope.user_sex = response.data.Gender;
+							});
+
 						$scope.username_confirmed = "WELCOME " + response.data.username + "  ID: " + response.data.user_id ;
 						$scope.username_account_button = response.data.username + " ACCOUNT INFO";
 						document.getElementById("account_button").style.visibility = "visible";
@@ -1802,26 +1805,32 @@ app.controller('myCtrl', function($scope, $http) {
 					}
 						
 			  });
-	   		//$scope.username= "John";
-	    	//$scope.password= "Doe";
     	}
     	
     	$scope.create_account_click = function() {
 				$http.post("http://localhost:3000/login", 
-				{email: $scope.new_username, username: $scope.new_email, password: $scope.new_password, passwordConf: $scope.new_passwordConf}
+				{username: $scope.new_username, email: $scope.new_email, password: $scope.new_password, passwordConf: $scope.new_passwordConf}
 				).then(function(response) {
-					if (response.data.success == true) {
-						var x = document.getElementById("login_block");
-					    if (x.style.display === "none") {
-					        x.style.display = "block";
-					    } else {
-					        x.style.display = "none";
-					    }
+					if (response.data.username) {
+
+						$http.post("http://localhost:3000/account/stats", 
+							{Height: 0, Weight: 0, Age: 0, Body_Fat_Percentage: 0, Gender: 0}
+							).then(function(response) {
+								$scope.user_age = 0;
+								$scope.user_height = 0;
+								$scope.user_weight = 0;
+								$scope.user_bf = 0;
+								$scope.user_sex = 0;
+							});
 						
-						$scope.username_confirmed = "WELCOME " + response.data.username + "  ID: " + response.data.user_id ;
+						$scope.username_confirmed = "WELCOME " + response.data.username + "  ID: " + response.data._id ;
 						$scope.username_account_button = response.data.username + " ACCOUNT INFO";
 						document.getElementById("account_button").style.visibility = "visible";
 						$scope.login_logout_button_text = "LOGOUT";
+						$scope.new_username = "";
+						$scope.new_email = "";
+						$scope.new_password = "";
+						$scope.new_passwordConf = "";
 						$("#create_account_dialog").dialog("close");
 					}
 					else
@@ -1830,10 +1839,19 @@ app.controller('myCtrl', function($scope, $http) {
 					}
 						
 			  });
-	   		//$scope.username= "John";
-	    	//$scope.password= "Doe";
     	}
     	
+		$scope.logout_click = function() {
+    		$http.get("http://localhost:3000/logout").then(function(response) {
+        		$scope.username_confirmed = "";
+				$scope.username_account_button = "";
+				document.getElementById("account_button").style.visibility = "hidden";
+				$scope.username = "";
+				$scope.password = "";
+				$scope.login_logout_button_text = "LOGIN";
+		    });
+	    }
+
     	$scope.list_food_click = function() {
     		$http.get("http://localhost:3000/food").then(function(response) {//$http.get("http://localhost:3000/food").then(function(response) {
         		$scope.search_food_data = response.data;

@@ -77,71 +77,11 @@ app.get('/', function (req, res) {
   res.sendFile(__dirname + '/formAng.html');
 })
 
-// get /goals
-// gets all goals
-app.get('/goals', function (req, res) {
-  res.send('get /goals')
-})
 
 app.get('/name', function (req, res) {
   
   res.sendFile(__dirname + '/form.html');
   //res.render('form.html');
-})
-
-
-// post /meal/day
-// posts a single meal to the specified day
-app.post('/meal/day', function (req, res) {
-  res.send('post /meal/day')
-})
-
-// post /goal
-// posts a goal
-app.post('/goal', function (req, res) {
-  res.send('post /goal')
-})
-
-
-//DELETES
-
-// delete /meal/id
-// deletes the specified meal for today
-app.delete('/meal/id', function (req, res) {
-  res.send('delete /meal/id')
-})
-
-// delete /meal/day/id
-// deletes the specified meal for the specified day
-app.delete('/meal/day/id', function (req, res) {
-  res.send('delete /meal/day/id')
-})
-
-// delete /goal/id
-// delete a goal
-app.delete('/goal/id', function (req, res) {
-  res.send('delete /goal/id')
-})
-
-
-//PUTS
-
-// put /meal/id
-// puts the specified meal for today
-app.put('/meal/id', function (req, res) {
-  res.send('put /meal/id')
-})
-
-// put /meal/day/id
-// puts the specified meal for the specified day
-app.put('/meal/day/id', function (req, res) {
-  res.send('put /meal/day/id')
-})
-
-// put /goal/id
-// puts a goal
-app.put('/goal/id', function (req, res) {
-  res.send('put /goal/id')
 })
 
 

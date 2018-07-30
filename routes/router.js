@@ -29,7 +29,7 @@ router.post('/login', function (req, res, next) {//router.post('/login', functio
       email: req.body.email,
       username: req.body.username,
       password: req.body.password,
-      passwordConf: req.body.passwordConf,
+      passwordConf: req.body.passwordConf
     }
 
     User.create(userData, function (error, user) {
@@ -37,7 +37,9 @@ router.post('/login', function (req, res, next) {//router.post('/login', functio
         return next(error);
       } else {
         req.session.userId = user._id;
-        return res.redirect('/profile');
+        res.setHeader('Content-Type', 'application/json');
+        res.json(user);//({success: true});
+        //return res.redirect('/profile');
       }
     });
 
