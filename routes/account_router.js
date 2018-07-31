@@ -60,4 +60,50 @@ account_router.post('/stats', function (req, res, next) {
 
 })
 
+account_router.put('/stats', function (req, res, next) {
+
+  var statsData = req.body;
+  statsData.User_ID= String(req.session.userId);
+
+  User_Stats.update({User_ID: req.session.userId}, statsData, function(err, raw) {
+    if (err) {
+      res.send(err);
+    }
+    res.setHeader('Content-Type', 'application/json');
+    res.json({success: true});
+  });
+
+})
+
+account_router.get('/publicity_type', function (req, res, next) {
+
+  User.find({"_id": req.session.userId}, function(err, user) {
+    if (err) {
+      res.setHeader('Content-Type', 'application/json');
+      res.json({success: false});
+      //return next(error);
+    } else {
+      console.log(user);
+      res.setHeader('Content-Type', 'application/json');
+      res.json(user);
+    }
+  })
+
+})
+
+account_router.put('/publicity_type', function (req, res, next) {
+
+  var pubData = req.body;
+  //statsData.User_ID= String(req.session.userId);
+
+  User.update({_id: req.session.userId}, pubData, function(err, raw) {
+    if (err) {
+      res.send(err);
+    }
+    res.setHeader('Content-Type', 'application/json');
+    res.json({success: true});
+  });
+
+})
+
 module.exports = account_router;

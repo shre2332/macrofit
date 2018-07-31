@@ -567,24 +567,24 @@
 				</div>
 				<h3 id="personal_stats_ac">PERSONAL STATS</h3>
 				<div>
-					<p>Age: <br/><input type="text" ng-model="user_age"></p>
-					<p>Height: <br/><input type="text" ng-model="user_height"></p>
-					<p>Weight: <br/><input type="text" ng-model="user_weight"></p>
-					<p>Body Fat %: <br/><input type="text" ng-model="user_bf"></p>
+					<p>Age: <br/><input type="text" ng-model="user_age" ng-change="update_user_stats()"></p>
+					<p>Height: <br/><input type="text" ng-model="user_height" ng-change="update_user_stats()"></p>
+					<p>Weight: <br/><input type="text" ng-model="user_weight" ng-change="update_user_stats()"></p>
+					<p>Body Fat %: <br/><input type="text" ng-model="user_bf" ng-change="update_user_stats()"></p>
 					<p>Gender: <br/>
-						<select name="user_sex" id="user_sex" ng-model="user_sex">
-      					<option selected="selected">Male</option>
-      					<option>Female</option>
+					  <select name="user_sex" id="user_sex" ng-model="user_sex" ng-change="update_user_stats()">
+      					<option value="1" selected="selected">Male</option>
+      					<option value="2">Female</option>
     				</select>
     			</p>
 				</div>
 				<h3 id="settings_ac">SETTINGS</h3>
 				<div>
 					<p>Publicity Type: <br/>
-						<select name="account_privacy_type" id="account_privacy_type" ng-model="account_privacy_type">
-      					<option selected="selected">completely open</option>
-      					<option>private except followers</option>
-      					<option>completely private</option>
+						<select name="account_privacy_type" id="account_privacy_type" ng-model="account_privacy_type" ng-change="update_user_pub()">
+      					<option value="1" selected="selected">completely open</option>
+      					<option value="2">private except followers</option>
+      					<option value="3">completely private</option>
     				</select>
     			</p>
 				</div>
@@ -1782,14 +1782,18 @@ app.controller('myCtrl', function($scope, $http) {
 				$http.post("http://localhost:3000/login", 
 				{login_email: $scope.username, login_username: $scope.username, login_password: $scope.password}
 				).then(function(response) {
-					if (response.data.success == true) {
+					if (response.data.username) {
 						
 						$http.get("http://localhost:3000/account/stats").then(function(response) {
-								$scope.user_age = response.data.Age;
-								$scope.user_height = response.data.Height;
-								$scope.user_weight = response.data.Weight;
-								$scope.user_bf = response.data.Body_Fat_Percentage;
-								$scope.user_sex = response.data.Gender;
+								$scope.user_age = response.data[0].Age;
+								$scope.user_height = response.data[0].Height;
+								$scope.user_weight = response.data[0].Weight;
+								$scope.user_bf = response.data[0].Body_Fat_Percentage;
+								$scope.user_sex = response.data[0].Gender;
+							});
+
+						$http.get("http://localhost:3000/account/publicity_type").then(function(response) {
+								$scope.account_privacy_type = response.data[0].Publicity_type;
 							});
 
 						$scope.username_confirmed = "WELCOME " + response.data.username + "  ID: " + response.data.user_id ;
@@ -1840,6 +1844,22 @@ app.controller('myCtrl', function($scope, $http) {
 						
 			  });
     	}
+
+    	$scope.update_user_stats = function() {
+    		$http.put("http://localhost:3000/account/stats", 
+			{Height: $scope.user_height, Weight: $scope.user_weight , Age: $scope.user_age, Body_Fat_Percentage: $scope.user_bf, Gender: $scope.user_sex }
+			).then(function(response) {
+				
+			});
+	    }
+
+	    $scope.update_user_pub = function() {
+    		$http.put("http://localhost:3000/account/publicity_type", 
+			{Publicity_type: $scope.account_privacy_type}
+			).then(function(response) {
+				
+			});
+	    }
     	
 		$scope.logout_click = function() {
     		$http.get("http://localhost:3000/logout").then(function(response) {
