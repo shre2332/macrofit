@@ -48,7 +48,8 @@ meal_router.post('/', function (req, res, next) {
                 Protein: (parseInt(food["Protein"]) * gram_ratio),
                 Fat: (parseInt(food["Fat"]) * gram_ratio),
                 Carbs: (parseInt(food["Carbs"]) * gram_ratio),
-                Fiber: (parseInt(food["Fiber"]) * gram_ratio)
+                Fiber: (parseInt(food["Fiber"]) * gram_ratio),
+                Net_Carbs: (parseInt(food["Carbs"]) - parseInt(food["Fiber"]))
               }
 
               Meal.create(mealData, function (error, meal) {

@@ -44,6 +44,10 @@ var MealSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   },
+  Net_Carbs: {
+    type: Number,
+    required: true,
+  },
 
   //food label data
   Serving_Size: {

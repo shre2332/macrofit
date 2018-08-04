@@ -29,6 +29,9 @@ var FoodSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  Net_Carbs: {
+    type: Number
+  },
   Entry_Date: {
     type: Date,
     default: Date.now
@@ -44,12 +47,37 @@ var FoodSchema = new mongoose.Schema({
   },
   
   Serving_Size_Type: {
-    //1=cups, 2=ounces, 2=grams
+    //1=cups, 2=ounces, 2=grams, 4=units
+    type: Number
+  },
+  Cups_Present: {
+    type: Boolean,
+    required: true,
+    default: false
+  },
+  Cups: {
+    type: Number
+  },
+  Ounces_Present: {
+    type: Boolean,
+    required: true,
+    default: false
+  },
+  Ounces: {
+    type: Number
+  },
+  Units_Present: {
+    type: Boolean,
+    required: true,
+    default: false
+  },
+  Units: {
     type: Number
   },
   Default_Serving_Size: {
     type: Number
   },
+
   //food label data
   Serving_Size: {
     type: Number

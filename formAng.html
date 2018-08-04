@@ -427,15 +427,31 @@
   
   <div id="add_meal_dialog" title="ADD MEAL">
   	<div type="text" id="add_meal_dialog_id" name="add_meal_dialog_id" ng-model="add_meal_dialog_id" style=" display:none">{{add_meal_dialog_id}}</div>
-  	<div type="text" id="add_meal_dialog_serving_size" name="add_meal_dialog_serving_size" ng-model="add_meal_dialog_serving_size" style=" display:none">{{add_meal_dialog_serving_size}}</div>
+
+  	<!--<div type="text" id="add_meal_dialog_serving_size" name="add_meal_dialog_serving_size" ng-model="add_meal_dialog_serving_size" style=" display:none">{{add_meal_dialog_serving_size}}</div>-->
+  	<div type="text" id="add_meal_dialog_serving_size_cups" name="add_meal_dialog_serving_size_cups" ng-model="add_meal_dialog_serving_size_cups" style=" display:none">{{add_meal_dialog_serving_size_cups}}</div>
+  	<div type="text" id="add_meal_dialog_serving_size_ounces" name="add_meal_dialog_serving_size_ounces" ng-model="add_meal_dialog_serving_size_ounces" style=" display:none">{{add_meal_dialog_serving_size_ounces}}</div>
+  	<div type="text" id="add_meal_dialog_serving_size_units" name="add_meal_dialog_serving_size_units" ng-model="add_meal_dialog_serving_size_units" style=" display:none">{{add_meal_dialog_serving_size_units}}</div>
+
   	<div type="text" id="add_meal_dialog_serving_grams" name="add_meal_dialog_serving_grams" ng-model="add_meal_dialog_serving_grams" style=" display:none">{{add_meal_dialog_serving_grams}}</div>
 
   	<p id="add_meal_dialog_name" ng-model="add_meal_dialog_name">{{add_meal_dialog_name}}</p>
-  	<p name="meal_size_type_dialog" id="meal_size_type_dialog" ng-model="meal_size_type_dialog">{{meal_size_type_dialog}}:</p>
+  	<!--<p name="meal_size_type_dialog" id="meal_size_type_dialog" ng-model="meal_size_type_dialog">{{meal_size_type_dialog}}:</p>-->
 	<!--<label for="size">Size: </label>-->
+
+	<select name="meal_amount_type_dialog" id="meal_amount_type_dialog">
+		<option id="meal_in_cups" disabled="true" value="1">Cups</option>
+		<option id="meal_in_ounces" disabled="true" value="2">Ounces</option>
+		<option id="meal_in_grams" disabled="true" value="3" selected="selected">Grams</option>
+		<option id="meal_in_units" disabled="true" value="4">Units</option>
+	</select>
+	<br/>
+	<br/>
+
     <input type="text" id="add_meal_size_dialog" name="add_meal_size_dialog" ng-change="cal_grams()" ng-model="add_meal_size_dialog" />
   	<label for="amount">Grams Amount: </label>
     <input type="text" id="add_meal_amount_dialog" name="add_meal_amount_dialog" ng-model="add_meal_amount_dialog" />
+
     <label for="date">Date: </label>
     <input type="text" id="add_meal_date_dialog" name="add_meal_date_dialog" ng-model="add_meal_date_dialog" />
     <button ng-click="add_meal_from_dialog()">Add</button>
@@ -628,6 +644,10 @@
 								    <th>Fiber</th>
 								    <th>{{x.Fiber}}</th>
 								  </tr>
+								  <tr>
+								    <th>Net Carbs</th>
+								    <th>{{x.Net_Carbs}}</th>
+								  </tr>
 								  <!--<tr>
 								    <th>Grams: <input class="spinner" name="value" ng-attr-id="{{ 'add_meal_grams-' + x._id}}" style="width:30%;">{{load_spinner()}}</th>
 								    <th><button ng-click="food_select_click($event)" ng-attr-id="{{x._id}}">ADD</button></th>
@@ -689,6 +709,10 @@
 								    <th>Fiber</th>
 								    <th>{{x.Fiber}}</th>
 								  </tr>
+								  <tr>
+								    <th>Net Carbs</th>
+								    <th>{{x.Net_Carbs}}</th>
+								  </tr>
 								   <tr>
 								    <th>Add Meal Dialog<!--Grams: <input class="spinner" name="value" ng-attr-id="{{ 'add_meal_grams-' + x._id}}" style="width:30%;">{{load_spinner()}}--></th>
 								    <th><button ng-click="food_select_dialog_click($event)" ng-attr-id="{{x._id}}">ADD</button></th>
@@ -745,6 +769,10 @@
 								  <tr>
 								    <th>Fiber</th>
 								    <th>{{x.Fiber}}</th>
+								  </tr>
+								  <tr>
+								    <th>Net Carbs</th>
+								    <th>{{x.Net_Carbs}}</th>
 								  </tr>
 								  <tr>
 								    <th>Edit:</th>
@@ -1116,9 +1144,16 @@
 						<option selected="selected" value="1">Cups</option>
 						<option value="2">Ounces</option>
 						<option value="3">Grams</option>
+						<option value="4">Units</option>
 				  </select>
 				  <p>Serving Size: <br/><input type="text" ng-model="create_serving_size"></p>
-				  <p>Grams Per Serving<br/><input type="text" ng-model="create_grams"></p>
+				  <p>Cups: <br/>
+			  	  <input type="text" id="create_cups" name="create_cups" ng-model="create_cups" /></p>
+			  	  <p>Ounces: <br/>
+				  <input type="text" id="create_ounces" name="create_ounces" ng-model="create_ounces" /></p>
+			  	  <p>Units: <br/>
+			  	  <input type="text" id="create_units" name="create_units" ng-model="create_units" /></p>
+				  <p>Grams Per Serving: <br/><input type="text" ng-model="create_grams"></p>
 				  <p>Calories: <br/><input type="text" ng-model="create_calories"></p>
 				  <p>Fat: <br/><input type="text" ng-model="create_fat"></p>
 				  <p>Carbs: <br/><input type="text" ng-model="create_carbs"></p>
@@ -1791,11 +1826,9 @@ app.controller('myCtrl', function($scope, $http) {
 								$scope.user_bf = response.data[0].Body_Fat_Percentage;
 								$scope.user_sex = response.data[0].Gender;
 							});
-
 						$http.get("http://localhost:3000/account/publicity_type").then(function(response) {
 								$scope.account_privacy_type = response.data[0].Publicity_type;
 							});
-
 						$scope.username_confirmed = "WELCOME " + response.data.username + "  ID: " + response.data.user_id ;
 						$scope.username_account_button = response.data.username + " ACCOUNT INFO";
 						document.getElementById("account_button").style.visibility = "visible";
@@ -1816,7 +1849,6 @@ app.controller('myCtrl', function($scope, $http) {
 				{username: $scope.new_username, email: $scope.new_email, password: $scope.new_password, passwordConf: $scope.new_passwordConf}
 				).then(function(response) {
 					if (response.data.username) {
-
 						$http.post("http://localhost:3000/account/stats", 
 							{Height: 0, Weight: 0, Age: 0, Body_Fat_Percentage: 0, Gender: 0}
 							).then(function(response) {
@@ -1844,7 +1876,6 @@ app.controller('myCtrl', function($scope, $http) {
 						
 			  });
     	}
-
     	$scope.update_user_stats = function() {
     		$http.put("http://localhost:3000/account/stats", 
 			{Height: $scope.user_height, Weight: $scope.user_weight , Age: $scope.user_age, Body_Fat_Percentage: $scope.user_bf, Gender: $scope.user_sex }
@@ -1852,7 +1883,6 @@ app.controller('myCtrl', function($scope, $http) {
 				
 			});
 	    }
-
 	    $scope.update_user_pub = function() {
     		$http.put("http://localhost:3000/account/publicity_type", 
 			{Publicity_type: $scope.account_privacy_type}
@@ -1871,7 +1901,6 @@ app.controller('myCtrl', function($scope, $http) {
 				$scope.login_logout_button_text = "LOGIN";
 		    });
 	    }
-
     	$scope.list_food_click = function() {
     		$http.get("http://localhost:3000/food").then(function(response) {//$http.get("http://localhost:3000/food").then(function(response) {
         		$scope.search_food_data = response.data;
@@ -1931,16 +1960,34 @@ app.controller('myCtrl', function($scope, $http) {
 		    //});
 	    }
 	    $scope.create_food_click = function() {
-	    	var amount_type = document.getElementById("food_create_amount_type").value;
+	    	var cups_present = false;
+	    	var ounces_present = false;
+	    	var units_present = false;
+	    	if ($scope.create_cups)
+	    	{
+	    		cups_present = true;
+	    	}
+	    	if ($scope.create_ounces)
+	    	{
+	    		ounces_present = true;
+	    	}
+	    	if ($scope.create_units)
+	    	{
+	    		units_present = true;
+	    	}
 
-			$http.post("http://localhost:3000/food", //$http.post("http://localhost:3000/create_food", 
-			{Name: $scope.create_food_name, Serving_Size_Type: amount_type, Default_Serving_Size: $scope.create_serving_size, Grams: $scope.create_grams, Calories: $scope.create_calories, Fat: $scope.create_fat, Carbs: $scope.create_carbs, Protein: $scope.create_protein, Fiber: $scope.create_fiber}
+	    	var amount_type = document.getElementById("food_create_amount_type").value;
+			$http.post("http://localhost:3000/food",
+			{Name: $scope.create_food_name, Serving_Size_Type: amount_type, Default_Serving_Size: $scope.create_serving_size, Grams: $scope.create_grams, Calories: $scope.create_calories, Fat: $scope.create_fat, Carbs: $scope.create_carbs, Protein: $scope.create_protein, Fiber: $scope.create_fiber, Cups_Present: cups_present, Cups: $scope.create_cups, Ounces_Present: ounces_present, Ounces: $scope.create_ounces, Units_Present: units_present, Units: $scope.create_units}
 			).then(function(response) {
 				if (response.data.success == true) {
 					//$scope.create_food_confirmed = "SUCCESS";
 					$("#success_dialog").dialog("open");
 					$scope.create_food_name = "";
 					document.getElementById("food_create_amount_type").value = 1;
+					$scope.create_cups = "";
+					$scope.create_ounces = "";
+					$scope.create_units = "";
 					$scope.create_serving_size = "";
 					$scope.create_grams = "";
 					$scope.create_calories = "";
@@ -2361,11 +2408,18 @@ app.controller('myCtrl', function($scope, $http) {
 				document.getElementById("add_meal_dialog_name").value = response.data.Name;
 				$scope.add_meal_dialog_id = response.data._id;
 				$scope.add_meal_dialog_name = response.data.Name;
+				//$scope.add_meal_dialog_serving_size_type = response.data.Serving_Size_Type
+				$scope.add_meal_dialog_serving_size_cups = response.data.Cups
+				$scope.add_meal_dialog_serving_size_ounces = response.data.Ounces
+				$scope.add_meal_dialog_serving_size_units = response.data.Units
 
-				$scope.add_meal_dialog_serving_size_type = response.data.Serving_Size_Type
+				document.getElementById("meal_in_cups").disabled = !(response.data.Cups_Present);
+				document.getElementById("meal_in_ounces").disabled = !(response.data.Ounces_Present);
+				document.getElementById("meal_in_grams").disabled = false;
+				document.getElementById("meal_in_units").disabled = !(response.data.Units_Present);
+
 				$scope.add_meal_dialog_serving_size = response.data.Default_Serving_Size;
 				$scope.add_meal_dialog_serving_grams = response.data.Grams;
-
 				if (response.data.Serving_Size_Type == 1)
 				{
 					$scope.meal_size_type_dialog = "Cups";
@@ -2398,6 +2452,16 @@ app.controller('myCtrl', function($scope, $http) {
 			).then(function(response) {
 				if (response.data.success == true) {		
 					//$scope.add_meal_confirmed = "SUCCESS";
+
+					$scope.add_meal_dialog_serving_size_cups = 0;
+					$scope.add_meal_dialog_serving_size_ounces = 0;
+					$scope.add_meal_dialog_serving_size_units = 0;
+
+					document.getElementById("meal_in_cups").disabled = true;
+					document.getElementById("meal_in_ounces").disabled = true;
+					document.getElementById("meal_in_grams").disabled = true;
+					document.getElementById("meal_in_units").disabled = true;
+
 					$scope.add_meal_size_dialog = "";
 					$scope.add_meal_amount_dialog = "";
 					$("#add_meal_dialog").dialog("close");
@@ -2455,18 +2519,47 @@ app.controller('myCtrl', function($scope, $http) {
 	    $scope.account_dialog_close = function(event) {
     		$("#account_dialog").dialog("close");
 	    }
-
 	    $scope.cal_grams = function() {
-			if ($scope.add_meal_dialog_serving_size_type != 3)
+
+			var coef = 0;
+			var res = 0;
+
+	    	var selected_val = document.getElementById("meal_amount_type_dialog").value;
+	    	if (selected_val == 3 )
+	    	{
+	    		$scope.add_meal_amount_dialog = $scope.add_meal_size_dialog;
+	    	}
+	    	if (selected_val == 1 )
+	    	{
+	    		coef = $scope.add_meal_dialog_serving_grams / $scope.add_meal_dialog_serving_size_cups ;
+		    	res = $scope.add_meal_size_dialog * coef;
+	    		$scope.add_meal_amount_dialog = res;
+	    	}
+	    	if (selected_val == 2 )
+	    	{
+	    		coef = $scope.add_meal_dialog_serving_grams / $scope.add_meal_dialog_serving_size_ounces ;
+		    	res = $scope.add_meal_size_dialog * coef;
+	    		$scope.add_meal_amount_dialog = res;
+	    	}
+	    	if (selected_val == 4 )
+	    	{
+	    		coef = $scope.add_meal_dialog_serving_grams / $scope.add_meal_dialog_serving_size_units ;
+		    	res = $scope.add_meal_size_dialog * coef;
+	    		$scope.add_meal_amount_dialog = res;
+	    	}
+
+	    	
+
+			/*if ($scope.add_meal_dialog_serving_size_type != 3)
 			{
-		    	var coef = $scope.add_meal_dialog_serving_grams / $scope.add_meal_dialog_serving_size ;
-		    	var res = $scope.add_meal_size_dialog * coef;
+		    	coef = $scope.add_meal_dialog_serving_grams / $scope.add_meal_dialog_serving_size ;
+		    	res = $scope.add_meal_size_dialog * coef;
 	    		$scope.add_meal_amount_dialog = res;
 	    	}
 	    	else
 	    	{
 	    		$scope.add_meal_amount_dialog = $scope.add_meal_size_dialog;
-	    	}
+	    	}*/
 	    }
 		
 		

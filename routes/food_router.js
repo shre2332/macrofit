@@ -29,18 +29,11 @@ food_router.post('/', function (req, res, next)  {
       req.body.Protein &&
       req.body.Fiber) {
 
-        /*var foodData = {
-          Name: req.body.name,
-          Grams: req.body.grams,
-          Calories: req.body.calories,
-          Fat: req.body.fat,
-          Carbs: req.body.carbs,
-          Protein: req.body.protein,
-          Fiber: req.body.fiber
-        }*/
         var foodData = req.body;
+        console.log(foodData);
+        foodData.Net_Carbs = (parseInt(req.body.Carbs) - parseInt(req.body.Fiber));
 
-        Food.create(foodData, function (error, food) {//(foodData, function (error, food) {
+        Food.create(foodData, function (error, food) {
           if (error) {
             return next(error);
           } else {
