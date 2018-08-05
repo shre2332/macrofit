@@ -13,8 +13,11 @@ var Exercise_Move = require('../models/exercise_move.js');
 var Exercise_Set = require('../models/exercise_set.js');
 var Exercise = require('../models/exercise.js');
 
+var moment = require('moment');
+moment().format();
+
 meal_router.use(function (req, res, next) {
-  console.log('meal router')
+  console.log('meal router');
   next()
 })
 
@@ -52,6 +55,14 @@ meal_router.post('/', function (req, res, next) {
                 Net_Carbs: (parseInt(food["Carbs"]) - parseInt(food["Fiber"]))
               }
 
+              console.log(req.body.Entry_Date);
+              console.log(moment(req.body.Entry_Date).toDate());
+              console.log(moment());
+              console.log(moment(req.body.Entry_Date));
+              console.log(moment(req.body.Entry_Date).startOf('day'));
+              console.log(moment(req.body.Entry_Date).endOf('day'));
+              
+
               Meal.create(mealData, function (error, meal) {
                 if (error) {
                   return next(error);
@@ -73,10 +84,13 @@ meal_router.post('/', function (req, res, next) {
 meal_router.get('/day/:day', function (req, res, next) {
 
   var day = new Date();
-  
-  day = req.params.day;
+  var input_date = (req.params.day).replace(/-/g, "/");
+  //console.log(input_date);
+  //console.log(moment(input_date));
+  var day_start = new Date(moment(input_date));
+  var day_end = new Date(moment(input_date).add(24, 'hours'));
 
-  Meal.find({"User_ID": req.session.userId, "Entry_Date": {$gte: new Date(day.getFullYear(),day.getMonth(),day.getDate())}}, function(err, meals) {
+  Meal.find({"User_ID": req.session.userId, "Entry_Date": {$gte: day_start}, "Entry_Date": {$lt: day_end}}, function(err, meals) {
     var mealMap = {};
 
     meals.forEach(function(meal) {

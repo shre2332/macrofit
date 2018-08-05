@@ -1948,9 +1948,13 @@ app.controller('myCtrl', function($scope, $http) {
 	    }
 	    
 	    $scope.check_meals_click = function() {
-    		$http.get("http://localhost:3000/meal/today").then(function(response) {
-        		$scope.search_meals_data = response.data;
-		  	});
+    		//$http.get("http://localhost:3000/meal/today").then(function(response) {
+        		//$scope.search_meals_data = response.data;
+        		$http.get("http://localhost:3000/meal/day/" + document.getElementById("check_meals_date").value.toString().replace(/\//g, "-")).then(function(response) {
+        			$scope.search_meals_data = response.data;
+		  		});
+		  	//});
+		  	alert (document.getElementById("check_meals_date").value.toString().replace(/\//g, "-"));
 		  }
 		  
 		  $scope.meal_select_click = function(event) {
@@ -2448,7 +2452,7 @@ app.controller('myCtrl', function($scope, $http) {
 	    
 	   $scope.add_meal_from_dialog = function(event) {
     		$http.post("http://localhost:3000/meal", 
-			{Food_ID: $scope.add_meal_dialog_id, Grams: $scope.add_meal_amount_dialog}
+			{Food_ID: $scope.add_meal_dialog_id, Grams: $scope.add_meal_amount_dialog, Entry_Date: add_meal_date_dialog}
 			).then(function(response) {
 				if (response.data.success == true) {		
 					//$scope.add_meal_confirmed = "SUCCESS";
