@@ -25,6 +25,16 @@ meal_router.post('/', function (req, res, next) {
   if (req.body.Food_ID &&
       req.body.Grams) {
 
+      var day = new Date();
+      var input_date = req.body.Entry_Date;
+      var moment_start = moment(input_date);
+
+      var diff = (moment_start.diff(moment(), 'days'));
+      console.log("time diff: "+diff);
+
+      var day_start = new Date(moment(input_date));
+
+
       var mealData = {};
 
       Food.findById(req.body.Food_ID)
@@ -52,15 +62,19 @@ meal_router.post('/', function (req, res, next) {
                 Fat: (parseInt(food["Fat"]) * gram_ratio),
                 Carbs: (parseInt(food["Carbs"]) * gram_ratio),
                 Fiber: (parseInt(food["Fiber"]) * gram_ratio),
-                Net_Carbs: (parseInt(food["Carbs"]) - parseInt(food["Fiber"]))
+                Net_Carbs: (parseInt(food["Carbs"]) - parseInt(food["Fiber"])),
               }
 
-              console.log(req.body.Entry_Date);
+              if (diff != 0) {
+                mealData.Entry_Date = input_date;
+              }
+
+              /*console.log(req.body.Entry_Date);
               console.log(moment(req.body.Entry_Date).toDate());
               console.log(moment());
               console.log(moment(req.body.Entry_Date));
               console.log(moment(req.body.Entry_Date).startOf('day'));
-              console.log(moment(req.body.Entry_Date).endOf('day'));
+              console.log(moment(req.body.Entry_Date).endOf('day'));*/
               
 
               Meal.create(mealData, function (error, meal) {
@@ -85,12 +99,14 @@ meal_router.get('/day/:day', function (req, res, next) {
 
   var day = new Date();
   var input_date = (req.params.day).replace(/-/g, "/");
-  //console.log(input_date);
-  //console.log(moment(input_date));
+
   var day_start = new Date(moment(input_date));
   var day_end = new Date(moment(input_date).add(24, 'hours'));
 
-  Meal.find({"User_ID": req.session.userId, "Entry_Date": {$gte: day_start}, "Entry_Date": {$lt: day_end}}, function(err, meals) {
+  //console.log(day_start);
+  //console.log(day_end);
+
+  Meal.find({"User_ID": req.session.userId, "Entry_Date": {$gte: day_start, $lt: day_end}}, function(err, meals) {
     var mealMap = {};
 
     meals.forEach(function(meal) {

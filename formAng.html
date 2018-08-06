@@ -1935,8 +1935,8 @@ app.controller('myCtrl', function($scope, $http) {
 	    }
 	    
 	    $scope.check_macros_click = function() {
-	    	//$http.post("http://localhost:3000/macros", {username: "a"}).then(function(response) {
-	    	$http.get("http://localhost:3000/macro").then(function(response) {
+	    	//$http.get("http://localhost:3000/macro").then(function(response) {
+	    	$http.get("http://localhost:3000/macro/date/" + document.getElementById("current_macros_date").value.toString().replace(/\//g, "-")).then(function(response) {
 	    		//alert(response.data);
         		//$scope.date = response.data.Date;
         		$scope.calories = response.data.Calories;
@@ -1950,11 +1950,11 @@ app.controller('myCtrl', function($scope, $http) {
 	    $scope.check_meals_click = function() {
     		//$http.get("http://localhost:3000/meal/today").then(function(response) {
         		//$scope.search_meals_data = response.data;
-        		$http.get("http://localhost:3000/meal/day/" + document.getElementById("check_meals_date").value.toString().replace(/\//g, "-")).then(function(response) {
-        			$scope.search_meals_data = response.data;
-		  		});
+        	$http.get("http://localhost:3000/meal/day/" + document.getElementById("check_meals_date").value.toString().replace(/\//g, "-")).then(function(response) {
+        		$scope.search_meals_data = response.data;
+		  	});
 		  	//});
-		  	alert (document.getElementById("check_meals_date").value.toString().replace(/\//g, "-"));
+		  	
 		  }
 		  
 		  $scope.meal_select_click = function(event) {
@@ -2028,9 +2028,9 @@ app.controller('myCtrl', function($scope, $http) {
 		    });
     	}
     	$scope.get_rem_click = function() {
-	    	//$http.post("http://localhost:3000/macros", {username: "a"}).then(function(response) {
-	    	$http.get("http://localhost:3000/macro/remaining").then(function(response) {
-	    		//alert(response.data.Calories);
+	    	//$http.get("http://localhost:3000/macro/remaining").then(function(response) {
+	    	$http.get("http://localhost:3000/macro/remaining/date/" + document.getElementById("rem_macros_date").value.toString().replace(/\//g, "-")).then(function(response) {
+
 	    		if (response.data.no_goal == true)
 	    		{
 	    			$scope.cal_rem = "no goal set";
@@ -2452,7 +2452,7 @@ app.controller('myCtrl', function($scope, $http) {
 	    
 	   $scope.add_meal_from_dialog = function(event) {
     		$http.post("http://localhost:3000/meal", 
-			{Food_ID: $scope.add_meal_dialog_id, Grams: $scope.add_meal_amount_dialog, Entry_Date: add_meal_date_dialog}
+			{Food_ID: $scope.add_meal_dialog_id, Grams: $scope.add_meal_amount_dialog, Entry_Date: document.getElementById("add_meal_date_dialog").value}
 			).then(function(response) {
 				if (response.data.success == true) {		
 					//$scope.add_meal_confirmed = "SUCCESS";

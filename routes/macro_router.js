@@ -13,6 +13,9 @@ var Exercise_Move = require('../models/exercise_move.js');
 var Exercise_Set = require('../models/exercise_set.js');
 var Exercise = require('../models/exercise.js');
 
+var moment = require('moment');
+moment().format();
+
 macro_router.use(function (req, res, next) {
   console.log('macro router')
   next()
@@ -70,6 +73,117 @@ macro_router.get('/remaining', function (req, res) {
       }
   
   Meal.find({"User_ID": req.session.userId, "Entry_Date": {$gte: new Date(day.getFullYear(),day.getMonth(),day.getDate())}}, function(err, meals) {
+    if (err) return handleError(err);
+      
+    var arrayLength = meals.length;
+    for (var i = 0; i < arrayLength; i++) {
+    daily_totals["Calories"] = daily_totals["Calories"] + parseInt(meals[i]["Calories"]);
+    daily_totals["Protein"] = daily_totals["Protein"] + parseInt(meals[i]["Protein"]);
+    daily_totals["Fat"] = daily_totals["Fat"] + parseInt(meals[i]["Fat"]);
+    daily_totals["Carbs"] = daily_totals["Carbs"] + parseInt(meals[i]["Carbs"]);
+    daily_totals["Fiber"] = daily_totals["Fiber"] + parseInt(meals[i]["Fiber"]);
+     }
+    
+    var remData = {};
+
+    Mac_Goal.findOne({"User_ID": String(req.session.userId), "Active": true})
+    .exec(function (error, goal) {
+      if (error) {
+      return next(error);
+    } else {
+      if (goal === null) {
+        var err = new Error('Not found');
+        err.status = 400;
+        res.setHeader('Content-Type', 'application/json');
+        res.json({no_goal: true});
+        //return next(err);
+      } else {
+
+         console.log(parseInt(goal["Calories"]));
+             console.log(daily_totals["Calories"]);
+
+         remData = {
+           no_goal: false,
+             Calories: parseInt(goal["Calories"]) - daily_totals["Calories"],
+             Protein: parseInt(goal["Protein"]) - daily_totals["Protein"],
+           Fat: parseInt(goal["Fat"]) - daily_totals["Fat"],
+           Carbs: parseInt(goal["Carbs"]) - daily_totals["Carbs"],
+           Fiber: parseInt(goal["Fiber"]) - daily_totals["Fiber"]
+           }
+            
+           console.log(remData);
+       res.setHeader('Content-Type', 'application/json');
+         res.json(remData);
+      }
+    }
+      })
+    })
+})
+
+macro_router.get('/date/:date', function (req, res, next) {
+
+  var day = new Date();
+  
+  var daily_totals = {
+        Calories: 0,
+        Protein: 0,
+        Fat: 0,
+        Carbs: 0,
+        Fiber: 0
+      }
+  
+  var day = new Date();
+  var input_date = (req.params.date).replace(/-/g, "/");
+
+  var day_start = new Date(moment(input_date));
+  var day_end = new Date(moment(input_date).add(24, 'hours'));
+
+  //console.log(day_start);
+  //console.log(day_end);
+
+  Meal.find({"User_ID": req.session.userId, "Entry_Date": {$gte: day_start, $lt: day_end}}, function(err, meals) {
+    if (err) return handleError(err);
+      
+      var arrayLength = meals.length;
+    for (var i = 0; i < arrayLength; i++) {
+          //console.log(meals[i]["Entry_Date"]);
+      daily_totals["Calories"] = daily_totals["Calories"] + parseInt(meals[i]["Calories"]);
+      daily_totals["Protein"] = daily_totals["Protein"] + parseInt(meals[i]["Protein"]);
+      daily_totals["Fat"] = daily_totals["Fat"] + parseInt(meals[i]["Fat"]);
+      daily_totals["Carbs"] = daily_totals["Carbs"] + parseInt(meals[i]["Carbs"]);
+      daily_totals["Fiber"] = daily_totals["Fiber"] + parseInt(meals[i]["Fiber"]);
+    }
+
+    res.setHeader('Content-Type', 'application/json');
+      res.json(daily_totals);
+  });
+})
+
+
+// get /remaining
+// remaining macros for today
+macro_router.get('/remaining/date/:date', function (req, res) {
+
+  var day = new Date();
+  
+  var daily_totals = {
+        Calories: 0,
+        Protein: 0,
+        Fat: 0,
+        Carbs: 0,
+        Fiber: 0
+      }
+  
+  var day = new Date();
+  var input_date = (req.params.date).replace(/-/g, "/");
+
+  var day_start = new Date(moment(input_date));
+  var day_end = new Date(moment(input_date).add(24, 'hours'));
+
+  //console.log(day_start);
+  //console.log(day_end);
+
+  Meal.find({"User_ID": req.session.userId, "Entry_Date": {$gte: day_start, $lt: day_end}}, function(err, meals) {
     if (err) return handleError(err);
       
     var arrayLength = meals.length;
